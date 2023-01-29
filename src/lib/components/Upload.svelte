@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fade } from "svelte/transition";
-  import { duration } from "$lib/stores";
+  import { buttonClass, duration } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
   let uploading = false;
@@ -46,9 +46,5 @@
   }}
 >
   <FileInput />
-  <button
-    disabled={uploading}
-    class="text-lg px-3 py-2 rounded-md text-slate-100 bg-white/[.06] border border-slate-300 focus:ring disabled:opacity-75"
-    on:click={handleSubmit}>Upload</button
-  >
+  <button disabled={uploading} class={buttonClass} on:click={handleSubmit}>Upload</button>
 </form>

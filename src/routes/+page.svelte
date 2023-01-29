@@ -1,12 +1,9 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { files, filesVisible } from "$lib/stores";
+  import { buttonClass, files, filesVisible } from "$lib/stores";
   import Upload from "$lib/components/Upload.svelte";
   import FileExplorer from "$lib/components/FileExplorer.svelte";
-
-  const buttonClass =
-    "mt-10 text-lg px-3 py-2 rounded-md text-slate-100 bg-white/[.06] border border-slate-300 focus:ring";
 
   const toggleFiles = async () => {
     $files = await trpc($page).fetchAll.query();
