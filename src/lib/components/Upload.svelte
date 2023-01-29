@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fade } from "svelte/transition";
-  import { animationDuration } from "$lib/stores";
+  import { duration } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
   let uploading = false;
@@ -18,14 +18,9 @@
 
 <div class="center fixed top-0 mt-12">
   {#if uploading}
-    <img
-      src="/sync.svg"
-      alt="Sync"
-      class="animate-spin w-10 h-10"
-      transition:fade={{ duration: animationDuration }}
-    />
+    <img src="/sync.svg" alt="Sync" class="animate-spin w-10 h-10" transition:fade={{ duration }} />
   {:else if success}
-    <p class="text-green-400 tracking-wider" transition:fade={{ duration: animationDuration }}>
+    <p class="text-green-400 tracking-wider" transition:fade={{ duration }}>
       Uploaded file to server
     </p>
   {:else if error}
@@ -37,7 +32,7 @@
   method="POST"
   enctype="multipart/form-data"
   class="center gap-y-3 w-full"
-  in:fade={{ duration: animationDuration }}
+  in:fade={{ duration }}
   use:enhance={({}) => {
     return async ({ result }) => {
       if (result.type == "success") {
