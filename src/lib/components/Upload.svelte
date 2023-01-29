@@ -24,7 +24,7 @@
       Uploaded file to server
     </p>
   {:else if error}
-    <p class="text-red-400 tracking-wider">Couldn't upload file to server</p>
+    <p class="text-red-400 tracking-wider">{errorMsg}</p>
   {/if}
 </div>
 
