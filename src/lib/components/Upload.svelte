@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fade } from "svelte/transition";
-  import { buttonClass, duration, inputFiles } from "$lib/stores";
+  import { buttonClass, duration, inputFiles, maxSize } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
   let uploading = false;
@@ -28,9 +28,13 @@
   class="center gap-y-3 w-full mb-10"
   in:fade={{ duration }}
   use:enhance={({ cancel }) => {
-    console.log($inputFiles);
     if (!$inputFiles) {
       errorMsg = "No file selected";
+      error = true;
+      cancel();
+      return;
+    } else if ($inputFiles[0].size > maxSize) {
+      errorMsg = "File cannot be larger than 20MB";
       error = true;
       cancel();
       return;
