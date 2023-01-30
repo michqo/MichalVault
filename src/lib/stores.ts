@@ -7,5 +7,6 @@ const duration = 250;
 
 const files: Writable<[string, Record<string, string>][]> = writable([]);
 const filesVisible = writable(false);
+const inputFiles: Writable<FileList> = writable();
 
-export { buttonClass, duration, files, filesVisible };
+export { buttonClass, duration, files, filesVisible, inputFiles };

@@ -1,19 +1,13 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fade } from "svelte/transition";
-  import { buttonClass, duration } from "$lib/stores";
+  import { buttonClass, duration, inputFiles } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
   let uploading = false;
   let error = false;
   let success = false;
   let errorMsg = "";
-
-  const handleSubmit = () => {
-    success = false;
-    uploading = true;
-    error = false;
-  };
 </script>
 
 <div class="center fixed top-0 mt-12">
@@ -24,27 +18,45 @@
       Uploaded file to server
     </p>
   {:else if error}
-    <p class="text-red-400 tracking-wider">{errorMsg}</p>
+    <p class="text-red-400 tracking-wider" transition:fade={{ duration }}>{errorMsg}</p>
   {/if}
 </div>
 
 <form
   method="POST"
   enctype="multipart/form-data"
-  class="center gap-y-3 w-full"
+  class="center gap-y-3 w-full mb-10"
   in:fade={{ duration }}
-  use:enhance={({}) => {
+  use:enhance={({ cancel }) => {
+    console.log($inputFiles);
+    if (!$inputFiles) {
+      errorMsg = "No file selected";
+      error = true;
+      cancel();
+      return;
+    }
+    success = false;
+    error = false;
+    uploading = true;
+    // @ts-ignore
+    $inputFiles = undefined;
+
     return async ({ result }) => {
       if (result.type == "success") {
         uploading = false;
         success = true;
+      } else if (result.type == "failure") {
+        uploading = false;
+        errorMsg = "Internal server error";
+        error = true;
       } else {
-        errorMsg = "Couldn't upload file to server";
+        uploading = false;
+        errorMsg = "Failed to upload file to server";
         error = true;
       }
     };
   }}
 >
   <FileInput />
-  <button disabled={uploading} class={buttonClass} on:click={handleSubmit}>Upload</button>
+  <button disabled={uploading} class={buttonClass}>Upload</button>
 </form>
