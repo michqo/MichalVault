@@ -1,7 +1,28 @@
 <script lang="ts">
-  import { inputFiles } from "$lib/stores";
+  import { fade } from "svelte/transition";
+  import { duration, inputFiles } from "$lib/stores";
+  import { formatBytes } from "$lib/utils";
+
+  const removeFiles = () => {
+    // @ts-ignore
+    $inputFiles = undefined;
+  };
 </script>
 
+{#if $inputFiles}
+  <div
+    transition:fade={{ duration }}
+    class="w-full px-3 py-2 flex justify-between mb-2 rounded-md bg-gray-700"
+  >
+    <div class="flex items-center">
+      <button type="button" on:click={removeFiles}>
+        <img src="/delete.svg" alt="Remove" class="w-6 h-6 mr-1 cursor-pointer" />
+      </button>
+      <p>{$inputFiles[0].name}</p>
+    </div>
+    <p>{formatBytes($inputFiles[0].size)}</p>
+  </div>
+{/if}
 <div class="w-full">
   <label
     class="flex justify-center w-full h-32 px-4 transition bg-transparent border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:bg-white/[.03] focus:outline-none"
