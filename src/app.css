@@ -6,4 +6,7 @@
   .center {
     @apply flex flex-col items-center;
   }
+  .top {
+    @apply fixed top-0 mt-12;
+  }
 }

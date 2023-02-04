@@ -1,19 +1,16 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fade } from "svelte/transition";
-  import { buttonClass, duration, inputFiles, maxSize } from "$lib/stores";
+  import { buttonClass, duration, inputFiles, maxSize, loading } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
-  let uploading = false;
   let error = false;
   let success = false;
   let errorMsg = "";
 </script>
 
-<div class="center fixed top-0 mt-12">
-  {#if uploading}
-    <img src="/sync.svg" alt="Sync" class="animate-spin w-10 h-10" transition:fade={{ duration }} />
-  {:else if success}
+<div class="center top">
+  {#if success}
     <p class="text-green-400 tracking-wider" transition:fade={{ duration }}>
       Uploaded file to server
     </p>
@@ -41,20 +38,18 @@
     }
     success = false;
     error = false;
-    uploading = true;
+    $loading = true;
     // @ts-ignore
     $inputFiles = undefined;
 
     return async ({ result }) => {
+      $loading = false;
       if (result.type == "success") {
-        uploading = false;
         success = true;
       } else if (result.type == "failure") {
-        uploading = false;
         errorMsg = "Internal server error";
         error = true;
       } else {
-        uploading = false;
         errorMsg = "Failed to upload file to server";
         error = true;
       }
@@ -62,5 +57,5 @@
   }}
 >
   <FileInput />
-  <button disabled={uploading} class={buttonClass}>Upload</button>
+  <button disabled={$loading} class={buttonClass}>Upload</button>
 </form>

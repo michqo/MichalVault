@@ -3,7 +3,7 @@
   import { duration, inputFiles } from "$lib/stores";
   import { formatBytes } from "$lib/utils";
 
-  const removeFiles = () => {
+  function removeFiles() {
     // @ts-ignore
     $inputFiles = undefined;
   };

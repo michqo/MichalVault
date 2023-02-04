@@ -11,7 +11,7 @@
   const imgClass = "w-14 h-14";
 
   // TODO: Faster download
-  const download = async (key: string, name: string) => {
+  async function download(key: string, name: string) {
     const data = await trpc($page).fetchOne.query({ key });
     const bufferArray = new Uint8Array(data!.data);
     const blob = new Blob([bufferArray]);
@@ -22,7 +22,7 @@
     link.click();
   };
 
-  const deleteAll = async () => {
+  async function deleteAll() {
     await trpc($page).deleteAll.query();
   };
 </script>

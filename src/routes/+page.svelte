@@ -1,15 +1,20 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { buttonClass, files, filesVisible } from "$lib/stores";
+  import { buttonClass, files, filesVisible, loading } from "$lib/stores";
   import Upload from "$lib/components/Upload.svelte";
   import FileExplorer from "$lib/components/FileExplorer.svelte";
+  import Loading from "$lib/components/Loading.svelte";
 
-  const toggleFiles = async () => {
+  async function toggleFiles() {
+    $loading = true;
     $files = await trpc($page).fetchAll.query();
+    $loading = false;
     $filesVisible = true;
   };
 </script>
+
+<Loading />
 
 <main class="flex justify-center min-h-screen w-full">
   <div class="center justify-center w-full max-w-md">
