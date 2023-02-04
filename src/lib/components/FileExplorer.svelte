@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { fly } from "svelte/transition";
-  import { files, filesVisible } from "$lib/stores";
+  import { files, filesVisible, loading } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
 
   const today = new Date();
@@ -12,6 +12,7 @@
 
   // TODO: Faster download
   async function download(key: string, name: string) {
+    $loading = true;
     const data = await trpc($page).fetchOne.query({ key });
     const bufferArray = new Uint8Array(data!.data);
     const blob = new Blob([bufferArray]);
@@ -19,6 +20,7 @@
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     link.download = name;
+    $loading = false;
     link.click();
   };
 
