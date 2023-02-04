@@ -14,10 +14,9 @@
   };
 </script>
 
-<Loading />
-
 <main class="flex justify-center min-h-screen w-full">
   <div class="center justify-center w-full max-w-md">
+  <Loading />
     {#if !$filesVisible}
       <Upload />
       <button on:click={toggleFiles} class={buttonClass}>Show files</button>

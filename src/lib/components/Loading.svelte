@@ -4,7 +4,5 @@
 </script>
 
 {#if $loading}
-  <div class="w-full center top">
-    <img src="/sync.svg" alt="Sync" class="animate-spin w-10 h-10" transition:fade={{ duration }} />
-  </div>
+  <img src="/sync.svg" alt="Sync" class="animate-spin w-10 h-10 top" transition:fade={{ duration }} />
 {/if}
