@@ -15,7 +15,7 @@
 </script>
 
 <main class="flex justify-center min-h-screen w-full">
-  <div class="center justify-center w-full max-w-md">
+  <div class="center justify-center w-full max-w-xl">
     <Loading />
     {#if !$filesVisible}
       <Upload />

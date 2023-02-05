@@ -7,7 +7,7 @@
 
   const today = new Date();
   const thClass = "text-sm font-medium px-4 py-2 text-left";
-  const tdClass = "text-sm font-light px-4 py-2 whitespace-nowrap";
+  const tdClass = "text-sm font-light px-4 py-1 whitespace-nowrap";
   const imgClass = "w-14 h-14";
   const svgClass = "w-7 h-7 mr-2 cursor-pointer";
 
@@ -29,6 +29,12 @@
     await trpc($page).delete.query({ key });
   }
 
+  async function refresh() {
+    $loading = true;
+    $files = await trpc($page).fetchAll.query();
+    $loading = false;
+  }
+
   async function deleteAll() {
     await trpc($page).deleteAll.query();
   }
@@ -40,6 +46,9 @@
 >
   <button title="Go back" on:click={() => ($filesVisible = false)}
     ><img src="/back.svg" alt="Back" class={imgClass} /></button
+  >
+  <button title="Refresh" on:click={refresh}
+    ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
   >
   <button title="Delete all files" on:click={deleteAll}
     ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
