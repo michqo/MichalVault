@@ -8,8 +8,7 @@ const duration = 250;
 const maxSize = 1048576 * 20;
 
 const files: Writable<[string, Record<string, string>][]> = writable([]);
-const filesVisible = writable(false);
 const inputFiles: Writable<FileList> = writable();
 const loading = writable(false);
 
-export { buttonClass, duration, maxSize, files, filesVisible, inputFiles, loading };
+export { buttonClass, duration, maxSize, files, inputFiles, loading };

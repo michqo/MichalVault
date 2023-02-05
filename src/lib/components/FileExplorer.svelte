@@ -2,14 +2,14 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { fly } from "svelte/transition";
-  import { files, filesVisible, loading } from "$lib/stores";
+  import { files, loading } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
 
   const today = new Date();
   const thClass = "text-sm font-medium px-4 py-2 text-left";
   const tdClass = "text-sm font-light px-4 py-1 whitespace-nowrap";
   const imgClass = "w-14 h-14";
-  const svgClass = "w-7 h-7 mr-2 cursor-pointer";
+  const svgClass = "w-7 h-7 mr-3 cursor-pointer";
 
   // TODO: Faster download
   async function download(key: string, name: string) {
@@ -44,9 +44,7 @@
   class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 border border-slate-500 bg-gray-800 rounded-xl drop-shadow-xl"
   in:fly={{ y: -100, duration: 220 }}
 >
-  <button title="Go back" on:click={() => ($filesVisible = false)}
-    ><img src="/back.svg" alt="Back" class={imgClass} /></button
-  >
+  <a href="/" title="Go back"><img src="/back.svg" alt="Back" class={imgClass} /></a>
   <button title="Refresh" on:click={refresh}
     ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
   >
