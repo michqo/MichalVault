@@ -10,6 +10,10 @@ export const router = t.router({
   deleteAll: t.procedure.query(async () => {
     await redis.flushdb();
   }),
+  delete: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
+    await redis.del(input.key);
+    await redis.del(input.key + "F");
+  }),
   fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     return await redis.getBuffer(input.key + "F");
   }),

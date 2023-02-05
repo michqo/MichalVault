@@ -6,7 +6,7 @@
   function removeFiles() {
     // @ts-ignore
     $inputFiles = undefined;
-  };
+  }
 </script>
 
 {#if $inputFiles}

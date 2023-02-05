@@ -9,6 +9,7 @@
   const thClass = "text-sm font-medium px-4 py-2 text-left";
   const tdClass = "text-sm font-light px-4 py-2 whitespace-nowrap";
   const imgClass = "w-14 h-14";
+  const svgClass = "w-7 h-7 mr-2 cursor-pointer";
 
   // TODO: Faster download
   async function download(key: string, name: string) {
@@ -22,11 +23,15 @@
     link.download = name;
     $loading = false;
     link.click();
-  };
+  }
+
+  async function deleteFile(key: string) {
+    await trpc($page).delete.query({ key });
+  }
 
   async function deleteAll() {
     await trpc($page).deleteAll.query();
-  };
+  }
 </script>
 
 <div
@@ -51,11 +56,16 @@
   </thead>
   <tbody>
     {#each $files as file}
-      <tr
-        class="border-b border-gray-700 cursor-pointer hover:bg-gray-700"
-        on:click={() => download(file[0], file[1].name)}
-      >
-        <td class={tdClass}>{file[1].name}</td>
+      <tr class="border-b border-gray-700 hover:bg-gray-700">
+        <td class="flex items-center {tdClass}">
+          <button type="button" on:click={() => download(file[0], file[1].name)}>
+            <img src="/download.svg" alt="Download" class={svgClass} />
+          </button>
+          <button type="button" on:click={() => deleteFile(file[0])}>
+            <img src="/delete.svg" alt="Remove" class={svgClass} />
+          </button>
+          {file[1].name}
+        </td>
         <td class={tdClass}>{formatDate(new Date(parseInt(file[1].date)), today)}</td>
         <td class={tdClass}>{formatBytes(parseInt(file[1].size))}</td>
       </tr>
