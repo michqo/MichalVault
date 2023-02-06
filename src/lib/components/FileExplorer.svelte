@@ -45,7 +45,7 @@
 </script>
 
 <div
-  class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
+  class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
   in:fly={{ y: -100, duration: 220 }}
 >
   <a class={btnClass} href="/" title="Go back"
@@ -59,29 +59,31 @@
   >
 </div>
 
-<table class="block overflow-x-auto divide-y divide-gray-700 w-full">
-  <thead class="uppercase">
-    <tr>
-      <th scope="col" class={thClass}> Name </th>
-      <th scope="col" class={thClass}> Uploaded </th>
-      <th scope="col" class={thClass}> Size </th>
-    </tr>
-  </thead>
-  <tbody>
-    {#each $files as file}
-      <tr class="border-b border-gray-700 hover:bg-gray-700">
-        <td class="flex items-center {tdClass}">
-          <button type="button" on:click={() => download(file[0], file[1].name)}>
-            <img src="/download.svg" alt="Download" class={svgClass} />
-          </button>
-          <button type="button" on:click={() => deleteFile(file[0])}>
-            <img src="/delete.svg" alt="Remove" class={svgClass} />
-          </button>
-          {file[1].name}
-        </td>
-        <td class={tdClass}>{formatDate(new Date(parseInt(file[1].date)), today)}</td>
-        <td class={tdClass}>{formatBytes(parseInt(file[1].size))}</td>
+<div class="overflow-x-auto w-full">
+  <table class="w-full divide-y divide-gray-700">
+    <thead class="uppercase">
+      <tr>
+        <th scope="col" class={thClass}> Name </th>
+        <th scope="col" class={thClass}> Uploaded </th>
+        <th scope="col" class={thClass}> Size </th>
       </tr>
-    {/each}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {#each $files as file}
+        <tr class="border-b border-gray-700 hover:bg-gray-700">
+          <td class="flex items-center {tdClass}">
+            <button type="button" on:click={() => download(file[0], file[1].name)}>
+              <img src="/download.svg" alt="Download" class={svgClass} />
+            </button>
+            <button type="button" on:click={() => deleteFile(file[0])}>
+              <img src="/delete.svg" alt="Remove" class={svgClass} />
+            </button>
+            {file[1].name}
+          </td>
+          <td class={tdClass}>{formatDate(new Date(parseInt(file[1].date)), today)}</td>
+          <td class={tdClass}>{formatBytes(parseInt(file[1].size))}</td>
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>

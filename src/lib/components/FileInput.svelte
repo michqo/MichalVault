@@ -12,7 +12,7 @@
 {#if $inputFiles}
   <div
     transition:fade={{ duration }}
-    class="w-full px-3 py-2 flex justify-between mb-2 rounded-md bg-gray-700"
+    class="w-full px-3 py-2 flex justify-between mb-2 rounded-md bg-gray-800"
   >
     <div class="flex items-center">
       <button type="button" on:click={removeFiles}>
