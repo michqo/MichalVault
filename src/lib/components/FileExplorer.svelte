@@ -6,10 +6,11 @@
   import { formatBytes, formatDate } from "$lib/utils";
 
   const today = new Date();
-  const thClass = "text-sm font-medium px-4 py-2 text-left";
+  const thClass = "text-sm font-medium px-4 py-2 text-left tracking-wider";
   const tdClass = "text-sm font-light px-4 py-1 whitespace-nowrap";
+  const btnClass = "";
   const imgClass = "w-14 h-14";
-  const svgClass = "w-7 h-7 mr-3 cursor-pointer";
+  const svgClass = "w-7 h-7";
 
   // TODO: Faster download
   async function download(key: string, name: string) {
@@ -44,16 +45,18 @@
   class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 border border-slate-500 bg-gray-800 rounded-xl drop-shadow-xl"
   in:fly={{ y: -100, duration: 220 }}
 >
-  <a href="/" title="Go back"><img src="/back.svg" alt="Back" class={imgClass} /></a>
-  <button title="Refresh" on:click={refresh}
+  <a class={btnClass} href="/" title="Go back"
+    ><img src="/back.svg" alt="Back" class={imgClass} /></a
+  >
+  <button class={btnClass} title="Refresh" on:click={refresh}
     ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
   >
-  <button title="Delete all files" on:click={deleteAll}
+  <button class={btnClass} title="Delete all files" on:click={deleteAll}
     ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
   >
 </div>
 
-<table class="overflow-x-auto divide-y divide-gray-700 w-full">
+<table class="block overflow-x-auto divide-y divide-gray-700 w-full">
   <thead class="uppercase">
     <tr>
       <th scope="col" class={thClass}> Name </th>
