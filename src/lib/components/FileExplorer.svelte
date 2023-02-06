@@ -8,7 +8,7 @@
   const today = new Date();
   const thClass = "text-sm font-medium px-4 py-2 text-left tracking-wider";
   const tdClass = "text-sm font-light px-4 py-1 whitespace-nowrap";
-  const btnClass = "";
+  const btnClass = "p-1 rounded hover:bg-white/[.1] focus:ring";
   const imgClass = "w-14 h-14";
   const svgClass = "w-7 h-7";
 
@@ -28,6 +28,8 @@
 
   async function deleteFile(key: string) {
     await trpc($page).delete.query({ key });
+    const values = $files.filter((value) => value[0] != key);
+    $files = values;
   }
 
   async function refresh() {
@@ -38,11 +40,12 @@
 
   async function deleteAll() {
     await trpc($page).deleteAll.query();
+    $files = [];
   }
 </script>
 
 <div
-  class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 border border-slate-500 bg-gray-800 rounded-xl drop-shadow-xl"
+  class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
   in:fly={{ y: -100, duration: 220 }}
 >
   <a class={btnClass} href="/" title="Go back"
