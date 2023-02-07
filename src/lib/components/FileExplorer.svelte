@@ -6,8 +6,8 @@
   import { formatBytes, formatDate } from "$lib/utils";
 
   const today = new Date();
-  const thClass = "text-sm font-medium px-4 py-2 text-left tracking-wider";
-  const tdClass = "text-sm font-light px-4 py-1 whitespace-nowrap";
+  const thClass = "text-sm py-3 px-2 font-medium text-left";
+  const tdClass = "text-sm py-2 px-2 whitespace-nowrap";
   const btnClass = "p-1 rounded hover:bg-white/[.1] focus:ring";
   const imgClass = "w-14 h-14";
   const svgClass = "w-7 h-7";
@@ -59,10 +59,11 @@
   >
 </div>
 
-<div class="overflow-x-auto w-full">
-  <table class="w-full divide-y divide-gray-700">
+<div class="overflow-x-auto w-full p-3 bg-white/[.07] rounded-lg">
+  <table class="w-full divide-y divide-gray-500">
     <thead class="uppercase">
       <tr>
+        <th scope="col" class={thClass} />
         <th scope="col" class={thClass}> Name </th>
         <th scope="col" class={thClass}> Uploaded </th>
         <th scope="col" class={thClass}> Size </th>
@@ -70,15 +71,20 @@
     </thead>
     <tbody>
       {#each $files as file}
-        <tr class="border-b border-gray-700 hover:bg-gray-700">
-          <td class="flex items-center {tdClass}">
-            <button type="button" on:click={() => download(file[0], file[1].name)}>
-              <img src="/download.svg" alt="Download" class={svgClass} />
-            </button>
+        <tr class="hover:bg-white/[.07]">
+          <td class={tdClass}>
             <button type="button" on:click={() => deleteFile(file[0])}>
               <img src="/delete.svg" alt="Remove" class={svgClass} />
             </button>
-            {file[1].name}
+          </td>
+          <td class={tdClass}>
+            <button
+              type="button"
+              class="hover:underline underline-offset-2"
+              on:click={() => download(file[0], file[1].name)}
+            >
+              {file[1].name}
+            </button>
           </td>
           <td class={tdClass}>{formatDate(new Date(parseInt(file[1].date)), today)}</td>
           <td class={tdClass}>{formatBytes(parseInt(file[1].size))}</td>
