@@ -63,7 +63,7 @@
   <table class="w-full divide-y divide-gray-500">
     <thead class="uppercase">
       <tr>
-        <th scope="col" class={thClass} />
+        <th scope="col" style="min-width:50px" class={thClass} />
         <th scope="col" class={thClass}> Name </th>
         <th scope="col" class={thClass}> Uploaded </th>
         <th scope="col" class={thClass}> Size </th>
@@ -72,7 +72,7 @@
     <tbody>
       {#each $files as file}
         <tr class="hover:bg-white/[.07]">
-          <td class={tdClass}>
+          <td style="min-width:50px" class={tdClass}>
             <button type="button" on:click={() => deleteFile(file[0])}>
               <img src="/delete.svg" alt="Remove" class={svgClass} />
             </button>
