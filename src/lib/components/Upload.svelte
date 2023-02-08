@@ -11,11 +11,9 @@
 
 <div class="center top">
   {#if success}
-    <p class="text-green-400 tracking-wider" transition:fade={{ duration }}>
-      Uploaded file to server
-    </p>
+    <p class="text-green-400 tracking-wider" in:fade={{ duration }}>Uploaded file to server</p>
   {:else if error}
-    <p class="text-red-400 tracking-wider" transition:fade={{ duration }}>{errorMsg}</p>
+    <p class="text-red-400 tracking-wider" in:fade={{ duration }}>{errorMsg}</p>
   {/if}
 </div>
 
