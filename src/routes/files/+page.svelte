@@ -3,7 +3,6 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { files, loading, inputFiles } from "$lib/stores";
-  import Loading from "$lib/components/Loading.svelte";
   import FileExplorer from "$lib/components/FileExplorer.svelte";
 
   onMount(async () => {
@@ -19,5 +18,4 @@
   <title>Web Vault - Files Explorer</title>
 </svelte:head>
 
-<Loading />
 <FileExplorer />
