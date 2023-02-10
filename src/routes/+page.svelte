@@ -4,7 +4,10 @@
   import Upload from "$lib/components/Upload.svelte";
 </script>
 
-<Loading />
+<svelte:head>
+  <title>Web Vault - Upload files</title>
+</svelte:head>
 
+<Loading />
 <Upload />
 <a href="/files" class={buttonClass}>Show files</a>

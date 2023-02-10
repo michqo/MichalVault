@@ -15,6 +15,9 @@
   });
 </script>
 
-<Loading />
+<svelte:head>
+  <title>Web Vault - Files Explorer</title>
+</svelte:head>
 
+<Loading />
 <FileExplorer />

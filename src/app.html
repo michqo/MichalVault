@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
-    <meta name="viewport" content="width=device-width" />
-    %sveltekit.head%
-  </head>
 
-  <body data-sveltekit-preload-data="hover">
-    <div style="display: contents">%sveltekit.body%</div>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="%sveltekit.assets%/favicon.svg" />
+  <meta name="viewport" content="width=device-width" />
+
+  <!-- General Meta -->
+  <meta name="keywords" content="Files, cloud" />
+  <meta name="description" content="Temporary file upload" />
+  <meta content="Michaluser" name="author" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Web Vault" />
+  <meta property="og:description" content="Temporary file upload" />
+  <meta property="og:url" content="https://web-vault.vercel.app" />
+  <meta property="og:type" content="website" />
+
+  %sveltekit.head%
+</head>
+
+<body data-sveltekit-preload-data="hover">
+  <div style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>
