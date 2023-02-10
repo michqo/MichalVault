@@ -1,6 +1,6 @@
 import Redis from "ioredis";
-import { UPSTASH_REDIS_REST_URL } from "$env/static/private";
+import { REDIS_URL } from "$env/static/private";
 
-const redis = new Redis(UPSTASH_REDIS_REST_URL);
+const redis = new Redis(REDIS_URL);
 
 export default redis;
