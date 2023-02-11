@@ -7,7 +7,7 @@
   import "nprogress/nprogress.css";
 
   NProgress.configure({
-    // Full list: https://github.com/rstacruz/nprogress#configuration
+    showSpinner: false,
     minimum: 0.16
   });
 
