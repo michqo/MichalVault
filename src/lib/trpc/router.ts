@@ -20,11 +20,19 @@ export const router = t.router({
   fetchAll: t.procedure.query(async () => {
     const keys = await redis.scan(0, "TYPE", "hash");
     if (keys[1].length == 0) return [];
-    let files: [string, Record<string, string>][] = [];
+    let promises: Promise<Record<string, string>>[] = [];
     for (let i = 0; i < keys[1].length; i++) {
-      files.push([keys[1][i], await redis.hgetall(keys[1][i])]);
+      promises.push(redis.hgetall(keys[1][i]));
     }
-    return files;
+    let allKeys: [string, Record<string, string>][] = [];
+    const awaitedPromises = await Promise.allSettled(promises);
+    for (let i = 0; i < awaitedPromises.length; i++) {
+      if (awaitedPromises[i].status == "fulfilled") {
+        // @ts-ignore
+        allKeys.push([keys[1][i], awaitedPromises[i].value]);
+      }
+    }
+    return allKeys;
   })
 });
 
