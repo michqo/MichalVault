@@ -20,7 +20,6 @@ export const actions: Actions = {
       });
       await redis.set(uuid + "F", buffer);
     } catch {
-      console.log("fail");
       return fail(500);
     }
     return { success: true };

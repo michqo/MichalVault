@@ -2,6 +2,18 @@
   import { inputFiles } from "$lib/stores";
   import { formatBytes } from "$lib/utils";
 
+  let hover = false;
+  let fileInput: HTMLInputElement;
+
+  function dropHandler(e: DragEvent) {
+    hover = false;
+    if (e.dataTransfer) {
+      if (!e.dataTransfer.files) return;
+      fileInput.files = e.dataTransfer.files; // Otherwise doesn't work
+      $inputFiles = e.dataTransfer.files;
+    }
+  }
+
   function removeFiles() {
     // @ts-ignore
     $inputFiles = undefined;
@@ -21,15 +33,39 @@
 {/if}
 <div class="w-full">
   <label
-    class="flex justify-center w-full h-32 px-4 transition bg-transparent border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:bg-white/[.03] focus:outline-none"
+    on:drop|preventDefault={() => dropHandler(event)}
+    on:dragover|preventDefault={() => (hover = true)}
+    on:dragleave={() => (hover = false)}
+    class="flex justify-center w-full h-32 px-4 transition bg-transparent border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:bg-white/[.03] focus:outline-none {hover
+      ? 'bg-white/[.03]'
+      : 'bg-transparent'}"
   >
     <span class="flex items-center space-x-2">
-      <img src="/upload.svg" alt="Upload" class="w-7 h-7" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        class="w-7 h-7 {hover ? 'text-green-500' : 'text-inherit'}"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+        />
+      </svg>
       <span class="font-medium">
         Drop files to attach, or
         <span class="text-blue-400 underline">browse</span>
       </span>
     </span>
-    <input type="file" name="file_upload" bind:files={$inputFiles} class="hidden" />
+    <input
+      type="file"
+      name="file_upload"
+      bind:this={fileInput}
+      bind:files={$inputFiles}
+      class="hidden"
+    />
   </label>
 </div>
