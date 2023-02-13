@@ -9,34 +9,46 @@
     hover = false;
     if (e.dataTransfer) {
       if (!e.dataTransfer.files) return;
-      fileInput.files = e.dataTransfer.files; // Otherwise doesn't work
-      $inputFiles = e.dataTransfer.files;
+      let files = $inputFiles
+        ? Array.from($inputFiles).concat(Array.from(e.dataTransfer.files))
+        : Array.from(e.dataTransfer.files);
+      let dt = new DataTransfer();
+      for (let i = 0; i < files.length; i++) {
+        dt.items.add(files[i]);
+      }
+      fileInput.files = dt.files; // Required
+      $inputFiles = dt.files;
     }
   }
 
-  function removeFiles() {
+  function removeFile(file: File) {
+    let files = Array.from($inputFiles);
+    files.splice(files.indexOf(file), 1);
     // @ts-ignore
-    $inputFiles = undefined;
+    $inputFiles = files;
   }
 </script>
 
 {#if $inputFiles}
-  <div class="w-full px-3 py-2 flex justify-between mb-2 rounded-md bg-gray-800">
-    <div class="flex items-center">
-      <button type="button" on:click={removeFiles}>
-        <img src="/delete.svg" alt="Remove" class="w-6 h-6 mr-1 cursor-pointer" />
-      </button>
-      <p>{$inputFiles[0].name}</p>
+  {#each Array.from($inputFiles) as file}
+    <div class="w-full px-3 py-2 mb-1 flex justify-between rounded-md bg-gray-800">
+      <div class="flex items-center">
+        <button type="button" on:click={() => removeFile(file)}>
+          <img src="/delete.svg" alt="Remove" class="w-6 h-6 mr-1 cursor-pointer" />
+        </button>
+        <p>{file.name}</p>
+      </div>
+      <p>{formatBytes(file.size)}</p>
     </div>
-    <p>{formatBytes($inputFiles[0].size)}</p>
-  </div>
+  {/each}
 {/if}
+
 <div class="w-full">
   <label
     on:drop|preventDefault={() => dropHandler(event)}
     on:dragover|preventDefault={() => (hover = true)}
     on:dragleave={() => (hover = false)}
-    class="flex justify-center w-full h-32 px-4 transition bg-transparent border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:bg-white/[.03] focus:outline-none {hover
+    class="flex justify-center w-full h-32 px-4 mt-2 transition bg-transparent border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:bg-white/[.03] focus:outline-none {hover
       ? 'bg-white/[.03]'
       : 'bg-transparent'}"
   >
@@ -62,9 +74,11 @@
     </span>
     <input
       type="file"
+      multiple
       name="file_upload"
       bind:this={fileInput}
       bind:files={$inputFiles}
+      on:change={() => console.log($inputFiles)}
       class="hidden"
     />
   </label>
