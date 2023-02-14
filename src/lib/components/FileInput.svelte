@@ -45,7 +45,7 @@
 
 <div class="w-full">
   <label
-    on:drop|preventDefault={() => dropHandler(event)}
+    on:drop|preventDefault={(event) => dropHandler(event)}
     on:dragover|preventDefault={() => (hover = true)}
     on:dragleave={() => (hover = false)}
     class="flex justify-center w-full h-32 px-4 mt-2 transition bg-transparent border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:bg-white/[.03] focus:outline-none {hover
