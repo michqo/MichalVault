@@ -78,7 +78,6 @@
       name="file_upload"
       bind:this={fileInput}
       bind:files={$inputFiles}
-      on:change={() => console.log($inputFiles)}
       class="hidden"
     />
   </label>

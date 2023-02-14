@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PageData } from "./$types";
+  import type { PageServerData } from "./$types";
   import { inputFiles } from "$lib/stores";
   import FileExplorer from "$lib/components/FileExplorer.svelte";
 
-  export let data: PageData;
+  export let data: PageServerData;
 
   onMount(() => {
     // @ts-ignore
