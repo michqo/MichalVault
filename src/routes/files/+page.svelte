@@ -1,14 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PageServerData } from "./$types";
-  import { inputFiles } from "$lib/stores";
+  import { trpc } from "$lib/trpc/client";
+  import { page } from "$app/stores";
+  import { inputFiles, loading } from "$lib/stores";
   import FileExplorer from "$lib/components/FileExplorer.svelte";
 
-  export let data: PageServerData;
+  let files: [string, Record<string, string>][] = [];
 
-  onMount(() => {
+  onMount(async () => {
     // @ts-ignore
     $inputFiles = undefined;
+    $loading = true;
+    files = await trpc($page).fetchAll.query();
+    $loading = false;
   });
 </script>
 
@@ -16,4 +20,4 @@
   <title>Web Vault - Files Explorer</title>
 </svelte:head>
 
-<FileExplorer files={data.files} />
+<FileExplorer {files} />
