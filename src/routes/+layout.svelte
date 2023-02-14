@@ -3,6 +3,7 @@
 
   import NProgress from "nprogress";
   import { loading } from "$lib/stores";
+  import { navigating } from "$app/stores";
 
   import "nprogress/nprogress.css";
 
@@ -12,10 +13,10 @@
   });
 
   $: {
-    if ($loading) {
+    if ($loading || $navigating) {
       NProgress.start();
     }
-    if (!$loading) {
+    if (!$loading || $navigating) {
       NProgress.done();
     }
   }

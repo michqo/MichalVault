@@ -7,8 +7,7 @@ const duration = 250;
 // Limit file upload to roughly 20MB
 const maxSize = 1048576 * 20;
 
-const files: Writable<[string, Record<string, string>][]> = writable([]);
 const inputFiles: Writable<FileList> = writable();
 const loading = writable(false);
 
-export { buttonClass, duration, maxSize, files, inputFiles, loading };
+export { buttonClass, duration, maxSize, inputFiles, loading };

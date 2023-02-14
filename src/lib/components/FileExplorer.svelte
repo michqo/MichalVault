@@ -2,8 +2,10 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { fly } from "svelte/transition";
-  import { files, loading } from "$lib/stores";
+  import { loading } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
+
+  export let files: [string, Record<string, string>][];
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -28,19 +30,19 @@
 
   async function deleteFile(key: string) {
     await trpc($page).delete.query({ key });
-    const values = $files.filter((value) => value[0] != key);
-    $files = values;
+    const values = files.filter((value) => value[0] != key);
+    files = values;
   }
 
   async function refresh() {
     $loading = true;
-    $files = await trpc($page).fetchAll.query();
+    files = await trpc($page).fetchAll.query();
     $loading = false;
   }
 
   async function deleteAll() {
     await trpc($page).deleteAll.query();
-    $files = [];
+    files = [];
   }
 </script>
 
@@ -70,7 +72,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each $files as file}
+      {#each files as file}
         <tr class="hover:bg-white/[.07]">
           <td style="min-width:50px" class={tdClass}>
             <button type="button" on:click={() => deleteFile(file[0])}>
