@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { buttonClass } from "$lib/stores";
+  import { buttonClass, token } from "$lib/stores";
+  import Token from "$lib/components/Token.svelte";
   import Upload from "$lib/components/Upload.svelte";
 </script>
 
@@ -7,5 +8,8 @@
   <title>Web Vault - Upload files</title>
 </svelte:head>
 
-<Upload />
-<a href="/files" class={buttonClass}>Show files</a>
+<Token />
+{#if $token}
+  <Upload />
+  <a href="/files" class={buttonClass}>Show files</a>
+{/if}

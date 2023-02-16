@@ -9,5 +9,6 @@ const maxSize = 1048576 * 20;
 
 const inputFiles: Writable<FileList> = writable();
 const loading = writable(false);
+const token = writable("");
 
-export { buttonClass, duration, maxSize, inputFiles, loading };
+export { buttonClass, duration, maxSize, inputFiles, loading, token };

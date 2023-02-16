@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import type { Context } from "$lib/trpc/context";
 import { initTRPC } from "@trpc/server";
 import { z } from "zod";
@@ -13,6 +14,9 @@ export const router = t.router({
   delete: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     await redis.del(input.key);
     await redis.del(input.key + "F");
+  }),
+  fetchToken: t.procedure.query(async ({}) => {
+    return randomBytes(6).toString("hex");
   }),
   fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     return await redis.getBuffer(input.key + "F");
