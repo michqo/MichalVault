@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { fly } from "svelte/transition";
-  import { loading } from "$lib/stores";
+  import { duration, loading } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
 
   export let files: [string, Record<string, string>][];
@@ -29,36 +29,39 @@
   }
 
   async function deleteFile(key: string) {
-    await trpc($page).delete.query({ key });
     const values = files.filter((value) => value[0] != key);
     files = values;
+    await trpc($page).delete.query({ token: $page.params.token, key });
   }
 
   async function refresh() {
     $loading = true;
-    files = await trpc($page).fetchAll.query();
+    files = await trpc($page).fetchAll.query({ token: $page.params.token });
     $loading = false;
   }
 
   async function deleteAll() {
-    await trpc($page).deleteAll.query();
+    await trpc($page).deleteAll.query({ token: $page.params.token });
     files = [];
   }
 </script>
 
-<div
-  class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
-  in:fly={{ y: -100, duration: 220 }}
->
-  <a class={btnClass} href="/" title="Go back"
-    ><img src="/back.svg" alt="Back" class={imgClass} /></a
+<div class="center fixed top-0 mt-3">
+  <code class="text-lg underline select-all">{$page.params.token}</code>
+  <div
+    class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
+    in:fly={{ y: -100, duration }}
   >
-  <button class={btnClass} title="Refresh" on:click={refresh}
-    ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
-  >
-  <button class={btnClass} title="Delete all files" on:click={deleteAll}
-    ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
-  >
+    <a class={btnClass} href="/" title="Go back"
+      ><img src="/back.svg" alt="Back" class={imgClass} /></a
+    >
+    <button class={btnClass} title="Refresh" on:click={refresh}
+      ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
+    >
+    <button class={btnClass} title="Delete all files" on:click={deleteAll}
+      ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
+    >
+  </div>
 </div>
 
 <div class="overflow-x-auto w-full p-3 bg-white/[.07] rounded-lg">
