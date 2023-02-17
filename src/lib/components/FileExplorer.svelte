@@ -46,19 +46,22 @@
   }
 </script>
 
-<div
-  class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
-  in:fly={{ y: -100, duration }}
->
-  <a class={btnClass} href="/" title="Go back"
-    ><img src="/back.svg" alt="Back" class={imgClass} /></a
+<div class="center fixed top-0 mt-3">
+  <code class="text-lg underline select-all">{$page.params.token}</code>
+  <div
+    class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
+    in:fly={{ y: -100, duration }}
   >
-  <button class={btnClass} title="Refresh" on:click={refresh}
-    ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
-  >
-  <button class={btnClass} title="Delete all files" on:click={deleteAll}
-    ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
-  >
+    <a class={btnClass} href="/" title="Go back"
+      ><img src="/back.svg" alt="Back" class={imgClass} /></a
+    >
+    <button class={btnClass} title="Refresh" on:click={refresh}
+      ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
+    >
+    <button class={btnClass} title="Delete all files" on:click={deleteAll}
+      ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
+    >
+  </div>
 </div>
 
 <div class="overflow-x-auto w-full p-3 bg-white/[.07] rounded-lg">
