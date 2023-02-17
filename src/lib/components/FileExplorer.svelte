@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { fly } from "svelte/transition";
-  import { loading } from "$lib/stores";
+  import { duration, loading } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
 
   export let files: [string, Record<string, string>][];
@@ -48,7 +48,7 @@
 
 <div
   class="flex gap-x-3 fixed top-0 mt-10 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
-  in:fly={{ y: -100, duration: 220 }}
+  in:fly={{ y: -100, duration }}
 >
   <a class={btnClass} href="/" title="Go back"
     ><img src="/back.svg" alt="Back" class={imgClass} /></a
