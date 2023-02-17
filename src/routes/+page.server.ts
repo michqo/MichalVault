@@ -5,9 +5,10 @@ import { maxSize } from "$lib/stores";
 
 // TODO: Put file in the token group
 export const actions: Actions = {
-  default: async ({ request }) => {
+  default: async ({ cookies, request }) => {
     const form = await request.formData();
     const files = form.getAll("file_upload") as File[];
+    console.log(cookies.get("token"));
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (file.size == 0) throw error(400);

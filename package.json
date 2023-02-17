@@ -29,6 +29,7 @@
     "@trpc/client": "^10.10.0",
     "@trpc/server": "^10.10.0",
     "ioredis": "^5.3.0",
+    "js-cookie": "^3.0.1",
     "trpc-sveltekit": "^3.2.9",
     "zod": "^3.20.6"
   }

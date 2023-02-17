@@ -1,19 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import Cookies from 'js-cookie'
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { loading, token } from "../stores";
+  import { token } from "../stores";
 
   onMount(async () => {
-    $loading = true;
-    const t = localStorage.getItem("token");
-    if (t == null) {
+    const t = Cookies.get("token");
+    if (t == undefined) {
       $token = await trpc($page).fetchToken.query();
-      localStorage.setItem("token", $token);
+      Cookies.set("token", $token);
     } else {
       $token = t;
     }
-    $loading = false;
   });
 </script>
 
