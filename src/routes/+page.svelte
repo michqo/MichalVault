@@ -11,5 +11,5 @@
 <Token />
 {#if $token}
   <Upload />
-  <a href="/files" class={buttonClass}>Show files</a>
+  <a href="/files/{$token}" class={buttonClass}>Show files</a>
 {/if}

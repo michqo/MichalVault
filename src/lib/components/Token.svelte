@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Cookies from 'js-cookie'
+  import Cookies from "js-cookie";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { token } from "../stores";

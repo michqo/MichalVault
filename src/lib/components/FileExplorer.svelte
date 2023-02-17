@@ -29,19 +29,19 @@
   }
 
   async function deleteFile(key: string) {
-    await trpc($page).delete.query({ key });
     const values = files.filter((value) => value[0] != key);
     files = values;
+    await trpc($page).delete.query({ token: $page.params.token, key });
   }
 
   async function refresh() {
     $loading = true;
-    files = await trpc($page).fetchAll.query();
+    files = await trpc($page).fetchAll.query({ token: $page.params.token });
     $loading = false;
   }
 
   async function deleteAll() {
-    await trpc($page).deleteAll.query();
+    await trpc($page).deleteAll.query({ token: $page.params.token });
     files = [];
   }
 </script>
