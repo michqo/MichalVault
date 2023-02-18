@@ -62,7 +62,7 @@
       } else if (result.type == "failure") {
         showError("Internal server error");
       } else if (result.type == "error") {
-        showError(result.error ? result.error.message : "Failed to upload file to server");
+        showError(result.error.message ? result.error.message : "Failed to upload file to server");
       }
     };
   }}

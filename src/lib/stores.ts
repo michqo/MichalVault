@@ -7,8 +7,10 @@ const buttonClass =
 const duration = 250;
 // Limit file upload
 const maxSizeInMB = 1;
+const maxVaultSizeinMB = 3;
 const maxSize = 1048576 * maxSizeInMB;
-const maxVaultFilesCount = 10;
+const maxVaultSize = 1048576 * maxVaultSizeinMB;
+const maxVaultFilesCount = 5;
 
 const inputFiles: Writable<FileList> = writable();
 const loading = writable(false);
@@ -18,8 +20,10 @@ export {
   buttonClass,
   duration,
   maxSizeInMB,
-  maxVaultFilesCount,
   maxSize,
+  maxVaultSizeinMB,
+  maxVaultSize,
+  maxVaultFilesCount,
   inputFiles,
   loading,
   token
