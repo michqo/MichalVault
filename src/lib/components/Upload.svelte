@@ -14,7 +14,13 @@
     setTimeout(() => {
       success = false;
       error = false;
-    }, 3000);
+    }, 4000);
+  }
+
+  function showError(text: string) {
+    errorMsg = text;
+    error = true;
+    setModalTimout();
   }
 </script>
 
@@ -35,15 +41,11 @@
   in:fade={{ duration }}
   use:enhance={({ cancel }) => {
     if (!$inputFiles) {
-      errorMsg = "No file selected";
-      error = true;
-      setModalTimout();
+      showError("No file selected");
       cancel();
       return;
     } else if (Array.from($inputFiles).reduce((a, b) => a + b.size, 0) > maxSize) {
-      errorMsg = `Files cannot be larger than ${maxSizeInMB}MB`;
-      error = true;
-      setModalTimout();
+      showError(`Files cannot be larger than ${maxSizeInMB}MB`);
       cancel();
       return;
     }
@@ -58,16 +60,10 @@
       if (result.type == "success") {
         success = true;
       } else if (result.type == "failure") {
-        errorMsg = "Internal server error";
-        error = true;
+        showError("Internal server error");
       } else if (result.type == "error") {
-        errorMsg =
-          result.status == 413
-            ? `Vault is full, maximum size is ${maxSizeInMB}MB`
-            : "Failed to upload file to server";
-        error = true;
+        showError(result.error ? result.error.message : "Failed to upload file to server");
       }
-      setModalTimout();
     };
   }}
 >
