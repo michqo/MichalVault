@@ -11,19 +11,20 @@ export const router = t.router({
   // TODO: Improve performance
   deleteAll: t.procedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
     const keys = await redis.sscan(input.token, 0);
-    let promises: Promise<number>[] = [];
+    const pipeline = redis.pipeline();
     for (let i = 0; i < keys.length; i++) {
-      promises.push(redis.del(keys[1][i]));
+      pipeline.del(keys[1][i]);
     }
-    await Promise.all([Promise.allSettled(promises), redis.del(input.token)]);
+    pipeline.del(input.token);
+    await pipeline.exec();
   }),
   delete: t.procedure
     .input(z.object({ token: z.string(), key: z.string() }))
     .query(async ({ input }) => {
-      await Promise.allSettled([
-        redis.del([input.key, input.key + "F"]),
-        redis.srem(input.token, [input.key, input.key + "F"])
-      ]);
+      const pipeline = redis.pipeline();
+      pipeline.del([input.key, input.key + "F"]);
+      pipeline.srem(input.token, [input.key, input.key + "F"]);
+      await pipeline.exec();
     }),
   fetchToken: t.procedure.query(async ({}) => {
     // TODO: Make tokens human readable
@@ -36,23 +37,21 @@ export const router = t.router({
     if (input.token.length == 0) return [];
     const keys = await redis.sscan(input.token, 0);
     if (keys[1].length == 0) return [];
-    let promises: Promise<Record<string, string>>[] = [];
     let newKeys: string[] = [];
+    const pipeline = redis.pipeline();
     for (let i = 0; i < keys[1].length; i++) {
       const key = keys[1][i];
       if (key.substring(key.length - 1) == "F") continue;
-      promises.push(redis.hgetall(key));
+      pipeline.hgetall(key);
       newKeys.push(key);
     }
-    let files: [string, Record<string, string>][] = [];
-    const awaitedPromises = await Promise.allSettled(promises);
-    for (let i = 0; i < awaitedPromises.length; i++) {
-      if (awaitedPromises[i].status == "fulfilled") {
-        // @ts-ignore
-        files.push([newKeys[i], awaitedPromises[i].value]);
-      }
+    // @ts-ignore
+    const files: [any, Record<string, string>][] = await pipeline.exec();
+    let filesWithKeys: [string, Record<string, string>][] = [];
+    for (let i = 0; i < newKeys.length; i++) {
+      filesWithKeys.push([newKeys[i], files[i][1]]);
     }
-    return files;
+    return filesWithKeys;
   })
 });
 
