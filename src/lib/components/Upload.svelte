@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { fade, fly } from "svelte/transition";
-  import { buttonClass, duration, inputFiles, maxSize, loading } from "$lib/stores";
+  import { buttonClass, duration, inputFiles, maxSize, loading, maxSizeInMB } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
   const modalClass =
@@ -40,8 +40,8 @@
       setModalTimout();
       cancel();
       return;
-    } else if ($inputFiles[0].size > maxSize) {
-      errorMsg = "File cannot be larger than 20MB";
+    } else if (Array.from($inputFiles).reduce((a, b) => a + b.size, 0) > maxSize) {
+      errorMsg = `Files cannot be larger than ${maxSizeInMB}MB`;
       error = true;
       setModalTimout();
       cancel();
@@ -60,8 +60,11 @@
       } else if (result.type == "failure") {
         errorMsg = "Internal server error";
         error = true;
-      } else {
-        errorMsg = "Failed to upload file to server";
+      } else if (result.type == "error") {
+        errorMsg =
+          result.status == 413
+            ? `Vault is full, maximum size is ${maxSizeInMB}MB`
+            : "Failed to upload file to server";
         error = true;
       }
       setModalTimout();
