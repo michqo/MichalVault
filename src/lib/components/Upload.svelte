@@ -1,7 +1,8 @@
 <script lang="ts">
+  import Cookies from "js-cookie";
   import { enhance } from "$app/forms";
   import { fade, fly } from "svelte/transition";
-  import { buttonClass, duration, inputFiles, maxSize, loading, maxSizeInMB } from "$lib/stores";
+  import { buttonClass, duration, inputFiles, maxSize, loading, token, maxSizeInMB } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
 
   const modalClass =
@@ -54,6 +55,7 @@
     $loading = true;
     // @ts-ignore
     $inputFiles = undefined;
+    Cookies.set("token", $token, { sameSite: "strict" });
 
     return async ({ result }) => {
       $loading = false;

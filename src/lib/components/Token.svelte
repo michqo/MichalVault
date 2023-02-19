@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import Cookies from "js-cookie";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { buttonClass, token } from "../stores";
@@ -8,17 +7,17 @@
   let newToken = "";
 
   onMount(async () => {
-    const t = Cookies.get("token");
+    const t = localStorage.getItem("token");
     if (t == undefined) {
       $token = await trpc($page).fetchToken.query();
-      Cookies.set("token", $token, { sameSite: "strict" });
+      localStorage.setItem("token", $token);
     } else {
       $token = t;
     }
   });
 
   function changeToken() {
-    Cookies.set("token", newToken, { sameSite: "strict" });
+    localStorage.setItem("token", newToken);
     $token = newToken;
   }
 </script>
