@@ -24,8 +24,12 @@
   function removeFile(file: File) {
     let files = Array.from($inputFiles);
     files.splice(files.indexOf(file), 1);
-    // @ts-ignore
-    $inputFiles = files;
+    let dt = new DataTransfer();
+    for (let i = 0; i < files.length; i++) {
+      dt.items.add(files[i]);
+    }
+    fileInput.files = dt.files;
+    $inputFiles = dt.files;
   }
 </script>
 
