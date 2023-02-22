@@ -1,6 +1,6 @@
 import { fail, error } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-import redis from "$lib/redisConn";
+import redis from "$lib/server/redis";
 import {
   maxSize,
   maxSizeInMB,

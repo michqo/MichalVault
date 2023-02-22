@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import type { Context } from "$lib/trpc/context";
 import { initTRPC } from "@trpc/server";
 import { z } from "zod";
-import redis from "$lib/redisConn";
+import redis from "$lib/server/redis";
 
 export const t = initTRPC.context<Context>().create();
 
