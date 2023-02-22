@@ -7,6 +7,7 @@
   import { loading } from "$lib/stores";
   import { navigating } from "$app/stores";
   import Modal from "$lib/components/Modal.svelte";
+  import ConfirmModal from "$lib/components/ConfirmModal.svelte";
 
   NProgress.configure({
     showSpinner: false,
@@ -23,9 +24,10 @@
   }
 </script>
 
-<main class="flex justify-center min-h-screen w-full">
+<main class="grid place-items-center min-h-screen">
   <Modal />
   <div class="center justify-center w-full max-w-xl">
+    <ConfirmModal />
     <slot />
   </div>
 </main>

@@ -14,11 +14,16 @@ const maxSize = 1048576 * maxSizeInMB;
 const maxVaultSize = 1048576 * maxVaultSizeinMB;
 const maxVaultFilesCount = 5;
 
-const success = writable(false);
-const error = writable([false, ""]);
 const inputFiles: Writable<FileList> = writable();
 const loading = writable(false);
 const token = writable("");
+const success = writable(false);
+const error = writable([false, ""]);
+
+// Confirm modal stores
+const confirmVisible = writable(false);
+const confirmData: Writable<["delete" | "deleteAll", any, string]> = writable();
+const confirmResult = writable(false);
 
 export {
   modalClass,
@@ -29,9 +34,12 @@ export {
   maxVaultSizeinMB,
   maxVaultSize,
   maxVaultFilesCount,
-  success,
-  error,
   inputFiles,
   loading,
-  token
+  token,
+  success,
+  error,
+  confirmVisible,
+  confirmData,
+  confirmResult
 };

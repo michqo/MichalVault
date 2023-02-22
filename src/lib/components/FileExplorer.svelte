@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { fly } from "svelte/transition";
-  import { duration, loading } from "$lib/stores";
+  import { duration, loading, confirmVisible, confirmData, confirmResult } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
 
   export let files: [string, Record<string, string>][];
@@ -28,10 +28,13 @@
     link.click();
   }
 
-  async function deleteFile(key: string) {
-    const values = files.filter((value) => value[0] != key);
-    files = values;
-    await trpc($page).delete.query({ token: $page.params.token, key });
+  function deleteFile(key: string) {
+    $confirmData = ["delete", key, "delete file"];
+    $confirmVisible = true;
+  }
+  function deleteAll() {
+    $confirmData = ["deleteAll", undefined, "delete all files"];
+    $confirmVisible = true;
   }
 
   async function refresh() {
@@ -40,10 +43,23 @@
     $loading = false;
   }
 
-  async function deleteAll() {
-    await trpc($page).deleteAll.query({ token: $page.params.token });
-    files = [];
-  }
+  $: (async () => {
+    if ($confirmResult) {
+      switch ($confirmData[0]) {
+        case "delete":
+          const key = $confirmData[1];
+          const values = files.filter((value) => value[0] != key);
+          files = values;
+          await trpc($page).delete.query({ token: $page.params.token, key });
+          break;
+        case "deleteAll":
+          files = [];
+          await trpc($page).deleteAll.query({ token: $page.params.token });
+          break;
+      }
+      $confirmResult = false;
+    }
+  })();
 </script>
 
 <div class="center fixed top-0 mt-3">
