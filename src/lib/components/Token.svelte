@@ -22,10 +22,10 @@
   }
 </script>
 
-<div class="center mt-8 fixed top-0">
+<div class="center mt-8">
   <div>
     <label for="tokenInput" class="text-slate-200 block mb-1 ">Change token</label>
-    <div class="flex gap-x-2 mb-3">
+    <div class="flex gap-x-2 mb-2">
       <input
         type="text"
         id="tokenInput"

@@ -10,7 +10,7 @@
 <form
   method="POST"
   enctype="multipart/form-data"
-  class="center gap-y-3 w-full mb-10"
+  class="center gap-y-3 w-full mb-10 mt-5"
   in:fade={{ duration }}
   use:enhance={({ cancel }) => {
     if (!navigator.onLine) {

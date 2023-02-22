@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { buttonClass, token } from "$lib/stores";
+  import Header from "$lib/components/Header.svelte";
   import Token from "$lib/components/Token.svelte";
   import Upload from "$lib/components/Upload.svelte";
   import { showError } from "$lib/components/Modal.svelte";
@@ -18,6 +19,7 @@
   <title>Web Vault - Upload files</title>
 </svelte:head>
 
+<Header />
 <Token />
 {#if $token}
   <Upload />
