@@ -17,7 +17,7 @@
       showError("No network connection access");
       cancel();
       return;
-    } else if (!$inputFiles) {
+    } else if (!$inputFiles || $inputFiles.length == 0) {
       showError("No file selected");
       cancel();
       return;

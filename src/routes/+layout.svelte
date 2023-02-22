@@ -32,6 +32,6 @@
 
 <style>
   :global(body) {
-    @apply bg-gray-900 text-slate-100 mx-4;
+    @apply bg-gray-900 text-slate-100 m-4;
   }
 </style>
