@@ -2,7 +2,8 @@
   import { fade } from "svelte/transition";
   import { duration, confirmVisible, confirmData, confirmResult } from "$lib/stores";
 
-  const modalClass = "center fixed z-20 px-20 py-5 bg-gray-900 border border-slate-600 rounded drop-shadow-xl";
+  const modalClass =
+    "center fixed z-20 px-20 py-5 bg-gray-900 border border-slate-600 rounded drop-shadow-xl";
   const btnClass = "p-1 rounded hover:bg-white/[.1] focus:ring";
   const imgClass = "w-14 h-14";
 

@@ -2,7 +2,17 @@
   import Cookies from "js-cookie";
   import { enhance } from "$app/forms";
   import { fade } from "svelte/transition";
-  import { buttonClass, duration, inputFiles, maxSize, loading, token, success, error, maxSizeInMB } from "$lib/stores";
+  import {
+    buttonClass,
+    duration,
+    inputFiles,
+    maxSize,
+    loading,
+    token,
+    success,
+    error,
+    maxSizeInMB
+  } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./Modal.svelte";
 </script>
