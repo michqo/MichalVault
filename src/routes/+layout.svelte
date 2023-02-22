@@ -1,11 +1,12 @@
 <script>
   import "../app.css";
+  import "nprogress/nprogress.css";
 
+  import { fade, fly } from "svelte/transition";
   import NProgress from "nprogress";
   import { loading } from "$lib/stores";
   import { navigating } from "$app/stores";
-
-  import "nprogress/nprogress.css";
+  import Modal from "$lib/components/Modal.svelte";
 
   NProgress.configure({
     showSpinner: false,
@@ -23,6 +24,7 @@
 </script>
 
 <main class="flex justify-center min-h-screen w-full">
+  <Modal />
   <div class="center justify-center w-full max-w-xl">
     <slot />
   </div>

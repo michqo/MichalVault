@@ -1,39 +1,11 @@
 <script lang="ts">
   import Cookies from "js-cookie";
   import { enhance } from "$app/forms";
-  import { fade, fly } from "svelte/transition";
-  import { buttonClass, duration, inputFiles, maxSize, loading, token, maxSizeInMB } from "$lib/stores";
+  import { fade } from "svelte/transition";
+  import { buttonClass, duration, inputFiles, maxSize, loading, token, success, error, maxSizeInMB } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
-
-  const modalClass =
-    "center top px-3 py-2 bg-gray-900 border border-slate-700 rounded-md drop-shadow-xl";
-  let error = false;
-  let success = false;
-  let errorMsg = "";
-
-  function setModalTimout() {
-    setTimeout(() => {
-      success = false;
-      error = false;
-    }, 4000);
-  }
-
-  function showError(text: string) {
-    errorMsg = text;
-    error = true;
-    setModalTimout();
-  }
+  import { showSuccess, showError } from "./Modal.svelte";
 </script>
-
-{#if success}
-  <div class={modalClass} transition:fly={{ y: -50, duration }}>
-    <p class="text-green-400 tracking-wider">Uploaded file to server</p>
-  </div>
-{:else if error}
-  <div class={modalClass} transition:fly={{ y: -50, duration }}>
-    <p class="text-red-400 tracking-wider">{errorMsg}</p>
-  </div>
-{/if}
 
 <form
   method="POST"
@@ -41,7 +13,11 @@
   class="center gap-y-3 w-full mb-10"
   in:fade={{ duration }}
   use:enhance={({ cancel }) => {
-    if (!$inputFiles) {
+    if (!navigator.onLine) {
+      showError("No network connection access");
+      cancel();
+      return;
+    } else if (!$inputFiles) {
       showError("No file selected");
       cancel();
       return;
@@ -50,8 +26,8 @@
       cancel();
       return;
     }
-    success = false;
-    error = false;
+    $success = false;
+    $error[0] = false;
     $loading = true;
     // @ts-ignore
     $inputFiles = undefined;
@@ -60,7 +36,7 @@
     return async ({ result }) => {
       $loading = false;
       if (result.type == "success") {
-        success = true;
+        showSuccess();
       } else if (result.type == "failure") {
         showError("Internal server error");
       } else if (result.type == "error") {
