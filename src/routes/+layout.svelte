@@ -2,7 +2,6 @@
   import "../app.css";
   import "nprogress/nprogress.css";
 
-  import { fade, fly } from "svelte/transition";
   import NProgress from "nprogress";
   import { loading } from "$lib/stores";
   import { navigating } from "$app/stores";
@@ -24,7 +23,7 @@
   }
 </script>
 
-<main class="grid place-items-center min-h-screen">
+<main class="center justify-center min-h-screen">
   <Modal />
   <div class="center justify-center w-full max-w-xl">
     <ConfirmModal />

@@ -15,7 +15,7 @@
 
 {#if $confirmVisible}
   <div class="center" transition:fade={{ duration }}>
-    <div class="fixed top-0 left-0 w-full h-full z-10 bg-black/[.4]" />
+    <div class="fixed top-0 left-0 w-full h-full z-10 bg-white/[.04]" />
     <div class={modalClass}>
       <h1 class="text-xl font-medium tracking-wider">Confirm {$confirmData[2]}?</h1>
       <div class="flex space-between gap-x-3 px-8 mt-16">
