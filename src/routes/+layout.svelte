@@ -23,10 +23,10 @@
   }
 </script>
 
+<ConfirmModal />
 <main class="center justify-center min-h-screen">
   <Modal />
   <div class="center justify-center w-full max-w-xl">
-    <ConfirmModal />
     <slot />
   </div>
 </main>
