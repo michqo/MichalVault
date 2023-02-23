@@ -1,13 +1,7 @@
 import { fail, error } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import redis from "$lib/server/redis";
-import {
-  maxSize,
-  maxSizeInMB,
-  maxVaultFilesCount,
-  maxVaultSize,
-  maxVaultSizeinMB
-} from "$lib/stores";
+import { maxSize, maxVaultFilesCount, maxVaultSize, maxVaultSizeinMB } from "$lib/stores";
 
 async function fetchFiles(token: string): Promise<[any, Record<string, string>][]> {
   const keys = await redis.sscan(token, 0);
@@ -29,15 +23,18 @@ export const actions: Actions = {
     const token = cookies.get("token");
     if (token == undefined) throw error(400);
     const filesSize = files.reduce((a, b) => a + b.size, 0);
+    // Check if form files size doesn't exceed max size
     if (filesSize > maxSize) throw error(400);
     const vaultFilesCount = await redis.scard(token);
-    if (vaultFilesCount / 2 > maxVaultFilesCount)
+    // Check if number of files in vault doesn't exceed max size
+    if (vaultFilesCount / 2 + files.length > maxVaultFilesCount)
       throw error(
         400,
         `Vault has too many files, maximum amount of files is ${maxVaultFilesCount}`
       );
     const vaultFiles = await fetchFiles(token);
     const vaultSize = vaultFiles.reduce((a, b) => a + parseInt(b[1].size), 0);
+    // Check if files size doesn't exceed max size
     if (filesSize + vaultSize > maxVaultSize)
       throw error(413, `Vault is full, maximum size is ${maxVaultSizeinMB}MB`);
     for (let i = 0; i < files.length; i++) {
