@@ -4,7 +4,7 @@
   import Header from "$lib/components/Header.svelte";
   import Token from "$lib/components/Token.svelte";
   import Upload from "$lib/components/Upload.svelte";
-  import { showError } from "$lib/components/Modal.svelte";
+  import { showError } from "$lib/components/StatusModal.svelte";
 
   function handleClick() {
     if (!navigator.onLine) {

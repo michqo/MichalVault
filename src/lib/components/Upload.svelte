@@ -14,7 +14,7 @@
     maxSizeInMB
   } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
-  import { showSuccess, showError } from "./Modal.svelte";
+  import { showSuccess, showError } from "./StatusModal.svelte";
 </script>
 
 <form

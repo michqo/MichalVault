@@ -5,7 +5,7 @@
   import NProgress from "nprogress";
   import { loading } from "$lib/stores";
   import { navigating } from "$app/stores";
-  import Modal from "$lib/components/Modal.svelte";
+  import StatusModal from "$lib/components/StatusModal.svelte";
   import ConfirmModal from "$lib/components/ConfirmModal.svelte";
 
   NProgress.configure({
@@ -25,7 +25,7 @@
 
 <ConfirmModal />
 <main class="center justify-center min-h-screen">
-  <Modal />
+  <StatusModal />
   <div class="center justify-center w-full max-w-xl">
     <slot />
   </div>
