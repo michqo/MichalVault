@@ -13,16 +13,9 @@
     document.body.style.overflow = "visible";
   }
 
-  function onKeyDown(e: KeyboardEvent) {
-    if (e.code == "Escape") {
-      $confirmVisible = false;
-    }
-  }
-
   $: if ($confirmVisible) document.body.style.overflow = "hidden";
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} />
 {#if $confirmVisible}
   <div
     class="fixed z-20 inset-0 w-full min-h-full grid place-items-center"
