@@ -27,11 +27,11 @@
     <div class={modalClass}>
       <h1 class="text-center text-xl font-medium tracking-wider">Confirm {$confirmData[2]}?</h1>
       <div class="flex space-between gap-x-3 mt-16">
-        <button class={btnClass} on:click={() => setResult(false)}
-          ><img src="/close.svg" alt="Back" class={imgClass} /></button
-        >
         <button class={btnClass} on:click={() => setResult(true)}
           ><img src="/done.svg" alt="Delete" class={imgClass} /></button
+        >
+        <button class={btnClass} on:click={() => setResult(false)}
+          ><img src="/close.svg" alt="Back" class={imgClass} /></button
         >
       </div>
     </div>

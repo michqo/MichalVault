@@ -8,7 +8,6 @@ export const t = initTRPC.context<Context>().create();
 
 // TODO: Error handling
 export const router = t.router({
-  // TODO: Improve performance
   deleteAll: t.procedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
     const keys = await redis.sscan(input.token, 0);
     const pipeline = redis.pipeline();
