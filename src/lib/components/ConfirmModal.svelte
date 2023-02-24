@@ -13,15 +13,24 @@
     document.body.style.overflow = "visible";
   }
 
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.code == "Escape") {
+      $confirmVisible = false;
+    }
+  }
+
   $: if ($confirmVisible) document.body.style.overflow = "hidden";
 </script>
 
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 {#if $confirmVisible}
   <div
     class="fixed z-20 inset-0 w-full min-h-full grid place-items-center"
     transition:fade={{ duration }}
   >
-    <div class="fixed inset-0 w-full h-full bg-black/[.3]" />
+    <button class="cursor-default" on:click={() => ($confirmVisible = false)}>
+      <div class="fixed inset-0 w-full h-full bg-black/[.3]" />
+    </button>
     <div class={modalClass}>
       <h1 class="text-center text-xl font-medium tracking-wider">Confirm {$confirmData[2]}?</h1>
       <div class="flex space-between gap-x-3 mt-16">
