@@ -3,10 +3,10 @@
   import "nprogress/nprogress.css";
 
   import NProgress from "nprogress";
-  import { loading } from "$lib/stores";
   import { navigating } from "$app/stores";
-  import StatusModal from "$lib/components/StatusModal.svelte";
   import ConfirmModal from "$lib/components/ConfirmModal.svelte";
+  import StatusModal from "$lib/components/StatusModal.svelte";
+  import { loading } from "$lib/stores";
 
   NProgress.configure({
     showSpinner: false,
@@ -14,10 +14,9 @@
   });
 
   $: {
-    if ($loading || $navigating) {
+    if ($navigating || $loading) {
       NProgress.start();
-    }
-    if (!$loading || $navigating) {
+    } else {
       NProgress.done();
     }
   }
