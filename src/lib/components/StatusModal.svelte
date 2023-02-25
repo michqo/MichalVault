@@ -1,11 +1,13 @@
 <script lang="ts" context="module">
   import { success, error } from "$lib/stores";
 
+  const timeout = 4000;
+
   function setModalTimout() {
     setTimeout(() => {
       success.set(false);
       error.set([false, ""]);
-    }, 4000);
+    }, timeout);
   }
 
   export function showError(text: string) {
@@ -20,15 +22,22 @@
 
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { modalClass, duration } from "$lib/stores";
+  import { duration } from "$lib/stores";
+  import ProgressBar from "./ProgressBar.svelte";
+
+  const modalClass =
+    "center top z-20 bg-gray-900 border border-slate-700 rounded-md drop-shadow-xl";
+  const textClass = "tracking-wider mx-2 mt-2 mb-3";
 </script>
 
 {#if $success}
   <div class={modalClass} transition:fly={{ y: -50, duration }}>
-    <p class="text-green-400 tracking-wider">Uploaded file to server</p>
+    <ProgressBar {timeout} />
+    <p class="text-green-400 {textClass}">Uploaded file to server</p>
   </div>
 {:else if $error[0]}
   <div class={modalClass} transition:fly={{ y: -50, duration }}>
-    <p class="text-red-400 tracking-wider">{$error[1]}</p>
+    <ProgressBar {timeout} />
+    <p class="text-red-400 {textClass}">{$error[1]}</p>
   </div>
 {/if}
