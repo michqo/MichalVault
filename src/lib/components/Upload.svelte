@@ -37,7 +37,6 @@
 
     progress = 0;
     uploading = true;
-    total = formatBytes(Array.from($inputFiles).reduce((a, b) => a + b.size, 0));
     Cookies.set("token", $token, { sameSite: "strict" });
 
     const xhr = new XMLHttpRequest();
@@ -60,11 +59,13 @@
             break;
         }
         uploading = false;
+        total = "";
       }
     };
 
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
+        if (total.length == 0) total = formatBytes(event.total);
         uploaded = event.loaded;
         progress = (event.loaded / event.total) * 100;
       }
