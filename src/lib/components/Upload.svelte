@@ -92,11 +92,14 @@
   on:submit|preventDefault={handleSubmit}
 >
   {#if (progress > 0 && progress < 100) || uploading}
-    <div class="center gap-y-1" transition:fade={{ duration }}>
-      <p>{formatBytes(uploaded)} / {total}</p>
-      <div class="bg-gray-700 rounded-full drop-shadow h-3 w-72 md:w-96 max-w-full text-center">
+    <div class="w-full center gap-y-2" transition:fade={{ duration }}>
+      <div class="w-full flex justify-between">
+        <p class="text-sm">Uploading</p>
+        <p class="text-sm">{formatBytes(uploaded)} / {total}</p>
+      </div>
+      <div class="bg-gray-700 rounded-full drop-shadow w-full max-w-full text-center">
         <div
-          class="bg-blue-600 rounded-full h-3 w-0 ease-in"
+          class="bg-blue-600 rounded-full h-1 w-0 ease-in"
           style="width:{progress}%;transition: width 0.3s ease-in;"
         />
       </div>
