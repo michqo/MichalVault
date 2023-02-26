@@ -14,5 +14,5 @@
 </script>
 
 <div class="bg-gray-700 rounded-t-md h-0.5 w-full max-w-full">
-  <div class="bg-blue-500 rounded-t-md h-0.5 w-0" style="width:{$progress}%" />
+  <div class="bg-blue-500 rounded-tl-md h-0.5 w-0" style="width:{$progress}%" />
 </div>
