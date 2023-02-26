@@ -62,7 +62,7 @@
   })();
 </script>
 
-<div class="center fixed top-0 mt-3">
+<div class="center fixed top-0 mt-4">
   <code class="text-lg underline select-all">{$page.params.token}</code>
   <div
     class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"

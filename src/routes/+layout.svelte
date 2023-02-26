@@ -1,29 +1,14 @@
 <script>
   import "../app.css";
-  import "nprogress/nprogress.css";
 
-  import NProgress from "nprogress";
-  import { navigating } from "$app/stores";
   import ConfirmModal from "$lib/components/ConfirmModal.svelte";
   import StatusModal from "$lib/components/StatusModal.svelte";
-  import { loading } from "$lib/stores";
-
-  NProgress.configure({
-    showSpinner: false,
-    minimum: 0.16
-  });
-
-  $: {
-    if ($navigating || $loading) {
-      NProgress.start();
-    } else {
-      NProgress.done();
-    }
-  }
+  import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
 </script>
 
 <ConfirmModal />
 <main class="center justify-center min-h-screen">
+  <ProgressIndicator />
   <StatusModal />
   <div class="center justify-center w-full max-w-xl">
     <slot />
