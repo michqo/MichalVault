@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { duration, confirmVisible, confirmData, confirmResult } from "$lib/stores";
 
@@ -7,11 +8,17 @@
   const btnClass = "p-1 rounded hover:bg-white/[.1]";
   const imgClass = "w-14 h-14";
 
-  function setResult(confirm: boolean) {
-    $confirmResult = confirm;
+  function setResult(value: boolean) {
+    $confirmResult = value;
     $confirmVisible = false;
     document.body.style.overflow = "visible";
   }
+
+  onMount(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key == "Escape" && $confirmVisible) $confirmVisible = false;
+    });
+  });
 
   $: if ($confirmVisible) document.body.style.overflow = "hidden";
 </script>
