@@ -13,6 +13,7 @@ const maxVaultSize = 1048576 * maxVaultSizeinMB;
 const maxVaultFilesCount = 5;
 
 const inputFiles: Writable<FileList> = writable();
+const filesInput: Writable<HTMLInputElement> = writable();
 const loading = writable(false);
 const token = writable("");
 const success = writable(false);
@@ -32,6 +33,7 @@ export {
   maxVaultSize,
   maxVaultFilesCount,
   inputFiles,
+  filesInput,
   loading,
   token,
   success,

@@ -1,10 +1,16 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { buttonClass, token } from "$lib/stores";
+  import { buttonClass, inputFiles, filesInput, token } from "$lib/stores";
   import Header from "$lib/components/Header.svelte";
   import Token from "$lib/components/Token.svelte";
   import Upload from "$lib/components/Upload.svelte";
   import { showError } from "$lib/components/StatusModal.svelte";
+
+  onMount(() => {
+    // Persistent files between routes
+    if ($inputFiles) $filesInput.files = $inputFiles;
+  });
 
   function handleClick() {
     if (!navigator.onLine) {

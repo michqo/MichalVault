@@ -1,10 +1,9 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { duration, inputFiles } from "$lib/stores";
+  import { duration, inputFiles, filesInput } from "$lib/stores";
   import { formatBytes } from "$lib/utils";
 
   let hover = false;
-  let fileInput: HTMLInputElement;
 
   function dropHandler(e: DragEvent) {
     hover = false;
@@ -17,7 +16,7 @@
       for (let i = 0; i < files.length; i++) {
         dt.items.add(files[i]);
       }
-      fileInput.files = dt.files; // Required
+      $filesInput.files = dt.files; // Required
       $inputFiles = dt.files;
     }
   }
@@ -29,7 +28,7 @@
     for (let i = 0; i < files.length; i++) {
       dt.items.add(files[i]);
     }
-    fileInput.files = dt.files;
+    $filesInput.files = dt.files;
     $inputFiles = dt.files;
   }
 </script>
@@ -84,7 +83,7 @@
       type="file"
       multiple
       name="file_upload"
-      bind:this={fileInput}
+      bind:this={$filesInput}
       bind:files={$inputFiles}
       class="hidden"
     />
