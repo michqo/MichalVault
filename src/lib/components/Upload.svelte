@@ -48,6 +48,8 @@
         switch (result.type) {
           case "success":
             showSuccess();
+            // @ts-ignore
+            $inputFiles = undefined;
             break;
           case "failure":
             showError("Internal server error");
@@ -75,10 +77,6 @@
     xhr.open("POST", this.action);
 
     const data = new FormData(e.target);
-    $success = false;
-    $error[0] = false;
-    // @ts-ignore
-    $inputFiles = undefined;
 
     xhr.send(data);
   }

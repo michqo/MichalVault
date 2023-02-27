@@ -7,6 +7,7 @@
   export let data: PageData;
 
   onMount(async () => {
+    // Required because form resets, TODO: Make form not reset
     // @ts-ignore
     $inputFiles = undefined;
   });

@@ -18,14 +18,20 @@ async function fetchFiles(token: string): Promise<[any, Record<string, string>][
 
 export const actions: Actions = {
   default: async ({ cookies, request }) => {
-    const form = await request.formData();
-    const files = form.getAll("file_upload") as File[];
     const token = cookies.get("token");
     if (token == undefined) throw error(400);
+    // Pre file upload checks
+    const vaultFilesCount = await redis.scard(token);
+    if (vaultFilesCount / 2 >= maxVaultFilesCount)
+      throw error(
+        400,
+        `Vault has too many files, maximum amount of files is ${maxVaultFilesCount}`
+      );
+    const form = await request.formData();
+    const files = form.getAll("file_upload") as File[];
     const filesSize = files.reduce((a, b) => a + b.size, 0);
     // Check if form files size doesn't exceed max size
     if (filesSize > maxSize) throw error(400);
-    const vaultFilesCount = await redis.scard(token);
     // Check if number of files in vault doesn't exceed max size
     if (vaultFilesCount / 2 + files.length > maxVaultFilesCount)
       throw error(
