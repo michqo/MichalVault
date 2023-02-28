@@ -2,6 +2,7 @@
   import { fade } from "svelte/transition";
   import { duration, inputFiles, filesInput } from "$lib/stores";
   import { formatBytes } from "$lib/utils";
+  import Delete from "$lib/svgs/Delete.svelte";
 
   let hover = false;
 
@@ -41,7 +42,7 @@
     >
       <div class="flex items-center">
         <button type="button" on:click={() => removeFile(file)}>
-          <img src="/delete.svg" alt="Remove" class="w-6 h-6 mr-1 cursor-pointer" />
+          <Delete class="w-6 h-6 mr-1 cursor-pointer" />
         </button>
         <p>{file.name}</p>
       </div>

@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { duration, confirmVisible, confirmData, confirmResult } from "$lib/stores";
+  import Close from "$lib/svgs/Close.svelte";
+  import Done from "$lib/svgs/Done.svelte";
 
   const modalClass =
     "center fixed mx-4 px-10 py-5 bg-gray-900 border border-slate-600 rounded drop-shadow-xl";
@@ -34,11 +36,9 @@
     <div class={modalClass}>
       <h1 class="text-center text-xl font-medium tracking-wider">Confirm {$confirmData[2]}?</h1>
       <div class="flex space-between gap-x-3 mt-16">
-        <button class={btnClass} on:click={() => setResult(true)}
-          ><img src="/done.svg" alt="Delete" class={imgClass} /></button
-        >
+        <button class={btnClass} on:click={() => setResult(true)}><Done class={imgClass} /></button>
         <button class={btnClass} on:click={() => setResult(false)}
-          ><img src="/close.svg" alt="Back" class={imgClass} /></button
+          ><Close class={imgClass} /></button
         >
       </div>
     </div>

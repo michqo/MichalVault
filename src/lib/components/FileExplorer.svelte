@@ -4,6 +4,9 @@
   import { trpc } from "$lib/trpc/client";
   import { duration, loading, confirmVisible, confirmData, confirmResult } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
+  import Delete from "$lib/svgs/Delete.svelte";
+  import Sync from "$lib/svgs/Sync.svelte";
+  import Back from "$lib/svgs/Back.svelte";
 
   export let files: [string, Record<string, string>][];
 
@@ -68,14 +71,10 @@
     class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
     in:fly={{ y: -100, duration }}
   >
-    <a class={btnClass} href="/" title="Go back"
-      ><img src="/back.svg" alt="Back" class={imgClass} /></a
-    >
-    <button class={btnClass} title="Refresh" on:click={refresh}
-      ><img src="/sync.svg" alt="Sync" class={imgClass} /></button
-    >
+    <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
+    <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
     <button class={btnClass} title="Delete all files" on:click={deleteAll}
-      ><img src="/delete.svg" alt="Delete" class={imgClass} /></button
+      ><Delete class={imgClass} /></button
     >
   </div>
 </div>
@@ -84,7 +83,7 @@
   <table class="w-full divide-y divide-gray-500">
     <thead class="uppercase">
       <tr>
-        <th scope="col" style="min-width:50px" class={thClass} />
+        <th scope="col" class={thClass} />
         <th scope="col" class={thClass}> Name </th>
         <th scope="col" class={thClass}> Uploaded </th>
         <th scope="col" class={thClass}> Size </th>
@@ -93,9 +92,9 @@
     <tbody>
       {#each files as file}
         <tr class="hover:bg-white/[.07]">
-          <td style="min-width:50px" class={tdClass}>
+          <td class={tdClass}>
             <button type="button" on:click={() => deleteFile(file[0])}>
-              <img src="/delete.svg" alt="Remove" class={svgClass} />
+              <Delete class={svgClass} />
             </button>
           </td>
           <td class={tdClass}>
