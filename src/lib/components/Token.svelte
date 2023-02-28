@@ -42,7 +42,7 @@
       />
       <div>
         <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
-        {#if $token.length < 12}
+        {#if $token.length < 11}
           <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
         {/if}
       </div>
