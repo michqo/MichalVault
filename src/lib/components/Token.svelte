@@ -16,7 +16,14 @@
     }
   });
 
+  async function resetToken() {
+    newToken = "";
+    $token = await trpc($page).fetchToken.query();
+    localStorage.setItem("token", $token);
+  }
+
   function changeToken() {
+    if (newToken.length == 0 || newToken.length >= 12) return;
     localStorage.setItem("token", newToken);
     $token = newToken;
   }
@@ -34,6 +41,9 @@
         class="px-2 py-1 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring"
       />
       <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
+      {#if $token.length < 12}
+        <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
+      {/if}
     </div>
   </div>
   <p class="text-xl font-bold">Your vault token is</p>

@@ -1,12 +1,12 @@
+import { z } from "zod";
 import { randomBytes } from "node:crypto";
 import type { Context } from "$lib/trpc/context";
 import { initTRPC } from "@trpc/server";
-import { z } from "zod";
 import redis from "$lib/server/redis";
+import randomWords from "random-words";
 
 export const t = initTRPC.context<Context>().create();
 
-// TODO: Error handling
 export const router = t.router({
   deleteAll: t.procedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
     const keys = await redis.sscan(input.token, 0);
@@ -26,8 +26,11 @@ export const router = t.router({
       await pipeline.exec();
     }),
   fetchToken: t.procedure.query(async ({}) => {
-    // TODO: Make tokens human readable
-    return randomBytes(8).toString("hex");
+    const words = randomWords({
+      exactly: 3,
+      maxLength: 4
+    });
+    return words.join("-");
   }),
   fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     return await redis.getBuffer(input.key + "F");
