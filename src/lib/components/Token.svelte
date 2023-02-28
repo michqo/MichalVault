@@ -32,18 +32,20 @@
 <div class="center mt-8">
   <div>
     <label for="tokenInput" class="text-slate-200 block mb-1 ">Change token</label>
-    <div class="flex gap-x-2 mb-2">
+    <div class="center md:flex-row gap-2 mb-2">
       <input
         type="text"
         id="tokenInput"
         placeholder="Token"
         bind:value={newToken}
-        class="px-2 py-1 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring"
+        class="px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring"
       />
-      <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
-      {#if $token.length < 12}
-        <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
-      {/if}
+      <div>
+        <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
+        {#if $token.length < 12}
+          <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
+        {/if}
+      </div>
     </div>
   </div>
   <p class="text-xl font-bold">Your vault token is</p>
