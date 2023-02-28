@@ -2,8 +2,9 @@
   import { fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { duration, loading, confirmVisible, confirmData, confirmResult } from "$lib/stores";
+  import { duration, loading, confirmData, confirmResult } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
+  import { showModal } from "./ConfirmModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
@@ -32,12 +33,10 @@
   }
 
   function deleteFile(key: string) {
-    $confirmData = ["delete", key, "delete file"];
-    $confirmVisible = true;
+    showModal("delete", "delete file", key);
   }
   function deleteAll() {
-    $confirmData = ["deleteAll", undefined, "delete all files"];
-    $confirmVisible = true;
+    showModal("deleteAll", "delete all files");
   }
 
   async function refresh() {
@@ -50,7 +49,7 @@
     if ($confirmResult) {
       switch ($confirmData[0]) {
         case "delete":
-          const key = $confirmData[1];
+          const key = $confirmData[2];
           const values = files.filter((value) => value[0] != key);
           files = values;
           await trpc($page).delete.query({ token: $page.params.token, key });

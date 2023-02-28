@@ -21,7 +21,8 @@ const error = writable([false, ""]);
 
 // Confirm modal stores
 const confirmVisible = writable(false);
-const confirmData: Writable<["delete" | "deleteAll", any, string]> = writable();
+type confirmType = "delete" | "deleteAll";
+const confirmData: Writable<[confirmType, string, any]> = writable();
 const confirmResult = writable(false);
 
 export {
@@ -40,5 +41,6 @@ export {
   error,
   confirmVisible,
   confirmData,
-  confirmResult
+  confirmResult,
+  type confirmType
 };

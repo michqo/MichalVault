@@ -1,7 +1,20 @@
+<script lang="ts" context="module">
+  export function showModal(type: confirmType, text: string, data?: any) {
+    confirmData.set([type, text, data]);
+    confirmVisible.set(true);
+  }
+</script>
+
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { duration, confirmVisible, confirmData, confirmResult } from "$lib/stores";
+  import {
+    duration,
+    confirmVisible,
+    confirmData,
+    confirmResult,
+    type confirmType
+  } from "$lib/stores";
   import Close from "$lib/svgs/Close.svelte";
   import Done from "$lib/svgs/Done.svelte";
 
@@ -34,7 +47,7 @@
       <div class="fixed inset-0 w-full h-full bg-black/[.3]" />
     </button>
     <div class={modalClass}>
-      <h1 class="text-center text-xl font-medium tracking-wider">Confirm {$confirmData[2]}?</h1>
+      <h1 class="text-center text-xl font-medium tracking-wider">Confirm {$confirmData[1]}?</h1>
       <div class="flex space-between gap-x-3 mt-16">
         <button class={btnClass} on:click={() => setResult(true)}><Done class={imgClass} /></button>
         <button class={btnClass} on:click={() => setResult(false)}
