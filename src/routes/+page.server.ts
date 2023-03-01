@@ -1,7 +1,14 @@
 import { fail, error } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import redis from "$lib/server/redis";
-import { maxSize, maxVaultFilesCount, maxVaultSize, maxVaultSizeinMB } from "$lib/stores";
+import {
+  maxSize,
+  maxVaultFilesCount,
+  maxVaultSize,
+  maxVaultSizeinMB,
+  tokenMaxLength,
+  tokenMinLength
+} from "$lib/stores";
 
 async function fetchFiles(token: string): Promise<[any, Record<string, string>][]> {
   const keys = await redis.sscan(token, 0);
@@ -19,7 +26,8 @@ async function fetchFiles(token: string): Promise<[any, Record<string, string>][
 export const actions: Actions = {
   default: async ({ cookies, request }) => {
     const token = cookies.get("token");
-    if (token == undefined) throw error(400);
+    if (token == undefined || token.length < tokenMinLength || token.length > tokenMaxLength)
+      throw error(400);
     // Pre file upload checks
     const vaultFilesCount = await redis.scard(token);
     if (vaultFilesCount / 2 >= maxVaultFilesCount)

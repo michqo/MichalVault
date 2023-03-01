@@ -11,6 +11,8 @@ const maxVaultSizeinMB = 3;
 const maxSize = 1048576 * maxSizeInMB;
 const maxVaultSize = 1048576 * maxVaultSizeinMB;
 const maxVaultFilesCount = 5;
+const tokenMinLength = 1;
+const tokenMaxLength = 20;
 
 const inputFiles: Writable<FileList> = writable();
 const filesInput: Writable<HTMLInputElement> = writable();
@@ -32,6 +34,8 @@ export {
   maxSize,
   maxVaultSizeinMB,
   maxVaultSize,
+  tokenMinLength,
+  tokenMaxLength,
   maxVaultFilesCount,
   inputFiles,
   filesInput,
