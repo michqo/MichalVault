@@ -9,7 +9,7 @@
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
 
-  export let files: [string, Record<string, string>][];
+  export let files: Record<string, string>[];
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -22,7 +22,8 @@
   async function download(key: string, name: string) {
     $loading = true;
     const data = await trpc($page).fetchOne.query({ key });
-    const bufferArray = new Uint8Array(data!.data);
+    // TODO: fix error
+    const bufferArray = new Uint8Array(Object.values(data));
     const blob = new Blob([bufferArray]);
     // download file
     let link = document.createElement("a");
@@ -50,7 +51,7 @@
       switch ($confirmData[0]) {
         case "delete":
           const key = $confirmData[2];
-          const values = files.filter((value) => value[0] != key);
+          const values = files.filter((value) => value.key != key);
           files = values;
           await trpc($page).delete.query({ token: $page.params.token, key });
           break;
@@ -92,7 +93,7 @@
       {#each files as file}
         <tr class="hover:bg-white/[.07]">
           <td class={tdClass}>
-            <button type="button" on:click={() => deleteFile(file[0])}>
+            <button type="button" on:click={() => deleteFile(file.key)}>
               <Delete class={svgClass} />
             </button>
           </td>
@@ -100,13 +101,13 @@
             <button
               type="button"
               class="hover:underline underline-offset-2"
-              on:click={() => download(file[0], file[1].name)}
+              on:click={() => download(file.key, file.name)}
             >
-              {file[1].name}
+              {file.name}
             </button>
           </td>
-          <td class={tdClass}>{formatDate(new Date(parseInt(file[1].date)), today)}</td>
-          <td class={tdClass}>{formatBytes(parseInt(file[1].size))}</td>
+          <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
+          <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
         </tr>
       {/each}
     </tbody>

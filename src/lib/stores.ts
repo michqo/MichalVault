@@ -6,11 +6,11 @@ const buttonClass =
 // Set transition duration in ms
 const duration = 250;
 // Limit file upload
-const maxSizeInMB = 1;
-const maxVaultSizeinMB = 3;
+const maxSizeInMB = 20;
+const maxVaultSizeinMB = 20;
 const maxSize = 1048576 * maxSizeInMB;
 const maxVaultSize = 1048576 * maxVaultSizeinMB;
-const maxVaultFilesCount = 5;
+const maxVaultFilesCount = 10;
 const tokenMinLength = 1;
 const tokenMaxLength = 20;
 
