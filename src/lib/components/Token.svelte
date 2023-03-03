@@ -2,7 +2,8 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { buttonClass, token } from "../stores";
+  import { buttonClass, token, tokenMaxLength, tokenMinLength } from "../stores";
+  import { showError } from "./StatusModal.svelte";
 
   let newToken = "";
 
@@ -23,7 +24,14 @@
   }
 
   function changeToken() {
-    if (newToken.length == 0 || newToken.length >= 12) return;
+    if (
+      newToken.length == 0 ||
+      newToken.length < tokenMinLength ||
+      newToken.length > tokenMaxLength
+    ) {
+      showError(`Token length must be between ${tokenMinLength} and ${tokenMaxLength} characters`);
+      return;
+    }
     localStorage.setItem("token", newToken);
     $token = newToken;
   }
