@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { duration, loading, confirmData, confirmResult } from "$lib/stores";
+  import { duration, loading, confirmData, confirmResult, filesCache } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showModal } from "./ConfirmModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
@@ -17,6 +18,11 @@
   const btnClass = "p-1 rounded hover:bg-white/[.1] focus:ring";
   const imgClass = "w-14 h-14";
   const svgClass = "w-7 h-7";
+
+  onMount(() => {
+    if (!$filesCache) $filesCache = [new Date(), files];
+    if (files.length == 0) files = $filesCache[1];
+  });
 
   // TODO: Faster download
   async function download(key: string, name: string) {
@@ -42,6 +48,7 @@
   async function refresh() {
     $loading = true;
     files = await trpc($page).fetchAll.query({ token: $page.params.token });
+    $filesCache = [new Date(), files];
     $loading = false;
   }
 
@@ -52,10 +59,12 @@
           const key = $confirmData[2];
           const values = files.filter((value) => value.key != key);
           files = values;
+          $filesCache = [new Date(), files];
           await trpc($page).delete.query({ token: $page.params.token, key });
           break;
         case "deleteAll":
           files = [];
+          $filesCache = [new Date(), files];
           await trpc($page).deleteAll.query({ token: $page.params.token });
           break;
       }
@@ -65,6 +74,11 @@
 </script>
 
 <div class="center fixed top-0 mt-4">
+  {#if $filesCache}
+    <p>
+      Last refreshed on <span class="font-medium">{formatDate($filesCache[0], new Date())}</span>
+    </p>
+  {/if}
   <code class="text-lg underline select-all">{$page.params.token}</code>
   <div
     class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"

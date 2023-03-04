@@ -2,17 +2,17 @@
   // @ts-ignore
   import Cookies from "js-cookie";
   import { fade } from "svelte/transition";
+  import { page } from "$app/stores";
   import { deserialize } from "$app/forms";
   import type { ActionResult } from "@sveltejs/kit";
   import { formatBytes } from "../utils";
   import {
     buttonClass,
     duration,
+    filesCache,
     inputFiles,
     maxSize,
     token,
-    success,
-    error,
     maxSizeInMB
   } from "$lib/stores";
   import FileInput from "./FileInput.svelte";
@@ -22,6 +22,17 @@
   let progress = 0;
   let uploaded = 0;
   let total = "";
+
+  function addFilesToCache() {
+    for (const file of $inputFiles) {
+      $filesCache[1].push({
+        key: `${$token}/${file.name}`,
+        name: file.name,
+        size: file.size.toString(),
+        date: new Date().toString()
+      });
+    }
+  }
 
   async function handleSubmit(e: any) {
     if (!navigator.onLine) {
@@ -48,6 +59,7 @@
         switch (result.type) {
           case "success":
             showSuccess();
+            if ($filesCache) addFilesToCache();
             // @ts-ignore
             $inputFiles = undefined;
             break;

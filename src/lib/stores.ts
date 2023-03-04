@@ -14,6 +14,7 @@ const maxVaultFilesCount = 10;
 const tokenMinLength = 1;
 const tokenMaxLength = 20;
 
+const filesCache: Writable<[Date, Record<string, string>[]]> = writable();
 const inputFiles: Writable<FileList> = writable();
 const filesInput: Writable<HTMLInputElement> = writable();
 const loading = writable(false);
@@ -37,6 +38,7 @@ export {
   tokenMinLength,
   tokenMaxLength,
   maxVaultFilesCount,
+  filesCache,
   inputFiles,
   filesInput,
   loading,
