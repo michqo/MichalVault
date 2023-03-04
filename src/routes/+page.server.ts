@@ -28,7 +28,6 @@ async function fetchFiles(token: string): Promise<[any, Record<string, string>][
 
 export const actions: Actions = {
   default: async ({ cookies, request }) => {
-    throw error(400);
     const token = cookies.get("token");
     if (token == undefined || token.length < tokenMinLength || token.length > tokenMaxLength)
       throw error(400);

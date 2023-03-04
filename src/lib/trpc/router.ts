@@ -27,15 +27,10 @@ export const router = t.router({
   delete: t.procedure
     .input(z.object({ token: z.string(), key: z.string() }))
     .query(async ({ input }) => {
-      s3.deleteObject(
-        {
-          Bucket: S3_BUCKET_NAME,
-          Key: input.key
-        },
-        (err, data) => {
-          console.log(data);
-        }
-      );
+      s3.deleteObject({
+        Bucket: S3_BUCKET_NAME,
+        Key: input.key
+      });
     }),
   fetchToken: t.procedure.query(async ({}) => {
     const words = randomWords({
@@ -49,7 +44,8 @@ export const router = t.router({
       Bucket: S3_BUCKET_NAME,
       Key: input.key
     });
-    return data.Body?.transformToByteArray();
+    // TODO: More performant way to return Uint8Array
+    return Array.from(await data.Body?.transformToByteArray()!);
   }),
   fetchAll: t.procedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
     if (input.token.length == 0) return [];
@@ -63,9 +59,13 @@ export const router = t.router({
     for (let i = 0; i < data.Contents?.length; i++) {
       const item = data.Contents[i];
       files.push({
+        // @ts-ignore
         key: item.Key,
+        // @ts-ignore
         name: item.Key?.split("/")[1],
+        // @ts-ignore
         size: item.Size,
+        // @ts-ignore
         date: item.LastModified
       });
     }

@@ -22,8 +22,7 @@
   async function download(key: string, name: string) {
     $loading = true;
     const data = await trpc($page).fetchOne.query({ key });
-    // TODO: fix error
-    const bufferArray = new Uint8Array(Object.values(data));
+    const bufferArray = new Uint8Array(data);
     const blob = new Blob([bufferArray]);
     // download file
     let link = document.createElement("a");
