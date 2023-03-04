@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { scale, fade } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { duration, loading, confirmData, confirmResult } from "$lib/stores";
@@ -68,7 +68,7 @@
   <code class="text-lg underline select-all">{$page.params.token}</code>
   <div
     class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
-    in:scale={{ start: 0.6, duration }}
+    in:fly={{ y: -100, duration }}
   >
     <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
     <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
