@@ -1,4 +1,4 @@
-const formatBytes = (bytes: number, decimals = 0) => {
+const formatBytes = (bytes: number, decimals = 1) => {
   if (!+bytes) return "0 Bytes";
 
   const k = 1024;

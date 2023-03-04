@@ -78,7 +78,7 @@
   </div>
 </div>
 
-<div class="overflow-x-auto w-full p-3 bg-white/[.07] rounded-lg">
+<div class="overflow-x-auto w-full p-3 bg-white/[.07] border border-slate-700 rounded-lg">
   <table class="w-full divide-y divide-gray-500">
     <thead class="uppercase">
       <tr>
