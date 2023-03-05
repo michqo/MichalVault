@@ -24,6 +24,7 @@ function countVaultFiles(token: string): Promise<[number, number]> {
         data?.Contents?.forEach((object) => {
           totalSize += object.Size!;
         });
+        if (!data?.Contents) return resolve([0, 0]);
         // @ts-ignore
         resolve([data.Contents.length, totalSize]);
       }
