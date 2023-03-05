@@ -3,7 +3,14 @@
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { duration, loading, confirmData, confirmResult, filesCache } from "$lib/stores";
+  import {
+    duration,
+    loading,
+    confirmData,
+    confirmResult,
+    filesCache,
+    maxVaultSizeinMB
+  } from "$lib/stores";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showModal } from "./ConfirmModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
@@ -11,6 +18,7 @@
   import Back from "$lib/svgs/Back.svelte";
 
   export let files: Record<string, string>[];
+  let filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -49,6 +57,7 @@
     $loading = true;
     files = await trpc($page).fetchAll.query({ token: $page.params.token });
     $filesCache = [new Date(), files];
+    filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
     $loading = false;
   }
 
@@ -92,7 +101,9 @@
   </div>
 </div>
 
-<h1 class="text-center font-medium text-3xl mb-2">Files</h1>
+<h1 class="text-center font-medium text-3xl">Files</h1>
+<p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
+
 <div
   class="overflow-x-auto w-full p-3 bg-white/[.07] border border-slate-700 rounded-lg"
   in:fade={{ duration }}
