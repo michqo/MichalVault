@@ -29,7 +29,10 @@
 
   onMount(() => {
     if (!$filesCache) $filesCache = [new Date(), files];
-    if (files.length == 0) files = $filesCache[1];
+    if (files.length == 0) {
+      files = $filesCache[1];
+      filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
+    }
   });
 
   // TODO: Faster download
