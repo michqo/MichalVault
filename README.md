@@ -1,6 +1,12 @@
-# Web Vault
+# Web Vault 🔒
 
-Quick way to upload/download temporary files from multiple devices powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Quick way to upload/download files from multiple devices
+
+## Libraries used
+
+- SvelteKit
+- AWS S3
+- 🧙‍♀️tRPC
 
 ## Developing
 
