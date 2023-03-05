@@ -1,7 +1,7 @@
 import { fail, error } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import s3 from "$lib/server/connection";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, type PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { S3_BUCKET_NAME } from "$env/static/private";
 import {
   maxBucketSize,
@@ -75,26 +75,19 @@ export const actions: Actions = {
     // Check vault files size
     if (filesSize + vaultFilesSize > maxVaultSize) throw error(413, MAX_VAULT_SIZE_MSG);
 
-    // Upload files to S3
+    let promises: Promise<PutObjectCommandOutput>[] = [];
     for (let file of files) {
       if (file.size == 0) throw error(400);
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const cmd = new PutObjectCommand({
-          Bucket: S3_BUCKET_NAME,
-          Key: `${token}/${file.name}`,
-          Body: buffer
-        });
-        try {
-          await s3.send(cmd);
-        } catch (err) {
-          return fail(500);
-        }
-      } catch {
-        return fail(500);
-      }
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const cmd = new PutObjectCommand({
+        Bucket: S3_BUCKET_NAME,
+        Key: `${token}/${file.name}`,
+        Body: buffer
+      });
+      promises.push(s3.send(cmd));
     }
+    Promise.all(promises).catch(() => fail(500));
 
     return { success: true };
   }
