@@ -18,7 +18,7 @@
   import Back from "$lib/svgs/Back.svelte";
 
   export let files: Record<string, string>[];
-  let filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
+  let filesSize: number;
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -29,10 +29,7 @@
 
   onMount(() => {
     if (!$filesCache) $filesCache = [new Date(), files];
-    if (files.length == 0) {
-      files = $filesCache[1];
-      filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
-    }
+    if (files.length == 0) files = $filesCache[1];
   });
 
   // TODO: Faster download
@@ -60,10 +57,10 @@
     $loading = true;
     files = await trpc($page).fetchAll.query({ token: $page.params.token });
     $filesCache = [new Date(), files];
-    filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
     $loading = false;
   }
 
+  $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
   $: (async () => {
     if ($confirmResult) {
       switch ($confirmData[0]) {
