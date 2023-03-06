@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { fail, error } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import s3 from "$lib/server/connection";
@@ -9,8 +10,7 @@ import {
   maxVaultFilesCount,
   maxVaultSize,
   maxVaultSizeinMB,
-  tokenMaxLength,
-  tokenMinLength
+  tokenRegex
 } from "$lib/stores";
 
 // Returns vault files size and vault files count
@@ -55,9 +55,13 @@ const MAX_VAULT_SIZE_MSG = `Vault is full, maximum size is ${maxVaultSizeinMB}MB
 // TODO: More advanced token validation
 export const actions: Actions = {
   default: async ({ cookies, request }) => {
-    const token = cookies.get("token");
-    if (token == undefined || token.length < tokenMinLength || token.length > tokenMaxLength)
-      throw error(400);
+    let token = cookies.get("token");
+
+    const tokenSchema = z.string().regex(tokenRegex);
+    const result = tokenSchema.safeParse(token);
+    if (result.success == false) throw error(400, "Invalid token name");
+    token = result.data;
+
     // Pre file upload checks
     const [vaultFilesCount, vaultFilesSize] = await countVaultFiles(token);
     if (vaultFilesCount >= maxVaultFilesCount) throw error(400, MAX_VAULT_FILES_MSG);

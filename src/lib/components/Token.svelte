@@ -3,7 +3,7 @@
   import { dev } from "$app/environment";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { buttonClass, token, tokenMaxLength, tokenMinLength } from "../stores";
+  import { buttonClass, token, tokenRegex } from "../stores";
   import { showError } from "./StatusModal.svelte";
 
   let newToken = "";
@@ -25,12 +25,8 @@
   }
 
   function changeToken() {
-    if (
-      newToken.length == 0 ||
-      newToken.length < tokenMinLength ||
-      newToken.length > tokenMaxLength
-    ) {
-      showError(`Token length must be between ${tokenMinLength} and ${tokenMaxLength} characters`);
+    if (!tokenRegex.test(newToken)) {
+      showError("Invalid token");
       return;
     }
     localStorage.setItem("token", newToken);
