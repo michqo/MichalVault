@@ -56,7 +56,7 @@ export const router = t.router({
       Delimiter: "/",
       Prefix: input.token + "/"
     });
-    if (!data.Contents) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    if (!data.Contents) return [];
     let files: Record<string, string>[] = [];
     for (let item of data.Contents) {
       files.push({
