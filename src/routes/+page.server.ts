@@ -11,7 +11,7 @@ import {
   maxVaultSize,
   maxVaultSizeinMB,
   tokenRegex
-} from "$lib/stores";
+} from "$lib/constants";
 
 // Returns vault files size and vault files count
 function countVaultFiles(token: string): Promise<[number, number]> {

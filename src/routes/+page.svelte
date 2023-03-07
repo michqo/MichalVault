@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
-  import { buttonClass, inputFiles, filesInput, token } from "$lib/stores";
+  import { inputFiles, filesInput, token } from "$lib/stores";
+  import { buttonClass } from "$lib/constants";
   import Header from "$lib/components/Header.svelte";
   import Token from "$lib/components/Token.svelte";
   import Upload from "$lib/components/Upload.svelte";

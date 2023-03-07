@@ -6,15 +6,9 @@
   import { deserialize } from "$app/forms";
   import type { ActionResult } from "@sveltejs/kit";
   import { formatBytes } from "../utils";
-  import {
-    buttonClass,
-    duration,
-    filesCache,
-    inputFiles,
-    maxSize,
-    token,
-    maxSizeInMB
-  } from "$lib/stores";
+  import { filesCache, inputFiles, token } from "$lib/stores";
+  import { buttonClass, duration, maxSize, maxSizeInMB } from "$lib/constants";
+
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
 

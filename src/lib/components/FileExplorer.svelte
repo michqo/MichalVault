@@ -3,14 +3,8 @@
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import {
-    duration,
-    loading,
-    confirmData,
-    confirmResult,
-    filesCache,
-    maxVaultSizeinMB
-  } from "$lib/stores";
+  import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
+  import { duration, maxVaultSizeinMB } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showModal } from "./ConfirmModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";

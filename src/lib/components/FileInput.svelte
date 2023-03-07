@@ -1,7 +1,8 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { duration, inputFiles, filesInput } from "$lib/stores";
-  import { formatBytes } from "$lib/utils";
+  import { inputFiles, filesInput } from "$lib/stores";
+  import { duration } from "$lib/constants";
+  import { formatBytes } from "../utils";
   import Delete from "$lib/svgs/Delete.svelte";
 
   let hover = false;

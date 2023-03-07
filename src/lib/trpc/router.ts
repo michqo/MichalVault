@@ -4,7 +4,7 @@ import { S3_BUCKET_NAME } from "$env/static/private";
 import type { Context } from "$lib/trpc/context";
 import { initTRPC, TRPCError } from "@trpc/server";
 import s3 from "$lib/server/connection";
-import { maxVaultFilesCount } from "$lib/stores";
+import { maxVaultFilesCount } from "$lib/constants";
 
 export const t = initTRPC.context<Context>().create();
 

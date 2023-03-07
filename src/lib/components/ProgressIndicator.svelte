@@ -1,7 +1,8 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { navigating } from "$app/stores";
-  import { duration, loading } from "$lib/stores";
+  import { loading } from "$lib/stores";
+  import { duration } from "$lib/constants";
 </script>
 
 {#if $navigating || $loading}

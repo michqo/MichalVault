@@ -8,13 +8,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import {
-    duration,
-    confirmVisible,
-    confirmData,
-    confirmResult,
-    type confirmType
-  } from "$lib/stores";
+  import { confirmVisible, confirmData, confirmResult, type confirmType } from "$lib/stores";
+  import { duration } from "$lib/constants";
   import Close from "$lib/svgs/Close.svelte";
   import Done from "$lib/svgs/Done.svelte";
 

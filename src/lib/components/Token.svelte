@@ -3,7 +3,8 @@
   import { dev } from "$app/environment";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { buttonClass, token, tokenRegex } from "../stores";
+  import { token } from "../stores";
+  import { buttonClass, tokenRegex } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
   let newToken = "";

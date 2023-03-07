@@ -22,7 +22,7 @@
 
 <script lang="ts">
   import { fly } from "svelte/transition";
-  import { duration } from "$lib/stores";
+  import { duration } from "$lib/constants";
   import ProgressBar from "./ProgressBar.svelte";
 
   const modalClass =
