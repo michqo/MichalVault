@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
+  import { TRPCClientError } from "@trpc/client";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
   import { duration, maxVaultSizeinMB } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showModal } from "./ConfirmModal.svelte";
+  import { showError } from "./StatusModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
@@ -29,15 +31,19 @@
   // TODO: Faster download
   async function download(key: string, name: string) {
     $loading = true;
-    const data = await trpc($page).fetchOne.query({ key });
-    const bufferArray = new Uint8Array(data);
-    const blob = new Blob([bufferArray]);
-    // download file
-    let link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = name;
+    try {
+      const data = await trpc($page).fetchOne.query({ key });
+      const bufferArray = new Uint8Array(data);
+      const blob = new Blob([bufferArray]);
+      // download file
+      let link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = name;
+      link.click();
+    } catch (err) {
+      showError("The file does not exist");
+    }
     $loading = false;
-    link.click();
   }
 
   function deleteFile(key: string) {
