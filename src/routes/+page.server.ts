@@ -52,7 +52,6 @@ function checkBucketSize(filesSize: number): Promise<void> {
 const MAX_VAULT_FILES_MSG = `Vault has too many files, maximum amount of files is ${maxVaultFilesCount}`;
 const MAX_VAULT_SIZE_MSG = `Vault is full, maximum size is ${maxVaultSizeinMB}MB`;
 
-// TODO: More advanced token validation
 export const actions: Actions = {
   default: async ({ cookies, request }) => {
     let token = cookies.get("token");

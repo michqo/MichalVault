@@ -1,9 +1,10 @@
 import { z } from "zod";
 import randomWords from "random-words";
-import type { Context } from "$lib/trpc/context";
-import { initTRPC } from "@trpc/server";
-import s3 from "$lib/server/connection";
 import { S3_BUCKET_NAME } from "$env/static/private";
+import type { Context } from "$lib/trpc/context";
+import { initTRPC, TRPCError } from "@trpc/server";
+import s3 from "$lib/server/connection";
+import { maxVaultFilesCount } from "$lib/stores";
 
 export const t = initTRPC.context<Context>().create();
 
@@ -51,13 +52,13 @@ export const router = t.router({
     if (input.token.length == 0) return [];
     const data = await s3.listObjectsV2({
       Bucket: S3_BUCKET_NAME,
+      MaxKeys: maxVaultFilesCount,
       Delimiter: "/",
       Prefix: input.token + "/"
     });
-    if (!data.Contents) return [];
+    if (!data.Contents) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
     let files: Record<string, string>[] = [];
-    for (let i = 0; i < data.Contents?.length; i++) {
-      const item = data.Contents[i];
+    for (let item of data.Contents) {
       files.push({
         // @ts-ignore
         key: item.Key,
