@@ -15,8 +15,10 @@ export const router = t.router({
         Bucket: S3_BUCKET_NAME,
         Prefix: input.token + "/"
       },
-      (_err, data) => {
-        const objects = data?.Contents?.map((obj) => ({ Key: obj.Key }));
+      (err, data) => {
+        if (err) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+        if (!data?.Contents) return;
+        const objects = data.Contents.map((obj) => ({ Key: obj.Key }));
         const deleteParams = {
           Bucket: S3_BUCKET_NAME,
           Delete: { Objects: objects }

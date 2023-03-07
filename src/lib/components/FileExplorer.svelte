@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
-  import { TRPCClientError } from "@trpc/client";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
