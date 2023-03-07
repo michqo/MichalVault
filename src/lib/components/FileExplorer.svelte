@@ -39,8 +39,8 @@
       link.href = window.URL.createObjectURL(blob);
       link.download = name;
       link.click();
-    } catch (err) {
-      showError("The file does not exist");
+    } catch {
+      showError("File not found");
     }
     $loading = false;
   }

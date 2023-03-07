@@ -4,12 +4,14 @@ import { S3_BUCKET_NAME } from "$env/static/private";
 import type { Context } from "$lib/trpc/context";
 import { initTRPC, TRPCError } from "@trpc/server";
 import s3 from "$lib/server/connection";
-import { maxVaultFilesCount } from "$lib/constants";
+import { maxVaultFilesCount, tokenRegex } from "$lib/constants";
 
 export const t = initTRPC.context<Context>().create();
 
+const token = z.string().regex(tokenRegex);
+
 export const router = t.router({
-  deleteAll: t.procedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+  deleteAll: t.procedure.input(z.object({ token })).query(async ({ input }) => {
     s3.listObjectsV2(
       {
         Bucket: S3_BUCKET_NAME,
@@ -27,14 +29,12 @@ export const router = t.router({
       }
     );
   }),
-  delete: t.procedure
-    .input(z.object({ token: z.string(), key: z.string() }))
-    .query(async ({ input }) => {
-      s3.deleteObject({
-        Bucket: S3_BUCKET_NAME,
-        Key: input.key
-      });
-    }),
+  delete: t.procedure.input(z.object({ token, key: z.string() })).query(async ({ input }) => {
+    s3.deleteObject({
+      Bucket: S3_BUCKET_NAME,
+      Key: input.key
+    });
+  }),
   fetchToken: t.procedure.query(async ({}) => {
     const words = randomWords({
       exactly: 3,
@@ -50,7 +50,7 @@ export const router = t.router({
     // TODO: More performant way to return Uint8Array
     return Array.from(await data.Body?.transformToByteArray()!);
   }),
-  fetchAll: t.procedure.input(z.object({ token: z.string() })).query(async ({ input }) => {
+  fetchAll: t.procedure.input(z.object({ token })).query(async ({ input }) => {
     if (input.token.length == 0) return [];
     const data = await s3.listObjectsV2({
       Bucket: S3_BUCKET_NAME,
