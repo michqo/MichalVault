@@ -11,6 +11,7 @@ const maxVaultFilesCount = 20;
 const maxBucketSizeInGB = 10;
 const maxBucketSize = 1048576 * 1000 * maxBucketSizeInGB;
 const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
+const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
 
 export {
   buttonClass,
@@ -22,5 +23,6 @@ export {
   maxBucketSizeInGB,
   maxVaultFilesCount,
   maxBucketSize,
-  tokenRegex
+  tokenRegex,
+  fileRegex
 };

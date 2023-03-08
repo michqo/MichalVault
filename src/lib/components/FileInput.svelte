@@ -1,11 +1,29 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { inputFiles, filesInput } from "$lib/stores";
-  import { duration } from "$lib/constants";
+  import { duration, fileRegex } from "$lib/constants";
   import { formatBytes } from "../utils";
+  import { showError } from "./StatusModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
 
   let hover = false;
+
+  function handleChange() {
+    let dt = new DataTransfer();
+    for (let file of $inputFiles) {
+      const renamedFile = new File([file], file.name.replaceAll(" ", "_"), { type: file.type });
+      if (structuredClone(fileRegex).test(renamedFile.name) == false) {
+        showError("Invalid file, selected file(s) includes special characters or is too long");
+        $filesInput.value = "";
+        // @ts-ignore
+        $inputFiles = undefined;
+        return;
+      }
+      dt.items.add(renamedFile);
+    }
+    $filesInput.files = dt.files;
+    $inputFiles = dt.files;
+  }
 
   function dropHandler(e: DragEvent) {
     hover = false;
@@ -15,11 +33,12 @@
         ? Array.from($inputFiles).concat(Array.from(e.dataTransfer.files))
         : Array.from(e.dataTransfer.files);
       let dt = new DataTransfer();
-      for (let i = 0; i < files.length; i++) {
-        dt.items.add(files[i]);
+      for (const file of files) {
+        dt.items.add(file);
       }
       $filesInput.files = dt.files; // Required
       $inputFiles = dt.files;
+      handleChange();
     }
   }
 
@@ -87,6 +106,7 @@
       name="file_upload"
       bind:this={$filesInput}
       bind:files={$inputFiles}
+      on:change={handleChange}
       class="hidden"
     />
   </label>

@@ -10,7 +10,8 @@ import {
   maxVaultFilesCount,
   maxVaultSize,
   maxVaultSizeinMB,
-  tokenRegex
+  tokenRegex,
+  fileRegex
 } from "$lib/constants";
 
 // Returns vault files size and vault files count
@@ -49,6 +50,7 @@ function checkBucketSize(filesSize: number): Promise<void> {
   });
 }
 
+// TODO: Move error messages into constants file
 const MAX_VAULT_FILES_MSG = `Vault has too many files, maximum amount of files is ${maxVaultFilesCount}`;
 const MAX_VAULT_SIZE_MSG = `Vault is full, maximum size is ${maxVaultSizeinMB}MB`;
 
@@ -79,8 +81,9 @@ export const actions: Actions = {
     if (filesSize + vaultFilesSize > maxVaultSize) throw error(413, MAX_VAULT_SIZE_MSG);
 
     let promises: Promise<PutObjectCommandOutput>[] = [];
-    for (let file of files) {
-      if (file.size == 0) throw error(400);
+    for (const file of files) {
+      if (structuredClone(fileRegex).test(file.name) == false)
+        throw error(400, "Invalid file names");
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const cmd = new PutObjectCommand({

@@ -2,7 +2,6 @@
   // @ts-ignore
   import Cookies from "js-cookie";
   import { fade } from "svelte/transition";
-  import { page } from "$app/stores";
   import { deserialize } from "$app/forms";
   import type { ActionResult } from "@sveltejs/kit";
   import { formatBytes } from "../utils";
