@@ -28,7 +28,5 @@
 
 <Header />
 <Token />
-{#if $token}
-  <Upload />
-  <button on:click={handleClick} class={buttonClass}>Show files</button>
-{/if}
+<Upload />
+<button on:click={handleClick} disabled={$token.length == 0} class={buttonClass}>Show files</button>

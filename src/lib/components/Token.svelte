@@ -59,6 +59,8 @@
     </div>
   {/if}
   <p class="text-xl font-bold">Your vault token is</p>
-  <code class="text-lg underline select-all">{$token}</code>
+  <code class="text-lg {$token.length != 0 ? 'underline select-all' : ''}"
+    >{$token.length != 0 ? $token : "loading..."}</code
+  >
   <p class="text-sm text-slate-300">With this token you can access your files</p>
 </div>

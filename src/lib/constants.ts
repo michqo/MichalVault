@@ -1,5 +1,5 @@
 const buttonClass =
-  "text-lg px-3 py-2 rounded-md text-slate-100 bg-white/[.06] border border-slate-300 focus:ring";
+  "text-lg px-3 py-2 rounded-md text-slate-100 bg-white/[.06] border border-slate-300 focus:ring disabled:opacity-50";
 // Set transition duration in ms
 const duration = 250;
 // Limit file upload

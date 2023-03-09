@@ -110,5 +110,5 @@
     </div>
   {/if}
   <FileInput />
-  <button class={buttonClass}>Upload</button>
+  <button class={buttonClass} disabled={$token.length == 0}>Upload</button>
 </form>
