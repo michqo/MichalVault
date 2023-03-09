@@ -38,7 +38,7 @@
     class="fixed z-20 inset-0 w-full min-h-full grid place-items-center"
     transition:fade={{ duration }}
   >
-    <button class="cursor-default" on:click={() => ($confirmVisible = false)}>
+    <button class="cursor-default" on:click={() => setResult(false)}>
       <div class="fixed inset-0 w-full h-full bg-black/[.3]" />
     </button>
     <div class={modalClass}>
