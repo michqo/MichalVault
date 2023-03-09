@@ -19,6 +19,9 @@
   function addFilesToCache() {
     if (!$filesCache) return;
     for (const file of $inputFiles) {
+      for (const item of $filesCache[1]) {
+        if (file.name == item.name) return;
+      }
       $filesCache[1].push({
         key: `${$token}/${file.name}`,
         name: file.name,
@@ -53,7 +56,7 @@
         switch (result.type) {
           case "success":
             showSuccess();
-            if ($filesCache) addFilesToCache();
+            addFilesToCache();
             // @ts-ignore
             $inputFiles = undefined;
             break;
