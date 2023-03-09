@@ -54,20 +54,22 @@
   }
 </script>
 
-{#each Array.from($inputFiles) as file}
-  <div
-    in:fade={{ duration }}
-    class="w-full px-3 py-2 mb-1 flex justify-between rounded-md bg-gray-800"
-  >
-    <div class="flex items-center">
-      <button type="button" on:click={() => removeFile(file)}>
-        <Delete class="w-6 h-6 mr-1 cursor-pointer" />
-      </button>
-      <p>{file.name}</p>
+{#if $inputFiles}
+  {#each Array.from($inputFiles) as file}
+    <div
+      in:fade={{ duration }}
+      class="w-full px-3 py-2 mb-1 flex justify-between rounded-md bg-gray-800"
+    >
+      <div class="flex items-center">
+        <button type="button" on:click={() => removeFile(file)}>
+          <Delete class="w-6 h-6 mr-1 cursor-pointer" />
+        </button>
+        <p>{file.name}</p>
+      </div>
+      <p>{formatBytes(file.size)}</p>
     </div>
-    <p>{formatBytes(file.size)}</p>
-  </div>
-{/each}
+  {/each}
+{/if}
 
 <div class="w-full">
   <label
