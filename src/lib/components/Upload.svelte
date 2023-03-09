@@ -17,6 +17,7 @@
   let total = "";
 
   function addFilesToCache() {
+    if (!$filesCache) return;
     for (const file of $inputFiles) {
       $filesCache[1].push({
         key: `${$token}/${file.name}`,

@@ -3,7 +3,7 @@
   import { dev } from "$app/environment";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { token } from "../stores";
+  import { token, filesCache } from "../stores";
   import { buttonClass, tokenRegex } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
@@ -23,6 +23,7 @@
     newToken = "";
     $token = await trpc($page).fetchToken.query();
     localStorage.setItem("token", $token);
+    $filesCache = undefined;
   }
 
   function changeToken() {
@@ -32,6 +33,7 @@
     }
     localStorage.setItem("token", newToken);
     $token = newToken;
+    $filesCache = undefined;
   }
 </script>
 
