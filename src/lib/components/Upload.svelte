@@ -6,7 +6,16 @@
   import type { ActionResult } from "@sveltejs/kit";
   import { formatBytes } from "../utils";
   import { filesCache, inputFiles, token } from "$lib/stores";
-  import { buttonClass, duration, maxSize, maxSizeInMB } from "$lib/constants";
+  import {
+    buttonClass,
+    CLIENT_ERROR,
+    duration,
+    maxSize,
+    FILE_SELECTED_ERROR,
+    FILE_SIZE_ERROR,
+    NETWORK_ERROR,
+    SERVER_ERROR
+  } from "$lib/constants";
 
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
@@ -33,13 +42,13 @@
 
   async function handleSubmit(e: any) {
     if (!navigator.onLine) {
-      showError("No network connection access");
+      showError(NETWORK_ERROR);
       return false;
     } else if (!$inputFiles || $inputFiles.length == 0) {
-      showError("No file selected");
+      showError(FILE_SELECTED_ERROR);
       return false;
     } else if (Array.from($inputFiles).reduce((a, b) => a + b.size, 0) > maxSize) {
-      showError(`Files cannot be larger than ${maxSizeInMB}MB`);
+      showError(FILE_SIZE_ERROR);
       return false;
     }
 
@@ -61,12 +70,10 @@
             $inputFiles = undefined;
             break;
           case "failure":
-            showError("Internal server error");
+            showError(SERVER_ERROR);
             break;
           case "error":
-            showError(
-              result.error.message ? result.error.message : "Failed to upload file to server"
-            );
+            showError(result.error.message ? result.error.message : CLIENT_ERROR);
             break;
         }
         uploading = false;

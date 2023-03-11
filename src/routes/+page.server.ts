@@ -9,9 +9,12 @@ import {
   maxSize,
   maxVaultFilesCount,
   maxVaultSize,
-  maxVaultSizeinMB,
   tokenRegex,
-  fileRegex
+  fileRegex,
+  TOKEN_ERROR,
+  MAX_VAULT_FILES_ERROR,
+  MAX_VAULT_SIZE_ERROR,
+  FULL_DB_ERROR
 } from "$lib/constants";
 
 // Returns vault files size and vault files count
@@ -43,16 +46,12 @@ function checkBucketSize(filesSize: number): Promise<void> {
         totalSize += object.Size!;
       });
       if (totalSize + filesSize > maxBucketSize) {
-        return reject(error(507, "Database is full"));
+        return reject(error(507, FULL_DB_ERROR));
       }
       resolve();
     });
   });
 }
-
-// TODO: Move error messages into constants file
-const MAX_VAULT_FILES_MSG = `Vault has too many files, maximum amount of files is ${maxVaultFilesCount}`;
-const MAX_VAULT_SIZE_MSG = `Vault is full, maximum size is ${maxVaultSizeinMB}MB`;
 
 export const actions: Actions = {
   default: async ({ cookies, request }) => {
@@ -60,13 +59,13 @@ export const actions: Actions = {
 
     const tokenSchema = z.string().regex(tokenRegex);
     const result = tokenSchema.safeParse(token);
-    if (result.success == false) throw error(400, "Invalid token name");
+    if (result.success == false) throw error(400, TOKEN_ERROR);
     token = result.data;
 
     // Pre file upload checks
     const [vaultFilesCount, vaultFilesSize] = await countVaultFiles(token);
-    if (vaultFilesCount >= maxVaultFilesCount) throw error(400, MAX_VAULT_FILES_MSG);
-    if (vaultFilesSize > maxVaultSize) throw error(413, MAX_VAULT_SIZE_MSG);
+    if (vaultFilesCount >= maxVaultFilesCount) throw error(400, MAX_VAULT_FILES_ERROR);
+    if (vaultFilesSize > maxVaultSize) throw error(413, MAX_VAULT_SIZE_ERROR);
 
     const form = await request.formData();
     const files = form.getAll("file_upload") as File[];
@@ -76,9 +75,10 @@ export const actions: Actions = {
     if (filesSize > maxSize) throw error(400);
     await checkBucketSize(filesSize);
     // Check if number of files in vault doesn't exceed max size
-    if (vaultFilesCount + files.length > maxVaultFilesCount) throw error(400, MAX_VAULT_FILES_MSG);
+    if (vaultFilesCount + files.length > maxVaultFilesCount)
+      throw error(400, MAX_VAULT_FILES_ERROR);
     // Check vault files size
-    if (filesSize + vaultFilesSize > maxVaultSize) throw error(413, MAX_VAULT_SIZE_MSG);
+    if (filesSize + vaultFilesSize > maxVaultSize) throw error(413, MAX_VAULT_SIZE_ERROR);
 
     let promises: Promise<PutObjectCommandOutput>[] = [];
     for (const file of files) {

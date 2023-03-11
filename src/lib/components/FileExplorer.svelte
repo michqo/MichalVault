@@ -4,7 +4,7 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
-  import { duration, maxVaultSizeinMB } from "$lib/constants";
+  import { duration, maxVaultSizeinMB, DOWNLOAD_ERROR } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showModal } from "./ConfirmModal.svelte";
   import { showError } from "./StatusModal.svelte";
@@ -40,7 +40,7 @@
       link.download = name;
       link.click();
     } catch {
-      showError("File not found");
+      showError(DOWNLOAD_ERROR);
     }
     $loading = false;
   }

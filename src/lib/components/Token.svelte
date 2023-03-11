@@ -4,7 +4,7 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { token, filesCache } from "../stores";
-  import { buttonClass, tokenRegex } from "../constants";
+  import { buttonClass, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
   let newToken = "";
@@ -28,7 +28,7 @@
 
   function changeToken() {
     if (!tokenRegex.test(newToken)) {
-      showError("Invalid token");
+      showError(TOKEN_ERROR);
       return;
     }
     localStorage.setItem("token", newToken);

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { inputFiles, filesInput } from "$lib/stores";
-  import { duration, fileRegex } from "$lib/constants";
+  import { duration, fileRegex, FILE_NAME_ERROR } from "$lib/constants";
   import { formatBytes } from "../utils";
   import { showError } from "./StatusModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
@@ -13,7 +13,7 @@
     for (let file of $inputFiles) {
       const renamedFile = new File([file], file.name.replaceAll(" ", "_"), { type: file.type });
       if (structuredClone(fileRegex).test(renamedFile.name) == false) {
-        showError("Invalid file, selected file(s) includes special characters or is too long");
+        showError(FILE_NAME_ERROR);
         $filesInput.value = "";
         // @ts-ignore
         $inputFiles = undefined;
