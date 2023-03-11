@@ -27,6 +27,13 @@
     if (files.length == 0) files = $filesCache[1];
   });
 
+  async function download(key: string) {
+    $loading = true;
+    const url = await trpc($page).fetchOne.query({ key });
+    $loading = true;
+    window.location.replace(url);
+  }
+
   function deleteFile(key: string) {
     showModal("delete", "delete file", key);
   }
@@ -107,11 +114,13 @@
             </button>
           </td>
           <td class={tdClass}>
-            <!-- type="button" -->
-            <!-- on:click={() => download(file.key)} -->
-            <a class="hover:underline underline-offset-2" href="/download/{file.key}">
+            <button
+              type="button"
+              class="hover:underline underline-offset-2"
+              on:click={() => download(file.key)}
+            >
               {file.name}
-            </a>
+            </button>
           </td>
           <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
           <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>

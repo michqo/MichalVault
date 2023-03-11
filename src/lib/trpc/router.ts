@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import randomWords from "random-words";
 import { S3_BUCKET_NAME } from "$env/static/private";
 import type { Context } from "$lib/trpc/context";
@@ -43,12 +45,12 @@ export const router = t.router({
     return words.join("-");
   }),
   fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
-    const data = await s3.getObject({
+    const command = new GetObjectCommand({
       Bucket: S3_BUCKET_NAME,
       Key: input.key
     });
-    // TODO: More performant way to return Uint8Array
-    return Array.from(await data.Body?.transformToByteArray()!);
+    const url = await getSignedUrl(s3, command);
+    return url;
   }),
   fetchAll: t.procedure.input(z.object({ token })).query(async ({ input }) => {
     if (input.token.length == 0) return [];
