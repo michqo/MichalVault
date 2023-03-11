@@ -31,7 +31,7 @@
   async function download(key: string) {
     $loading = true;
     const url = await trpc($page).fetchOne.query({ key });
-    $loading = true;
+    $loading = false;
     window.location.replace(url);
   }
 
