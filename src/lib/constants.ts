@@ -15,7 +15,7 @@ const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
 const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
 
 // Errors
-const DOWNLOAD_ERROR = "File not found";
+const FILE_NOT_FOUND = "File not found";
 const TOKEN_ERROR = "Invalid token";
 const FILE_NAME_ERROR = "Invalid file, selected file(s) includes special characters or is too long";
 const NETWORK_ERROR = "No network connection access";
@@ -39,7 +39,7 @@ export {
   maxBucketSize,
   tokenRegex,
   fileRegex,
-  DOWNLOAD_ERROR,
+  FILE_NOT_FOUND,
   TOKEN_ERROR,
   FILE_NAME_ERROR,
   NETWORK_ERROR,

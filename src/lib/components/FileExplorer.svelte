@@ -4,13 +4,13 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
-  import { duration, maxVaultSizeinMB, DOWNLOAD_ERROR } from "$lib/constants";
+  import { duration, maxVaultSizeinMB } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showModal } from "./ConfirmModal.svelte";
-  import { showError } from "./StatusModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
+  import { goto } from "$app/navigation";
 
   export let files: Record<string, string>[];
   let filesSize: number;
@@ -26,24 +26,6 @@
     if (!$filesCache) $filesCache = [new Date(), files];
     if (files.length == 0) files = $filesCache[1];
   });
-
-  // TODO: Faster download
-  async function download(key: string, name: string) {
-    $loading = true;
-    try {
-      const data = await trpc($page).fetchOne.query({ key });
-      const bufferArray = new Uint8Array(data);
-      const blob = new Blob([bufferArray]);
-      // download file
-      let link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = name;
-      link.click();
-    } catch {
-      showError(DOWNLOAD_ERROR);
-    }
-    $loading = false;
-  }
 
   function deleteFile(key: string) {
     showModal("delete", "delete file", key);
@@ -125,13 +107,11 @@
             </button>
           </td>
           <td class={tdClass}>
-            <button
-              type="button"
-              class="hover:underline underline-offset-2"
-              on:click={() => download(file.key, file.name)}
-            >
+            <!-- type="button" -->
+            <!-- on:click={() => download(file.key)} -->
+            <a class="hover:underline underline-offset-2" href="/download/{file.key}">
               {file.name}
-            </button>
+            </a>
           </td>
           <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
           <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>

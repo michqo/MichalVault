@@ -25,7 +25,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.282.0",
+    "@aws-sdk/client-s3": "^3.289.0",
+    "@aws-sdk/s3-request-presigner": "^3.289.0",
     "@trpc/client": "^10.14.0",
     "@trpc/server": "^10.14.0",
     "js-cookie": "^3.0.1",
