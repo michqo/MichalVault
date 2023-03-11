@@ -36,7 +36,7 @@
   }
 
   async function copyLink(key: string) {
-    const url = `${window.location.origin}/${key}`;
+    const url = `${window.location.origin}/download/${key}`;
     try {
       await navigator.clipboard.writeText(url);
       showSuccess("Copied link to clipboard", 1000);
