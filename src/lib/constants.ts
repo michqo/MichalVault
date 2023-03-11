@@ -23,6 +23,7 @@ const FILE_SELECTED_ERROR = "No file selected";
 const FILE_SIZE_ERROR = `Files cannot be larger than ${maxSizeInMB}MB`;
 const SERVER_ERROR = "Internal server error";
 const CLIENT_ERROR = "Failed to upload file to server";
+const CLIPBOARD_ERROR = "Failed to copy link to clipboard";
 const MAX_VAULT_FILES_ERROR = `Vault has too many files, maximum amount of files is ${maxVaultFilesCount}`;
 const MAX_VAULT_SIZE_ERROR = `Vault is full, maximum size is ${maxVaultSizeinMB}MB`;
 const FULL_DB_ERROR = "Database is full";
@@ -47,6 +48,7 @@ export {
   FILE_SIZE_ERROR,
   SERVER_ERROR,
   CLIENT_ERROR,
+  CLIPBOARD_ERROR,
   MAX_VAULT_FILES_ERROR,
   MAX_VAULT_SIZE_ERROR,
   FULL_DB_ERROR

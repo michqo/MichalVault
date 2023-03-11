@@ -4,13 +4,14 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
-  import { duration, maxVaultSizeinMB } from "$lib/constants";
+  import { duration, maxVaultSizeinMB, CLIPBOARD_ERROR } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
+  import { showError, showSuccess } from "./StatusModal.svelte";
   import { showModal } from "./ConfirmModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
-  import { goto } from "$app/navigation";
+  import Link from "$lib/svgs/Link.svelte";
 
   export let files: Record<string, string>[];
   let filesSize: number;
@@ -32,6 +33,16 @@
     const url = await trpc($page).fetchOne.query({ key });
     $loading = true;
     window.location.replace(url);
+  }
+
+  async function copyLink(key: string) {
+    const url = `${window.location.origin}/${key}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      showSuccess("Copied link to clipboard", 1000);
+    } catch (err) {
+      showError(CLIPBOARD_ERROR, 3000);
+    }
   }
 
   function deleteFile(key: string) {
@@ -108,9 +119,12 @@
     <tbody>
       {#each files as file}
         <tr class="hover:bg-white/[.07]">
-          <td class={tdClass}>
+          <td class="{tdClass} flex gap-x-3">
             <button type="button" on:click={() => deleteFile(file.key)}>
               <Delete class={svgClass} />
+            </button>
+            <button type="button" on:click={() => copyLink(file.key)}>
+              <Link class={svgClass} />
             </button>
           </td>
           <td class={tdClass}>

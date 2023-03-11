@@ -5,7 +5,7 @@ const inputFiles: Writable<FileList> = writable();
 const filesInput: Writable<HTMLInputElement> = writable();
 const loading = writable(false);
 const token = writable("");
-const success = writable(false);
+const success = writable([false, ""]);
 const error = writable([false, ""]);
 
 // Confirm modal stores
