@@ -5,8 +5,8 @@ import { createTRPCHandle } from "trpc-sveltekit";
 import { createContext } from "$lib/trpc/context";
 import { router } from "$lib/trpc/router";
 
-const MAX_REQUESTS = 5;
-const TIME_PERIOD = 30 * 1000;
+const MAX_REQUESTS = 100;
+const TIME_PERIOD = 30 * 60 * 1000; // 30 minutes
 
 interface IPRequest {
   count: number; // Requests coint
