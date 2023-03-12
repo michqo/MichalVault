@@ -85,11 +85,10 @@ export const actions: Actions = {
       if (structuredClone(fileRegex).test(file.name) == false)
         throw error(400, "Invalid file names");
       const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
       const cmd = new PutObjectCommand({
         Bucket: S3_BUCKET_NAME,
         Key: `${token}/${file.name}`,
-        Body: buffer
+        Body: Buffer.from(arrayBuffer)
       });
       promises.push(s3.send(cmd));
     }
