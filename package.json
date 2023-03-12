@@ -33,5 +33,9 @@
     "random-words": "^1.3.0",
     "trpc-sveltekit": "^3.4.2",
     "zod": "^3.21.0"
+  },
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
   }
 }
