@@ -13,22 +13,22 @@ interface IPRequest {
   time: number; // Request time
 }
 
-const ipRequestCounts: Record<string, IPRequest> = {};
+let ipRequests: Record<string, IPRequest> = {};
 
 const ratelimiter: Handle = async ({ event, resolve }) => {
   const clientIp = event.getClientAddress();
   // Check if the client IP has exceeded the maximum number of requests within the time period
-  const ipReq = ipRequestCounts[clientIp];
+  const ipReq = ipRequests[clientIp];
   if (ipReq && ipReq.count >= MAX_REQUESTS && Date.now() - ipReq.time <= TIME_PERIOD) {
     throw error(429, "Too many requests");
   }
   // Reset client request count if rate limit time is over
   if (ipReq && Date.now() - ipReq.time >= TIME_PERIOD) {
-    delete ipRequestCounts[clientIp];
+    delete ipRequests[clientIp];
   }
   // Increment the request count for the client IP and update the last request timestamp
-  ipRequestCounts[clientIp] = {
-    count: (ipRequestCounts[clientIp]?.count || 0) + 1,
+  ipRequests[clientIp] = {
+    count: (ipRequests[clientIp]?.count || 0) + 1,
     time: Date.now()
   };
 
