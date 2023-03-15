@@ -31,10 +31,10 @@
   function addFilesToCache() {
     if (!$filesCache) return;
     for (const file of $inputFiles) {
-      for (const item of $filesCache[1]) {
+      for (const item of $filesCache[2]) {
         if (file.name == item.name) return;
       }
-      $filesCache[1].push({
+      $filesCache[2].push({
         key: `${$token}/${file.name}`,
         name: file.name,
         size: file.size.toString(),
