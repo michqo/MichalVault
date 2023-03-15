@@ -1,6 +1,6 @@
 import { type Writable, writable } from "svelte/store";
 
-const filesCache: Writable<[Date, Record<string, string>[]] | undefined> = writable();
+const filesCache: Writable<[string, Date, Record<string, string>[]] | undefined> = writable();
 const inputFiles: Writable<FileList> = writable();
 const filesInput: Writable<HTMLInputElement> = writable();
 const loading = writable(false);

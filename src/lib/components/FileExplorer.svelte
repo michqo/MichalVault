@@ -3,7 +3,7 @@
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { loading, confirmData, confirmResult, filesCache } from "$lib/stores";
+  import { token, loading, confirmData, confirmResult, filesCache } from "$lib/stores";
   import { duration, maxVaultSizeinMB, CLIPBOARD_ERROR } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
@@ -24,8 +24,9 @@
   const svgClass = "w-7 h-7";
 
   onMount(() => {
-    if (!$filesCache) $filesCache = [new Date(), files];
-    if (files.length == 0) files = $filesCache[1];
+    if (!$filesCache) $filesCache = [$page.params.token, new Date(), files];
+    if ($filesCache[0] != $token) $filesCache = undefined;
+    if ($filesCache && files.length == 0) files = $filesCache[2];
   });
 
   async function download(key: string) {
@@ -55,7 +56,7 @@
   async function refresh() {
     $loading = true;
     files = await trpc($page).fetchAll.query({ token: $page.params.token });
-    $filesCache = [new Date(), files];
+    $filesCache = [$page.params.token, new Date(), files];
     $loading = false;
   }
 
@@ -67,12 +68,12 @@
           const key = $confirmData[2];
           const values = files.filter((value) => value.key != key);
           files = values;
-          $filesCache = [new Date(), files];
+          $filesCache = [$page.params.token, new Date(), files];
           await trpc($page).delete.query({ token: $page.params.token, key });
           break;
         case "deleteAll":
           files = [];
-          $filesCache = [new Date(), files];
+          $filesCache = [$page.params.token, new Date(), files];
           await trpc($page).deleteAll.query({ token: $page.params.token });
           break;
       }
@@ -84,7 +85,7 @@
 <div class="center fixed top-0 mt-4">
   {#if $filesCache}
     <p>
-      Last refreshed on <span class="font-medium">{formatDate($filesCache[0], new Date())}</span>
+      Last refreshed on <span class="font-medium">{formatDate($filesCache[1], new Date())}</span>
     </p>
   {/if}
   <code class="text-lg underline select-all">{$page.params.token}</code>
