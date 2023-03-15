@@ -11,18 +11,20 @@
     FILE_SELECTED_ERROR,
     FILE_SIZE_ERROR,
     NETWORK_ERROR,
-    CLIENT_ERROR,
-    SERVER_ERROR
+    CLIENT_ERROR
   } from "$lib/constants";
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
 
   let uploading = false;
-  let progress = 0;
-  let uploaded = 0;
-  let total = "";
   let uploadedCount: number;
   let filesCount: number;
+  let uploadingCount: number;
+  let progress = 0;
+  let totalSize = 0;
+  let uploadedSize = 0;
+  let uploadedSizes: number[];
+  let totalSizes: number[];
 
   function addFilesToCache() {
     if (!$filesCache) return;
@@ -39,7 +41,40 @@
     }
   }
 
+  function uploadFile(fd: FormData, url: string, file: File, i: number) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == 4) {
+        if (xhr.status >= 400) {
+          showError(CLIENT_ERROR);
+          uploading = false;
+          return;
+        }
+        uploadedCount += 1;
+      }
+    };
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        if (totalSizes[i] == 0) {
+          totalSizes[i] = event.total;
+          console.log("total:", formatBytes(event.total));
+          uploadingCount += 1;
+        }
+        uploadedSizes[i] = event.loaded;
+      }
+    };
+
+    fd.append("file", file);
+    fd.set("key", `${$token}/${file.name}`);
+
+    xhr.open("POST", url);
+    xhr.send(fd);
+  }
+
   /*
+  // TODO: Error handling `getUploadUrl` procedure
   switch (result.type) {
     case "success":
       showSuccess();
@@ -56,39 +91,6 @@
   }
   */
 
-  function uploadFile(fd: FormData, url: string, file: File) {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == 4) {
-        if (xhr.status >= 400) {
-          // TODO: Fix error handling
-          showError(SERVER_ERROR);
-          uploading = false;
-          return;
-        }
-        uploadedCount += 1;
-      }
-    };
-
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        if (total.length == 0) {
-          total = formatBytes(event.total);
-          uploading = true;
-        }
-        uploaded = event.loaded;
-        progress = (event.loaded / event.total) * 100;
-      }
-    };
-
-    fd.append("file", file);
-    fd.set("key", `${$token}/${file.name}`);
-
-    xhr.open("POST", url);
-    xhr.send(fd);
-  }
-
   async function handleSubmit() {
     if (!navigator.onLine) {
       showError(NETWORK_ERROR);
@@ -101,10 +103,13 @@
       return;
     }
 
-    progress = 0;
-    total = "";
+    totalSize = 0;
     uploadedCount = 0;
+    progress = 0;
     filesCount = $inputFiles.length;
+    uploadingCount = 0;
+    uploadedSizes = Array(filesCount).fill(0);
+    totalSizes = Array(filesCount).fill(0);
 
     const { url, fields } = await trpc($page).getUploadUrl.query({ token: $token });
     let fd = new FormData();
@@ -112,13 +117,22 @@
       fd.append(key, fields[key]);
     }
 
-    for (const file of $inputFiles) {
-      uploadFile(fd, url, file);
+    for (let i = 0; i < $inputFiles.length; i++) {
+      uploadFile(structuredClone(fd), url, $inputFiles[i], i);
     }
   }
 
+  // Calculate progress
+  $: if (filesCount && uploadingCount == filesCount) uploading = true;
+  $: if (uploading) {
+    uploadedSize = uploadedSizes.reduce((a, b) => a + b, 0);
+    totalSize = totalSizes.reduce((a, b) => a + b, 0);
+    progress = (uploadedSize / totalSize) * 100;
+  }
+
+  // Successful files upload
   $: {
-    if (filesCount && filesCount == uploadedCount) {
+    if (filesCount && uploadedCount == filesCount) {
       showSuccess();
       addFilesToCache();
       $filesInput.value = "";
@@ -138,7 +152,7 @@
     <div class="w-full center gap-y-2" transition:fade={{ duration }}>
       <div class="w-full flex justify-between">
         <p class="text-sm">Uploading</p>
-        <p class="text-sm">{formatBytes(uploaded)} / {total}</p>
+        <p class="text-sm">{formatBytes(uploadedSize)} / {formatBytes(totalSize)}</p>
       </div>
       <div class="bg-gray-700 rounded-full drop-shadow w-full max-w-full text-center">
         <div
