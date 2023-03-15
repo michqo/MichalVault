@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { page } from "$app/stores";
+  import { TRPCClientError } from "@trpc/client";
   import { trpc } from "$lib/trpc/client";
   import { formatBytes } from "../utils";
   import { filesCache, inputFiles, filesInput, token } from "$lib/stores";
@@ -59,7 +60,6 @@
       if (event.lengthComputable) {
         if (totalSizes[i] == 0) {
           totalSizes[i] = event.total;
-          console.log("total:", formatBytes(event.total));
           uploadingCount += 1;
         }
         uploadedSizes[i] = event.loaded;
@@ -98,7 +98,9 @@
     } else if (!$inputFiles || $inputFiles.length == 0) {
       showError(FILE_SELECTED_ERROR);
       return;
-    } else if (Array.from($inputFiles).reduce((a, b) => a + b.size, 0) > maxSize) {
+    }
+    const filesSize = Array.from($inputFiles).reduce((a, b) => a + b.size, 0);
+    if (filesSize > maxSize) {
       showError(FILE_SIZE_ERROR);
       return;
     }
@@ -111,13 +113,25 @@
     uploadedSizes = Array(filesCount).fill(0);
     totalSizes = Array(filesCount).fill(0);
 
-    const { url, fields } = await trpc($page).getUploadUrl.query({ token: $token });
+    let result: { url: string; fields: Record<string, string> };
+    try {
+      result = await trpc($page).getUploadUrl.query({ token: $token, filesSize, filesCount });
+    } catch (e) {
+      if (e instanceof TRPCClientError) {
+        showError(e.message);
+      } else {
+        showError(CLIENT_ERROR);
+      }
+      return;
+    }
+    const { url, fields } = result;
     let fd = new FormData();
     for (const key in fields) {
       fd.append(key, fields[key]);
     }
 
     for (let i = 0; i < $inputFiles.length; i++) {
+      // structuredClone is REQUIRED
       uploadFile(structuredClone(fd), url, $inputFiles[i], i);
     }
   }
