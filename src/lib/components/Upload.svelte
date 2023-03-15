@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { page } from "$app/stores";
-  import { TRPCClientError } from "@trpc/client";
+  import { TRPCError } from "@trpc/server";
   import { trpc } from "$lib/trpc/client";
   import { formatBytes } from "../utils";
   import { filesCache, inputFiles, filesInput, token } from "$lib/stores";
@@ -12,7 +12,8 @@
     FILE_SELECTED_ERROR,
     FILE_SIZE_ERROR,
     NETWORK_ERROR,
-    CLIENT_ERROR
+    CLIENT_ERROR,
+    SERVER_ERROR
   } from "$lib/constants";
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
@@ -73,24 +74,6 @@
     xhr.send(fd);
   }
 
-  /*
-  // TODO: Error handling `getUploadUrl` procedure
-  switch (result.type) {
-    case "success":
-      showSuccess();
-      addFilesToCache();
-      // @ts-ignore
-      $inputFiles = undefined;
-      break;
-    case "failure":
-      showError(SERVER_ERROR);
-      break;
-    case "error":
-      showError(result.error.message ? result.error.message : CLIENT_ERROR);
-      break;
-  }
-  */
-
   async function handleSubmit() {
     if (!navigator.onLine) {
       showError(NETWORK_ERROR);
@@ -117,8 +100,12 @@
     try {
       result = await trpc($page).getUploadUrl.query({ token: $token, filesSize, filesCount });
     } catch (e) {
-      if (e instanceof TRPCClientError) {
-        showError(e.message);
+      if (e instanceof TRPCError) {
+        if (e.code == "INTERNAL_SERVER_ERROR") {
+          showError(SERVER_ERROR);
+        } else {
+          showError(e.message);
+        }
       } else {
         showError(CLIENT_ERROR);
       }
