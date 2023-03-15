@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { createPresignedPost, type PresignedPostOptions } from "@aws-sdk/s3-presigned-post";
 import randomWords from "random-words";
+import s3 from "$lib/server/connection";
 import { S3_BUCKET_NAME } from "$env/static/private";
 import type { Context } from "$lib/trpc/context";
 import { initTRPC, TRPCError } from "@trpc/server";
-import s3 from "$lib/server/connection";
-import { maxVaultFilesCount, tokenRegex } from "$lib/constants";
+import { maxSize, maxVaultFilesCount, tokenRegex } from "$lib/constants";
 
 export const t = initTRPC.context<Context>().create();
 
@@ -32,7 +33,7 @@ export const router = t.router({
     );
   }),
   delete: t.procedure.input(z.object({ token, key: z.string() })).query(async ({ input }) => {
-    s3.deleteObject({
+    await s3.deleteObject({
       Bucket: S3_BUCKET_NAME,
       Key: input.key
     });
@@ -43,6 +44,23 @@ export const router = t.router({
       maxLength: 4
     });
     return words.join("-");
+  }),
+  getUploadUrl: t.procedure.input(z.object({ token })).query(async ({ input }) => {
+    const token = input.token + "/";
+    // #{filename} is just for validation purposes
+    const Key = token + "${filename}";
+    const Conditions = [
+      ["starts-with", "$key", token],
+      ["content-length-range", 1, maxSize]
+    ];
+    const options: PresignedPostOptions = {
+      Bucket: S3_BUCKET_NAME,
+      Key,
+      // @ts-ignore
+      Conditions, // Type error
+      Expires: 60 * 3
+    };
+    return await createPresignedPost(s3, options);
   }),
   fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     const command = new GetObjectCommand({

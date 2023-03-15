@@ -103,7 +103,6 @@
     <input
       type="file"
       multiple
-      name="file_upload"
       bind:this={$filesInput}
       bind:files={$inputFiles}
       on:change={handleChange}
