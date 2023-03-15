@@ -43,6 +43,15 @@
     }
   }
 
+  // TODO: Better performance (?)
+  function deepCloneFormData(fd: FormData): FormData {
+    const clonedFormData = new FormData();
+    for (let [key, value] of fd) {
+      clonedFormData.append(key, value);
+    }
+    return clonedFormData;
+  }
+
   function uploadFile(fd: FormData, url: string, file: File, i: number) {
     const xhr = new XMLHttpRequest();
 
@@ -118,8 +127,8 @@
     }
 
     for (let i = 0; i < $inputFiles.length; i++) {
-      // structuredClone is REQUIRED
-      uploadFile(structuredClone(fd), url, $inputFiles[i], i);
+      // Cannot use structuredClone because not supported on chromium
+      uploadFile(deepCloneFormData(fd), url, $inputFiles[i], i);
     }
   }
 
