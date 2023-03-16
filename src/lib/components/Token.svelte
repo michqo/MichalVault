@@ -7,7 +7,12 @@
   import { buttonClass, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
+  const inputDivClass = "center md:flex-row gap-2 mb-2";
+  const labelClass = "text-slate-200 block mb-1";
+  const inputClass =
+    "px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring";
   let newToken = "";
+  let redirectToken = "";
 
   onMount(async () => {
     const t = localStorage.getItem("token");
@@ -38,16 +43,16 @@
 </script>
 
 <div class="center mt-8">
-  {#if dev}
+  {#if !dev}
     <div>
-      <label for="tokenInput" class="text-slate-200 block mb-1 ">Change token</label>
-      <div class="center md:flex-row gap-2 mb-2">
+      <label for="tokenInput" class={labelClass}>Change token</label>
+      <div class={inputDivClass}>
         <input
           type="text"
           id="tokenInput"
           placeholder="Token"
           bind:value={newToken}
-          class="px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring"
+          class={inputClass}
         />
         <div>
           <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
@@ -58,6 +63,20 @@
       </div>
     </div>
   {/if}
+  <div>
+    <label for="tokenInput2" class={labelClass}>Redirect to vault</label>
+    <div class={inputDivClass}>
+      <input
+        type="text"
+        id="tokenInput2"
+        placeholder="Token"
+        bind:value={redirectToken}
+        class={inputClass}
+      />
+      <a href="/files/{redirectToken}" class="{buttonClass} py-1">Go</a>
+    </div>
+  </div>
+
   <p class="text-xl font-bold">Your vault token is</p>
   <code class="text-lg {$token.length != 0 ? 'underline select-all' : ''}"
     >{$token.length != 0 ? $token : "loading..."}</code
