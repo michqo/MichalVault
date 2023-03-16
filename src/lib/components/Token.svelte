@@ -64,7 +64,7 @@
     </div>
   {/if}
   <div>
-    <label for="tokenInput2" class={labelClass}>Redirect to vault</label>
+    <label for="tokenInput2" class={labelClass}>Go to vault</label>
     <div class={inputDivClass}>
       <input
         type="text"
