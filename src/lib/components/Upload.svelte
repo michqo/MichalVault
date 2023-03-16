@@ -4,7 +4,7 @@
   import { TRPCError } from "@trpc/server";
   import { trpc } from "$lib/trpc/client";
   import { formatBytes } from "../utils";
-  import { filesCache, inputFiles, filesInput, token } from "$lib/stores";
+  import { loading, filesCache, inputFiles, filesInput, token } from "$lib/stores";
   import {
     buttonClass,
     duration,
@@ -106,6 +106,7 @@
     totalSizes = Array(filesCount).fill(0);
 
     let result: { url: string; fields: Record<string, string> };
+    $loading = true;
     try {
       result = await trpc($page).getUploadUrl.query({ token: $token, filesSize, filesCount });
     } catch (e) {
@@ -118,8 +119,10 @@
       } else {
         showError(CLIENT_ERROR);
       }
+      $loading = false;
       return;
     }
+    $loading = false;
     const { url, fields } = result;
     let fd = new FormData();
     for (const key in fields) {
