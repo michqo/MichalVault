@@ -83,11 +83,11 @@
 </script>
 
 <div class="center fixed top-0 mt-4">
-  {#if $filesCache}
-    <p>
-      Last refreshed on <span class="font-medium">{formatDate($filesCache[1], new Date())}</span>
-    </p>
-  {/if}
+  <p>
+    Last refreshed on <span class="font-medium"
+      >{$filesCache ? formatDate($filesCache[1], new Date()) : formatDate(today, today)}</span
+    >
+  </p>
   <code class="text-lg underline select-all">{$page.params.token}</code>
   <div
     class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
