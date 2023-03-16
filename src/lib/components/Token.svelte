@@ -43,7 +43,7 @@
 </script>
 
 <div class="center mt-8">
-  {#if !dev}
+  {#if dev}
     <div>
       <label for="tokenInput" class={labelClass}>Change token</label>
       <div class={inputDivClass}>
