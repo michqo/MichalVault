@@ -128,6 +128,7 @@ export const router = t.router({
   fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     const command = new GetObjectCommand({
       Bucket: S3_BUCKET_NAME,
+      ResponseContentDisposition: "attachment",
       Key: input.key
     });
     const url = await getSignedUrl(s3, command);

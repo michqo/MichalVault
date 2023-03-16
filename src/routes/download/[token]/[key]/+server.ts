@@ -16,6 +16,7 @@ export const GET = (async ({ params }) => {
   try {
     const command = new GetObjectCommand({
       Bucket: S3_BUCKET_NAME,
+      ResponseContentDisposition: "attachment",
       Key: `${token}/${key}`
     });
     url = await getSignedUrl(s3, command);
