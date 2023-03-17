@@ -43,7 +43,7 @@
 
 <!-- TODO: Input text with label and optional buttons component -->
 
-<div class="center mt-8 md:w-full max-w-xs">
+<div class="mt-8 md:w-full max-w-xs">
   <div class="w-full">
     <label for="tokenInput" class={labelClass}>Change token</label>
     <div class={inputDivClass}>
@@ -76,9 +76,11 @@
     </div>
   </div>
 
-  <p class="text-xl font-bold mt-4">Your vault token is</p>
-  <code class="text-lg {$token.length != 0 ? 'underline select-all' : ''}"
-    >{$token.length != 0 ? $token : "loading..."}</code
-  >
-  <p class="text-sm text-slate-300">With this token you can access your files</p>
+  <div class="text-center">
+    <p class="text-xl font-bold mt-4">Your vault token is</p>
+    <code class="text-lg {$token.length != 0 ? 'underline select-all' : ''}"
+      >{$token.length != 0 ? $token : "loading..."}</code
+    >
+    <p class="text-sm text-slate-300 text-center">With this token you can access your files</p>
+  </div>
 </div>
