@@ -6,7 +6,7 @@
   import { buttonClass, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
-  const inputDivClass = "center md:flex-row gap-1";
+  const inputDivClass = "center md:flex-row md:items-stretch gap-2";
   const labelClass = "text-slate-200 block mb-1";
   const inputClass =
     "w-full px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring";
@@ -54,10 +54,12 @@
         bind:value={newToken}
         class={inputClass}
       />
-      <button on:click={changeToken} class="{buttonClass} py-1 text-base">Change</button>
-      {#if $token.length < 11}
-        <button on:click={resetToken} class="{buttonClass} py-1 text-base">Reset</button>
-      {/if}
+      <div class="flex gap-2 flex-row">
+        <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
+        {#if $token.length < 11}
+          <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
+        {/if}
+      </div>
     </div>
   </div>
   <div class="w-full mt-2">
@@ -70,7 +72,7 @@
         bind:value={redirectToken}
         class={inputClass}
       />
-      <a href="/files/{redirectToken}" class="{buttonClass} py-1 text-base">Go</a>
+      <a href="/files/{redirectToken}" class="{buttonClass} py-1">Go</a>
     </div>
   </div>
 
