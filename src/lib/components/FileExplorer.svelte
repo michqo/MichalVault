@@ -101,7 +101,7 @@
   </div>
 </div>
 
-<div class="fixed grid place-items-center w-full h-full top-0 max-w-xl">
+<div class="fixed grid place-items-center w-full h-full top-0 overflow-x-auto max-w-xl">
   <div class="center w-full">
     <h1 class="text-center font-medium text-3xl">Files</h1>
     <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
