@@ -101,13 +101,13 @@
   </div>
 </div>
 
-<div class="fixed grid place-items-center w-full h-full top-0 overflow-x-auto max-w-xl">
-  <div class="center w-full">
+<div class="fixed grid place-items-center w-full h-full top-0">
+  <div class="center w-full overflow-x-auto">
     <h1 class="text-center font-medium text-3xl">Files</h1>
     <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
 
     <div
-      class="overflow-x-auto w-full p-3 bg-white/[.07] border border-slate-700 rounded-lg"
+      class="w-full overflow-x-auto max-w-xl p-3 bg-white/[.07] border border-slate-700 rounded-lg"
       in:fade={{ duration }}
     >
       <table class="w-full divide-y divide-gray-500">
