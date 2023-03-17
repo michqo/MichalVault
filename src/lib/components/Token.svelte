@@ -7,10 +7,10 @@
   import { buttonClass, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
-  const inputDivClass = "center md:flex-row gap-2 mb-2";
+  const inputDivClass = "center md:flex-row gap-2 mb-2 w-full";
   const labelClass = "text-slate-200 block mb-1";
   const inputClass =
-    "px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring";
+    "w-full px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring";
   let newToken = "";
   let redirectToken = "";
 
@@ -42,9 +42,9 @@
   }
 </script>
 
-<div class="center mt-8">
+<div class="center mt-8 w-full max-w-xs">
   {#if dev}
-    <div>
+    <div class="w-full">
       <label for="tokenInput" class={labelClass}>Change token</label>
       <div class={inputDivClass}>
         <input
@@ -63,7 +63,7 @@
       </div>
     </div>
   {/if}
-  <div>
+  <div class="w-full">
     <label for="tokenInput2" class={labelClass}>Go to vault</label>
     <div class={inputDivClass}>
       <input
