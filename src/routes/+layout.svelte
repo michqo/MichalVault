@@ -2,15 +2,15 @@
   import "../app.css";
 
   import ConfirmModal from "$lib/components/ConfirmModal.svelte";
-  import StatusModal from "$lib/components/StatusModal.svelte";
   import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
+  import StatusModal from "$lib/components/StatusModal.svelte";
 </script>
 
 <ConfirmModal />
-<main class="center justify-center min-h-screen">
+<main class="center">
   <ProgressIndicator />
   <StatusModal />
-  <div class="center justify-center w-full max-w-xl">
+  <div class="center w-full max-w-xl mt-5 md:mt-20">
     <slot />
   </div>
 </main>
