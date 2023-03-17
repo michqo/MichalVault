@@ -82,7 +82,7 @@
   })();
 </script>
 
-<div class="center fixed top-0 mt-4">
+<div class="center fixed top-0 mt-4 z-10">
   <p>
     Last refreshed on <span class="font-medium"
       >{$filesCache ? formatDate($filesCache[1], new Date()) : formatDate(today, today)}</span
@@ -101,46 +101,50 @@
   </div>
 </div>
 
-<h1 class="text-center font-medium text-3xl">Files</h1>
-<p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
+<div class="fixed grid place-items-center w-full h-full top-0 max-w-xl">
+  <div class="center w-full">
+    <h1 class="text-center font-medium text-3xl">Files</h1>
+    <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
 
-<div
-  class="overflow-x-auto w-full p-3 bg-white/[.07] border border-slate-700 rounded-lg"
-  in:fade={{ duration }}
->
-  <table class="w-full divide-y divide-gray-500">
-    <thead class="uppercase">
-      <tr>
-        <th scope="col" class={thClass} />
-        <th scope="col" class={thClass}> Name </th>
-        <th scope="col" class={thClass}> Uploaded </th>
-        <th scope="col" class={thClass}> Size </th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each files as file}
-        <tr class="hover:bg-white/[.07]">
-          <td class="{tdClass} flex gap-x-3">
-            <button type="button" on:click={() => deleteFile(file.key)}>
-              <Delete class={svgClass} />
-            </button>
-            <button type="button" on:click={() => copyLink(file.key)}>
-              <Link class={svgClass} />
-            </button>
-          </td>
-          <td class={tdClass}>
-            <button
-              type="button"
-              class="hover:underline underline-offset-2"
-              on:click={() => download(file.key)}
-            >
-              {file.name}
-            </button>
-          </td>
-          <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
-          <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+    <div
+      class="overflow-x-auto w-full p-3 bg-white/[.07] border border-slate-700 rounded-lg"
+      in:fade={{ duration }}
+    >
+      <table class="w-full divide-y divide-gray-500">
+        <thead class="uppercase">
+          <tr>
+            <th scope="col" class={thClass} />
+            <th scope="col" class={thClass}> Name </th>
+            <th scope="col" class={thClass}> Uploaded </th>
+            <th scope="col" class={thClass}> Size </th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each files as file}
+            <tr class="hover:bg-white/[.07]">
+              <td class="{tdClass} flex gap-x-3">
+                <button type="button" on:click={() => deleteFile(file.key)}>
+                  <Delete class={svgClass} />
+                </button>
+                <button type="button" on:click={() => copyLink(file.key)}>
+                  <Link class={svgClass} />
+                </button>
+              </td>
+              <td class={tdClass}>
+                <button
+                  type="button"
+                  class="hover:underline underline-offset-2"
+                  on:click={() => download(file.key)}
+                >
+                  {file.name}
+                </button>
+              </td>
+              <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
+              <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
