@@ -31,12 +31,14 @@
   }
 
   function changeToken() {
+    console.log(newToken);
     if (!tokenRegex.test(newToken)) {
       showError(TOKEN_ERROR);
       return;
     }
     localStorage.setItem("token", newToken);
     $token = newToken;
+    newToken = "";
     $filesCache = undefined;
   }
 </script>
