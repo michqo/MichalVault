@@ -8,7 +8,8 @@
     duration,
     maxVaultSizeinMB,
     imageExtensionsRegex,
-    CLIPBOARD_ERROR
+    CLIPBOARD_ERROR,
+    FILE_NOT_FOUND
   } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
@@ -64,7 +65,13 @@
       return;
     }
     const url = await trpc($page).fetchOne.query({ key });
-    const res = await fetch(url);
+    let res: Response;
+    res = await fetch(url);
+    if (res.status >= 400) {
+      showError(FILE_NOT_FOUND);
+      $loading = false;
+      return;
+    }
     const blob = await res.blob();
     const localUrl = URL.createObjectURL(blob);
     const img = document.createElement("img");
