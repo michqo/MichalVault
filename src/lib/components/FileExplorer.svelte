@@ -53,10 +53,6 @@
     return undefined;
   }
 
-  function addImageToCache(key: string, src: string, width: number, height: number) {
-    $imageCache.push([key, src, width, height]);
-  }
-
   async function openFile(name: string, key: string) {
     $loading = true;
     fileName = name;
@@ -76,7 +72,7 @@
       imageSizes = [img.naturalWidth, img.naturalHeight];
       imageSrc = localUrl;
       $loading = false;
-      addImageToCache(key, localUrl, imageSizes[0], imageSizes[1]);
+      $imageCache.push([key, localUrl, imageSizes[0], imageSizes[1]]);
     };
     img.src = localUrl;
   }
