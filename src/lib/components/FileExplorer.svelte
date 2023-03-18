@@ -3,7 +3,7 @@
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { token, loading, confirmData, confirmResult, filesCache } from "$lib/stores";
+  import { token, loading, confirmData, confirmResult, filesCache, imageCache } from "$lib/stores";
   import {
     duration,
     maxVaultSizeinMB,
@@ -46,18 +46,37 @@
     window.location.replace(url);
   }
 
+  function findImageInCache(key: string): [string, [number, number]] | undefined {
+    for (const image of $imageCache) {
+      if (image[0] == key) return [image[1], [image[2], image[3]]];
+    }
+    return undefined;
+  }
+
+  function addImageToCache(key: string, src: string, width: number, height: number) {
+    $imageCache.push([key, src, width, height]);
+  }
+
   async function openFile(name: string, key: string) {
     $loading = true;
+    fileName = name;
+    const cacheImage = findImageInCache(key);
+    if (cacheImage) {
+      imageSizes = cacheImage[1];
+      imageSrc = cacheImage[0];
+      $loading = false;
+      return;
+    }
     const url = await trpc($page).fetchOne.query({ key });
     const res = await fetch(url);
     const blob = await res.blob();
-    fileName = name;
     const localUrl = URL.createObjectURL(blob);
     const img = document.createElement("img");
     img.onload = () => {
       imageSizes = [img.naturalWidth, img.naturalHeight];
       imageSrc = localUrl;
       $loading = false;
+      addImageToCache(key, localUrl, imageSizes[0], imageSizes[1]);
     };
     img.src = localUrl;
   }
