@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { token, filesCache } from "../stores";
+  import { token, filesCache, imageCache } from "../stores";
   import { buttonClass, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
@@ -23,11 +23,16 @@
     }
   });
 
+  function resetCache() {
+    $filesCache = undefined;
+    $imageCache = [];
+  }
+
   async function resetToken() {
     newToken = "";
     $token = await trpc($page).fetchToken.query();
     localStorage.setItem("token", $token);
-    $filesCache = undefined;
+    resetCache();
   }
 
   function changeToken() {
@@ -39,7 +44,7 @@
     localStorage.setItem("token", newToken);
     $token = newToken;
     newToken = "";
-    $filesCache = undefined;
+    resetCache();
   }
 </script>
 
