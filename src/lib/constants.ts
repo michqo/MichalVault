@@ -13,6 +13,7 @@ const maxBucketSizeInGB = 10;
 const maxBucketSize = MB * 1000 * maxBucketSizeInGB;
 const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
 const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
+const imageExtensionsRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
 
 // Errors
 const FILE_NOT_FOUND = "File not found";
@@ -40,6 +41,7 @@ export {
   maxBucketSize,
   tokenRegex,
   fileRegex,
+  imageExtensionsRegex,
   FILE_NOT_FOUND,
   TOKEN_ERROR,
   FILE_NAME_ERROR,

@@ -4,17 +4,27 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { token, loading, confirmData, confirmResult, filesCache } from "$lib/stores";
-  import { duration, maxVaultSizeinMB, CLIPBOARD_ERROR } from "$lib/constants";
+  import {
+    duration,
+    maxVaultSizeinMB,
+    imageExtensionsRegex,
+    CLIPBOARD_ERROR
+  } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
   import { showModal } from "./ConfirmModal.svelte";
+  import PreviewModal from "./PreviewModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
   import Link from "$lib/svgs/Link.svelte";
+  import Open from "$lib/svgs/Open.svelte";
 
   export let files: Record<string, string>[];
   let filesSize: number;
+  let imageSrc: string | undefined;
+  let fileName: string;
+  let imageSizes: [number, number];
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -34,6 +44,22 @@
     const url = await trpc($page).fetchOne.query({ key });
     $loading = false;
     window.location.replace(url);
+  }
+
+  async function openFile(name: string, key: string) {
+    $loading = true;
+    const url = await trpc($page).fetchOne.query({ key });
+    const res = await fetch(url);
+    const blob = await res.blob();
+    fileName = name;
+    const localUrl = URL.createObjectURL(blob);
+    const img = document.createElement("img");
+    img.onload = () => {
+      imageSizes = [img.naturalWidth, img.naturalHeight];
+      imageSrc = localUrl;
+      $loading = false;
+    };
+    img.src = localUrl;
   }
 
   async function copyLink(key: string) {
@@ -82,6 +108,16 @@
   })();
 </script>
 
+{#if imageSrc}
+  <PreviewModal
+    {imageSrc}
+    {fileName}
+    width={imageSizes[0]}
+    height={imageSizes[1]}
+    on:close={() => (imageSrc = undefined)}
+  />
+{/if}
+
 <div class="center fixed top-0 mt-4 z-10">
   <p>
     Last refreshed on <span class="font-medium"
@@ -129,6 +165,11 @@
                 <button type="button" on:click={() => copyLink(file.key)}>
                   <Link class={svgClass} />
                 </button>
+                {#if imageExtensionsRegex.test(file.name)}
+                  <button type="button" on:click={() => openFile(file.name, file.key)}>
+                    <Open class={svgClass} />
+                  </button>
+                {/if}
               </td>
               <td class={tdClass}>
                 <button
