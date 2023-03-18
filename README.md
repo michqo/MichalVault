@@ -10,6 +10,16 @@ Quick way to upload/download files from multiple devices
 
 ## Developing
 
+### Set enviromental variables
+
+```bash
+cp .env.example .env
+```
+
+Fill with your aws s3 crendentials
+
+### Running dev server
+
 Once you've installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
@@ -28,5 +38,3 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
