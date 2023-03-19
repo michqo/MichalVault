@@ -8,8 +8,8 @@
 
   const modalClass =
     "center justify-between z-30 w-full h-full md:h-fit md:max-w-4xl fixed gap-y-3 px-10 py-5 bg-gray-900 md:border md:border-slate-600 rounded drop-shadow-xl";
-  export let fileName: string;
-  export let imageSrc: string;
+  export let file: ["txt" | "img", string, string?];
+  export let name: string;
 
   onMount(() => {
     document.addEventListener("keydown", (e) => {
@@ -29,12 +29,16 @@
   <button class="cursor-default fixed z-20 inset-0 w-full h-full bg-black/[.15]" on:click={close} />
   <div class={modalClass}>
     <div class="center md:flex-row justify-center gap-x-2">
-      <h1 class="text-center text-xl font-medium tracking-wider mb-2">{fileName}</h1>
-      <a target="_blank" rel="noreferrer" href={imageSrc}>
+      <h1 class="text-center text-xl font-medium tracking-wider mb-2">{name}</h1>
+      <a target="_blank" rel="noreferrer" href={file[0] == "img" ? file[1] : file[2]}>
         <Open class="w-7 h-7" />
       </a>
     </div>
-    <img src={imageSrc} alt="Modal img" />
+    {#if file[0] == "img"}
+      <img src={file[1]} alt="Modal img" />
+    {:else}
+      <p class="overflow-auto max-w-full max-h-full">{file[1]}</p>
+    {/if}
     <button class="{buttonClass} mt-10" on:click={close}>Close</button>
   </div>
 </div>

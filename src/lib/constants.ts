@@ -13,7 +13,12 @@ const maxBucketSizeInGB = 10;
 const maxBucketSize = MB * 1000 * maxBucketSizeInGB;
 const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
 const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
+
+/**
+ * Regex for files which can be previewed in the PreviewModal
+ */
 const imageExtensionsRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
+const textExtensionsRegex = /\.(txt|py|rs|js|ts|cs|c|cpp|java|kt|gd|html)$/i;
 
 // Errors
 const FILE_NOT_FOUND = "File not found";
@@ -42,6 +47,7 @@ export {
   tokenRegex,
   fileRegex,
   imageExtensionsRegex,
+  textExtensionsRegex,
   FILE_NOT_FOUND,
   TOKEN_ERROR,
   FILE_NAME_ERROR,

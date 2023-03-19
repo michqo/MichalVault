@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { token, filesCache, imageCache } from "../stores";
+  import { token, filesCache, filesPreviewCache } from "../stores";
   import { buttonClass, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
 
@@ -25,7 +25,7 @@
 
   function resetCache() {
     $filesCache = undefined;
-    $imageCache = [];
+    $filesPreviewCache = [];
   }
 
   async function resetToken() {

@@ -15,6 +15,7 @@
     duration,
     maxVaultSizeinMB,
     imageExtensionsRegex,
+    textExtensionsRegex,
     CLIPBOARD_ERROR,
     FILE_NOT_FOUND
   } from "$lib/constants";
@@ -30,8 +31,8 @@
 
   export let files: Record<string, string>[];
   let filesSize: number;
-  let fileUrl: string | undefined;
-  let fileName: string;
+  let previewFile: ["txt" | "img", string, string?] | undefined;
+  let previewFileName: string;
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -53,19 +54,19 @@
     window.location.replace(url);
   }
 
-  function findImageInCache(key: string): string | undefined {
-    for (const image of $filesPreviewCache) {
-      if (image[0] == key) return image[1];
+  function findPreviewFileInCache(key: string): ["txt" | "img", string, string?] | undefined {
+    for (const file of $filesPreviewCache) {
+      if (file[1] == key) return [file[0], file[2], file[3]];
     }
     return undefined;
   }
 
   async function openFile(name: string, key: string) {
     $loading = true;
-    fileName = name;
-    const cacheImage = findImageInCache(key);
-    if (cacheImage) {
-      fileUrl = cacheImage;
+    previewFileName = name;
+    const cacheFile = findPreviewFileInCache(key);
+    if (cacheFile) {
+      previewFile = cacheFile;
       $loading = false;
       return;
     }
@@ -77,8 +78,15 @@
       return;
     }
     const blob = await res.blob();
-    fileUrl = URL.createObjectURL(blob);
-    $filesPreviewCache.push([key, fileUrl]);
+    const blobUrl = URL.createObjectURL(blob);
+    if (imageExtensionsRegex.test(name)) {
+      previewFile = ["img", blobUrl];
+      $filesPreviewCache.push(["img", key, blobUrl]);
+    } else {
+      const text = await blob.text();
+      previewFile = ["txt", text, blobUrl];
+      $filesPreviewCache.push(["txt", key, text, blobUrl]);
+    }
     $loading = false;
   }
 
@@ -128,8 +136,12 @@
   })();
 </script>
 
-{#if fileUrl}
-  <PreviewModal imageSrc={fileUrl} {fileName} on:close={() => (fileUrl = undefined)} />
+{#if previewFile}
+  <PreviewModal
+    file={previewFile}
+    name={previewFileName}
+    on:close={() => (previewFile = undefined)}
+  />
 {/if}
 
 <div class="center fixed top-0 mt-4 z-10">
@@ -179,7 +191,7 @@
                 <button type="button" on:click={() => copyLink(file.key)}>
                   <Link class={svgClass} />
                 </button>
-                {#if imageExtensionsRegex.test(file.name)}
+                {#if imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name)}
                   <button type="button" on:click={() => openFile(file.name, file.key)}>
                     <Open class={svgClass} />
                   </button>
