@@ -169,7 +169,7 @@
     <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
 
     <div
-      class="w-full overflow-x-auto max-w-xl p-3 bg-white/[.07] border border-slate-700 rounded-lg"
+      class="w-full overflow-x-auto max-w-2xl p-3 bg-white/[.07] border border-slate-700 rounded-lg"
       in:fade={{ duration }}
     >
       <table class="w-full divide-y divide-gray-500">
