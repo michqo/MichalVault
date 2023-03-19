@@ -37,7 +37,7 @@
     {#if file[0] == "img"}
       <img src={file[1]} alt="Modal img" />
     {:else}
-      <p class="overflow-auto max-w-full max-h-full">{file[1]}</p>
+      <code class="overflow-auto max-w-full max-h-full">{file[1]}</code>
     {/if}
     <button class="{buttonClass} mt-10" on:click={close}>Close</button>
   </div>
