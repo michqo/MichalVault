@@ -65,8 +65,7 @@
       return;
     }
     const url = await trpc($page).fetchOne.query({ key });
-    let res: Response;
-    res = await fetch(url);
+    let res = await fetch(url);
     if (res.status >= 400) {
       showError(FILE_NOT_FOUND);
       $loading = false;
