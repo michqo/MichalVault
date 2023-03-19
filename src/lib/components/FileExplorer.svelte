@@ -25,7 +25,6 @@
   let filesSize: number;
   let imageSrc: string | undefined;
   let fileName: string;
-  let imageSizes: [number, number];
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -47,9 +46,9 @@
     window.location.replace(url);
   }
 
-  function findImageInCache(key: string): [string, [number, number]] | undefined {
+  function findImageInCache(key: string): string | undefined {
     for (const image of $imageCache) {
-      if (image[0] == key) return [image[1], [image[2], image[3]]];
+      if (image[0] == key) return image[1];
     }
     return undefined;
   }
@@ -59,8 +58,7 @@
     fileName = name;
     const cacheImage = findImageInCache(key);
     if (cacheImage) {
-      imageSizes = cacheImage[1];
-      imageSrc = cacheImage[0];
+      imageSrc = cacheImage;
       $loading = false;
       return;
     }
@@ -75,10 +73,9 @@
     const localUrl = URL.createObjectURL(blob);
     const img = document.createElement("img");
     img.onload = () => {
-      imageSizes = [img.naturalWidth, img.naturalHeight];
       imageSrc = localUrl;
+      $imageCache.push([key, localUrl]);
       $loading = false;
-      $imageCache.push([key, localUrl, imageSizes[0], imageSizes[1]]);
     };
     img.src = localUrl;
   }
@@ -130,13 +127,7 @@
 </script>
 
 {#if imageSrc}
-  <PreviewModal
-    {imageSrc}
-    {fileName}
-    width={imageSizes[0]}
-    height={imageSizes[1]}
-    on:close={() => (imageSrc = undefined)}
-  />
+  <PreviewModal {imageSrc} {fileName} on:close={() => (imageSrc = undefined)} />
 {/if}
 
 <div class="center fixed top-0 mt-4 z-10">
