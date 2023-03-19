@@ -7,7 +7,7 @@
   const dispatch = createEventDispatcher();
 
   const modalClass =
-    "center justify-between z-30 w-full overflow-auto h-full max-h-full md:h-fit md:max-w-4xl fixed gap-y-3 px-10 py-5 bg-gray-900 md:border md:border-slate-600 rounded drop-shadow-xl";
+    "center justify-between z-30 w-full h-full md:h-fit md:max-w-4xl fixed gap-y-3 px-10 py-5 bg-gray-900 md:border md:border-slate-600 rounded drop-shadow-xl";
   export let fileName: string;
   export let imageSrc: string;
 

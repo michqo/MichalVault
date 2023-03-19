@@ -14,7 +14,7 @@ type confirmType = "delete" | "deleteAll";
 const confirmData: Writable<[confirmType, string, any]> = writable();
 const confirmResult = writable(false);
 
-const imageCache: Writable<[string, string][]> = writable([]);
+const filesPreviewCache: Writable<[string, string][]> = writable([]);
 
 export {
   filesCache,
@@ -28,5 +28,5 @@ export {
   confirmData,
   confirmResult,
   type confirmType,
-  imageCache
+  filesPreviewCache
 };

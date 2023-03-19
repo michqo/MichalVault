@@ -3,7 +3,14 @@
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { token, loading, confirmData, confirmResult, filesCache, imageCache } from "$lib/stores";
+  import {
+    token,
+    loading,
+    confirmData,
+    confirmResult,
+    filesCache,
+    filesPreviewCache
+  } from "$lib/stores";
   import {
     duration,
     maxVaultSizeinMB,
@@ -23,7 +30,7 @@
 
   export let files: Record<string, string>[];
   let filesSize: number;
-  let imageSrc: string | undefined;
+  let fileUrl: string | undefined;
   let fileName: string;
 
   const today = new Date();
@@ -47,7 +54,7 @@
   }
 
   function findImageInCache(key: string): string | undefined {
-    for (const image of $imageCache) {
+    for (const image of $filesPreviewCache) {
       if (image[0] == key) return image[1];
     }
     return undefined;
@@ -58,7 +65,7 @@
     fileName = name;
     const cacheImage = findImageInCache(key);
     if (cacheImage) {
-      imageSrc = cacheImage;
+      fileUrl = cacheImage;
       $loading = false;
       return;
     }
@@ -70,14 +77,9 @@
       return;
     }
     const blob = await res.blob();
-    const localUrl = URL.createObjectURL(blob);
-    const img = document.createElement("img");
-    img.onload = () => {
-      imageSrc = localUrl;
-      $imageCache.push([key, localUrl]);
-      $loading = false;
-    };
-    img.src = localUrl;
+    fileUrl = URL.createObjectURL(blob);
+    $filesPreviewCache.push([key, fileUrl]);
+    $loading = false;
   }
 
   async function copyLink(key: string) {
@@ -85,7 +87,7 @@
     try {
       await navigator.clipboard.writeText(url);
       showSuccess("Copied link to clipboard", 1000);
-    } catch (err) {
+    } catch {
       showError(CLIPBOARD_ERROR, 3000);
     }
   }
@@ -126,8 +128,8 @@
   })();
 </script>
 
-{#if imageSrc}
-  <PreviewModal {imageSrc} {fileName} on:close={() => (imageSrc = undefined)} />
+{#if fileUrl}
+  <PreviewModal imageSrc={fileUrl} {fileName} on:close={() => (fileUrl = undefined)} />
 {/if}
 
 <div class="center fixed top-0 mt-4 z-10">
