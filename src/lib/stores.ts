@@ -14,6 +14,11 @@ type confirmType = "delete" | "deleteAll";
 const confirmData: Writable<[confirmType, string, any]> = writable();
 const confirmResult = writable(false);
 
+/**
+ * Array of preview files cache
+ *
+ * @type {[type: "img" | "txt", key: string, url: string, text: string?]}
+ */
 const filesPreviewCache: Writable<["img" | "txt", string, string, string?][]> = writable([]);
 
 export {
