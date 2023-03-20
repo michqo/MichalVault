@@ -8,7 +8,7 @@
 <main class="center">
   <ProgressIndicator />
   <StatusModal />
-  <div class="center w-full max-w-xl mt-5 md:mt-20">
+  <div class="center w-full max-w-xl">
     <slot />
   </div>
 </main>

@@ -135,6 +135,10 @@
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
 </script>
 
+{#if confirmData}
+  <ConfirmModal title={confirmData[1]} on:done={handleConfirm} />
+{/if}
+
 {#if previewFile}
   <PreviewModal
     file={previewFile}
@@ -143,14 +147,10 @@
   />
 {/if}
 
-{#if confirmData}
-  <ConfirmModal title={confirmData[1]} on:done={handleConfirm} />
-{/if}
-
-<div class="center fixed top-0 mt-4 z-10">
+<div class="center md:absolute w-full max-w-2xl">
   <p>
     Last refreshed on <span class="font-medium"
-      >{$filesCache ? formatDate($filesCache[1], new Date()) : formatDate(today, today)}</span
+      >{$filesCache ? formatDate($filesCache[1], today) : formatDate(today, today)}</span
     >
   </p>
   <code class="text-lg underline select-all">{$page.params.token}</code>
@@ -164,57 +164,52 @@
       ><Delete class={imgClass} /></button
     >
   </div>
-</div>
 
-<div class="fixed center justify-center w-full h-full top-0">
-  <div class="center w-full overflow-x-auto">
-    <h1 class="text-center font-medium text-3xl">Files</h1>
-    <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
-
-    <div
-      class="w-full overflow-x-auto max-w-2xl p-3 bg-white/[.07] border border-slate-700 rounded-lg"
-      in:fade={{ duration }}
-    >
-      <table class="w-full divide-y divide-gray-500">
-        <thead class="uppercase">
-          <tr>
-            <th scope="col" class={thClass} />
-            <th scope="col" class={thClass}> Name </th>
-            <th scope="col" class={thClass}> Uploaded </th>
-            <th scope="col" class={thClass}> Size </th>
+  <h1 class="text-center font-medium text-3xl mt-10 md:mt-20">Files</h1>
+  <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
+  <div
+    class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg"
+    in:fade={{ duration }}
+  >
+    <table class="w-full divide-y divide-gray-500">
+      <thead class="uppercase">
+        <tr>
+          <th scope="col" class={thClass} />
+          <th scope="col" class={thClass}> Name </th>
+          <th scope="col" class={thClass}> Uploaded </th>
+          <th scope="col" class={thClass}> Size </th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each files as file}
+          <tr class="hover:bg-white/[.07]">
+            <td class="{tdClass} flex gap-x-3">
+              <button type="button" on:click={() => deleteFile(file.key)}>
+                <Delete class={svgClass} />
+              </button>
+              <button type="button" on:click={() => copyLink(file.key)}>
+                <Link class={svgClass} />
+              </button>
+              {#if imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name)}
+                <button type="button" on:click={() => openFile(file.name, file.key)}>
+                  <Open class={svgClass} />
+                </button>
+              {/if}
+            </td>
+            <td class={tdClass}>
+              <button
+                type="button"
+                class="hover:underline underline-offset-2"
+                on:click={() => download(file.key)}
+              >
+                {file.name}
+              </button>
+            </td>
+            <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
+            <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
           </tr>
-        </thead>
-        <tbody>
-          {#each files as file}
-            <tr class="hover:bg-white/[.07]">
-              <td class="{tdClass} flex gap-x-3">
-                <button type="button" on:click={() => deleteFile(file.key)}>
-                  <Delete class={svgClass} />
-                </button>
-                <button type="button" on:click={() => copyLink(file.key)}>
-                  <Link class={svgClass} />
-                </button>
-                {#if imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name)}
-                  <button type="button" on:click={() => openFile(file.name, file.key)}>
-                    <Open class={svgClass} />
-                  </button>
-                {/if}
-              </td>
-              <td class={tdClass}>
-                <button
-                  type="button"
-                  class="hover:underline underline-offset-2"
-                  on:click={() => download(file.key)}
-                >
-                  {file.name}
-                </button>
-              </td>
-              <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
-              <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+        {/each}
+      </tbody>
+    </table>
   </div>
 </div>
