@@ -18,7 +18,7 @@ const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
  * Regex for files which can be previewed in the PreviewModal
  */
 const imageExtensionsRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
-const textExtensionsRegex = /\.(txt|py|rs|js|ts|cs|c|cpp|java|kt|gd|css)$/i;
+const textExtensionsRegex = /\.(txt|py|rs|js|ts|cs|c|cpp|java|kt|gd|css|md)$/i;
 
 // Errors
 const FILE_NOT_FOUND = "File not found";
