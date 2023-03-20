@@ -1,12 +1,10 @@
 <script>
   import "../app.css";
 
-  import ConfirmModal from "$lib/components/ConfirmModal.svelte";
   import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
   import StatusModal from "$lib/components/StatusModal.svelte";
 </script>
 
-<ConfirmModal />
 <main class="center">
   <ProgressIndicator />
   <StatusModal />

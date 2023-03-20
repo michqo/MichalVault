@@ -3,14 +3,7 @@
   import { fade, fly } from "svelte/transition";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import {
-    token,
-    loading,
-    confirmData,
-    confirmResult,
-    filesCache,
-    filesPreviewCache
-  } from "$lib/stores";
+  import { token, loading, filesCache, filesPreviewCache } from "$lib/stores";
   import {
     duration,
     maxVaultSizeinMB,
@@ -21,7 +14,7 @@
   } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
-  import { showModal } from "./ConfirmModal.svelte";
+  import ConfirmModal from "./ConfirmModal.svelte";
   import PreviewModal from "./PreviewModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
@@ -31,6 +24,8 @@
 
   export let files: Record<string, string>[];
   let filesSize: number;
+
+  let confirmData: ["delete" | "deleteAll", string, any] | undefined;
   let previewFile: ["txt" | "img", string, string?] | undefined;
   let previewFileName: string;
 
@@ -101,10 +96,33 @@
   }
 
   function deleteFile(key: string) {
-    showModal("delete", "delete file", key);
+    confirmData = ["delete", "delete file", key];
   }
   function deleteAll() {
-    showModal("deleteAll", "delete all files");
+    confirmData = ["delete", "delete all files", undefined];
+  }
+
+  async function handleConfirm(e: CustomEvent<boolean>) {
+    if (!confirmData) return;
+    if (e.detail) {
+      switch (confirmData[0]) {
+        case "delete":
+          const key = confirmData[2];
+          confirmData = undefined;
+          const values = files.filter((value) => value.key != key);
+          files = values;
+          $filesCache = [$page.params.token, new Date(), files];
+          await trpc($page).delete.query({ token: $page.params.token, key });
+          break;
+        case "deleteAll":
+          confirmData = undefined;
+          files = [];
+          $filesCache = [$page.params.token, new Date(), files];
+          await trpc($page).deleteAll.query({ token: $page.params.token });
+          break;
+      }
+    }
+    confirmData = undefined;
   }
 
   async function refresh() {
@@ -115,25 +133,6 @@
   }
 
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
-  $: (async () => {
-    if ($confirmResult) {
-      switch ($confirmData[0]) {
-        case "delete":
-          const key = $confirmData[2];
-          const values = files.filter((value) => value.key != key);
-          files = values;
-          $filesCache = [$page.params.token, new Date(), files];
-          await trpc($page).delete.query({ token: $page.params.token, key });
-          break;
-        case "deleteAll":
-          files = [];
-          $filesCache = [$page.params.token, new Date(), files];
-          await trpc($page).deleteAll.query({ token: $page.params.token });
-          break;
-      }
-      $confirmResult = false;
-    }
-  })();
 </script>
 
 {#if previewFile}
@@ -142,6 +141,10 @@
     name={previewFileName}
     on:close={() => (previewFile = undefined)}
   />
+{/if}
+
+{#if confirmData}
+  <ConfirmModal title={confirmData[1]} on:done={handleConfirm} />
 {/if}
 
 <div class="center fixed top-0 mt-4 z-10">

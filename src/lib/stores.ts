@@ -8,12 +8,6 @@ const token = writable("");
 const success = writable([false, ""]);
 const error = writable([false, ""]);
 
-// Confirm modal stores
-const confirmVisible = writable(false);
-type confirmType = "delete" | "deleteAll";
-const confirmData: Writable<[confirmType, string, any]> = writable();
-const confirmResult = writable(false);
-
 /**
  * Array of preview files cache
  *
@@ -21,17 +15,4 @@ const confirmResult = writable(false);
  */
 const filesPreviewCache: Writable<["img" | "txt", string, string, string?][]> = writable([]);
 
-export {
-  filesCache,
-  inputFiles,
-  filesInput,
-  loading,
-  token,
-  success,
-  error,
-  confirmVisible,
-  confirmData,
-  confirmResult,
-  filesPreviewCache,
-  type confirmType
-};
+export { filesCache, inputFiles, filesInput, loading, token, success, error, filesPreviewCache };
