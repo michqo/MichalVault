@@ -36,7 +36,7 @@
       </a>
     </div>
     {#if file[0] == "img"}
-      <img src={file[1]} alt="Modal img" />
+      <img src={file[1]} class="overflow-auto max-w-full max-h-full" alt="Modal img" />
     {:else}
       <code
         class="p-5 whitespace-pre-line bg-gray-800 rounded-md overflow-auto max-w-full max-h-full"
