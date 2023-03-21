@@ -1,8 +1,14 @@
+/**
+ * Style
+ */
 const buttonClass =
   "text-lg px-3 py-2 rounded-md text-slate-100 bg-white/[.06] border border-slate-300 focus:ring disabled:opacity-50";
 // Set transition duration in ms
 const duration = 250;
 
+/**
+ * Configuration
+ */
 const MB = 1048576;
 const maxSizeInMB = 30;
 const maxSize = MB * maxSizeInMB;
@@ -21,7 +27,9 @@ const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
 const imageExtensionsRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
 const textExtensionsRegex = /\.(txt|py|rs|js|ts|cs|c|cpp|java|kt|gd|css|md)$/i;
 
-// Errors
+/**
+ * Errors
+ */
 const FILE_NOT_FOUND = "File not found";
 const TOKEN_ERROR = "Invalid token";
 const FILE_NAME_ERROR = "Invalid file, selected file(s) includes special characters or is too long";
