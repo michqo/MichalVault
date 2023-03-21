@@ -1,4 +1,5 @@
 <script lang="ts" context="module">
+  import { get } from "svelte/store";
   import { success, error } from "$lib/stores";
 
   const defaultTimeout = 4000;
@@ -12,11 +13,13 @@
   }
 
   export function showError(text: string, t = defaultTimeout) {
+    if (get(error)[0] == true) return;
     error.set([true, text]);
     timeout = t;
     setModalTimout();
   }
   export function showSuccess(text = "Uploaded file to server", t = defaultTimeout) {
+    if (get(success)[0] == true) return;
     success.set([true, text]);
     timeout = t;
     setModalTimout();

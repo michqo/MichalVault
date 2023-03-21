@@ -4,12 +4,12 @@
 
   export let timeout: number;
 
-  const progress = tweened(0, {
+  const progress = tweened(100, {
     duration: timeout
   });
 
   onMount(() => {
-    progress.set(100);
+    progress.set(0);
   });
 </script>
 
