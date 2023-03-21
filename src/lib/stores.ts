@@ -5,8 +5,7 @@ const inputFiles: Writable<FileList> = writable();
 const filesInput: Writable<HTMLInputElement> = writable();
 const loading = writable(false);
 const token = writable("");
-const success = writable([false, ""]);
-const error = writable([false, ""]);
+const status: Writable<["success" | "error", string] | undefined> = writable();
 
 /**
  * Array of preview files cache
@@ -15,4 +14,4 @@ const error = writable([false, ""]);
  */
 const filesPreviewCache: Writable<["img" | "txt", string, string, string?][]> = writable([]);
 
-export { filesCache, inputFiles, filesInput, loading, token, success, error, filesPreviewCache };
+export { filesCache, inputFiles, filesInput, loading, token, status, filesPreviewCache };

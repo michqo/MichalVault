@@ -1,26 +1,25 @@
 <script lang="ts" context="module">
   import { get } from "svelte/store";
-  import { success, error } from "$lib/stores";
+  import { status } from "$lib/stores";
 
   const defaultTimeout = 4000;
   let timeout = defaultTimeout;
 
   function setModalTimout() {
     setTimeout(() => {
-      success.set([false, ""]);
-      error.set([false, ""]);
+      status.set(undefined);
     }, timeout);
   }
 
   export function showError(text: string, t = defaultTimeout) {
-    if (get(error)[0] == true) return;
-    error.set([true, text]);
+    if (get(status)) return;
+    status.set(["error", text]);
     timeout = t;
     setModalTimout();
   }
   export function showSuccess(text = "Uploaded file to server", t = defaultTimeout) {
-    if (get(success)[0] == true) return;
-    success.set([true, text]);
+    if (get(status)) return;
+    status.set(["success", text]);
     timeout = t;
     setModalTimout();
   }
@@ -36,14 +35,11 @@
   const textClass = "tracking-wider mx-2 mt-2 mb-3";
 </script>
 
-{#if $success[0]}
+{#if $status}
   <div class={modalClass} transition:fly={{ y: -50, duration }}>
     <ProgressBar {timeout} />
-    <p class="text-green-400 {textClass}">{$success[1]}</p>
-  </div>
-{:else if $error[0]}
-  <div class={modalClass} transition:fly={{ y: -50, duration }}>
-    <ProgressBar {timeout} />
-    <p class="text-red-400 {textClass}">{$error[1]}</p>
+    <p class="{$status[0] == 'success' ? 'text-green-400' : 'text-red-400'} {textClass}">
+      {$status[1]}
+    </p>
   </div>
 {/if}

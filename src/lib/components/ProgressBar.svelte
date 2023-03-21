@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { tweened } from "svelte/motion";
+  import { status } from "$lib/stores";
 
   export let timeout: number;
 
@@ -8,8 +8,11 @@
     duration: timeout
   });
 
-  onMount(() => {
-    progress.set(0);
+  status.subscribe((value) => {
+    if (value) {
+      progress.set(100, { duration: 0 });
+      progress.set(0);
+    }
   });
 </script>
 
