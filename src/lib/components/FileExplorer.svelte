@@ -73,14 +73,16 @@
       return;
     }
     const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
     if (imageExtensionsRegex.test(name)) {
+      const blobUrl = URL.createObjectURL(blob);
       previewFile = ["img", blobUrl];
       $filesPreviewCache.push(["img", key, blobUrl]);
     } else {
-      const text = await blob.text();
-      previewFile = ["txt", text, blobUrl];
-      $filesPreviewCache.push(["txt", key, text, blobUrl]);
+      const textUTF8Blob = new Blob([blob], {type: "text/plain;charset=utf8"});
+      const text = await textUTF8Blob.text();
+      const textBlobUrl = URL.createObjectURL(textUTF8Blob);
+      previewFile = ["txt", text, textBlobUrl];
+      $filesPreviewCache.push(["txt", key, text, textBlobUrl]);
     }
     $loading = false;
   }
