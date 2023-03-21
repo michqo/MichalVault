@@ -5,10 +5,11 @@
   import Open from "$lib/svgs/Open.svelte";
 
   const dispatch = createEventDispatcher();
+  const decoder = new TextDecoder();
 
   const modalClass =
     "fixed center justify-between z-30 my-5 w-full md:max-w-4xl max-h-screen md:max-h-[95%] gap-y-3 md:gap-y-20 px-10 py-5 bg-gray-900 md:border md:border-slate-600 rounded drop-shadow-xl";
-  export let file: ["txt" | "img", string, string?];
+  export let file: ["txt" | "img", string, ArrayBuffer?];
   export let name: string;
 
   onMount(() => {
@@ -30,7 +31,7 @@
   <div class={modalClass}>
     <div class="center md:flex-row gap-x-4">
       <h1 class="text-center text-xl font-medium tracking-wider">{name}</h1>
-      <a target="_blank" rel="noreferrer" href={file[0] == "img" ? file[1] : file[2]}>
+      <a target="_blank" rel="noreferrer" href={file[1]}>
         <Open class="w-7 h-7" />
       </a>
     </div>
@@ -39,7 +40,7 @@
     {:else}
       <code
         class="p-5 whitespace-pre-line bg-gray-800 rounded-md overflow-auto max-w-full max-h-full"
-        >{file[1]}</code
+        >{decoder.decode(file[2])}</code
       >
     {/if}
     <button class={buttonClass} on:click={close}>Close</button>

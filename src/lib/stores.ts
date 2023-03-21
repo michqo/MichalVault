@@ -10,8 +10,8 @@ const status: Writable<["success" | "error", string] | undefined> = writable();
 /**
  * Array of preview files cache
  *
- * @type {[type: "img" | "txt", key: string, url: string, text: string?]}
+ * @type {[type: "img" | "txt", key: string, url: string, arrayBuffer: ArrayBuffer?]}
  */
-const filesPreviewCache: Writable<["img" | "txt", string, string, string?][]> = writable([]);
+const filesPreviewCache: Writable<["img" | "txt", string, string, ArrayBuffer?][]> = writable([]);
 
 export { filesCache, inputFiles, filesInput, loading, token, status, filesPreviewCache };

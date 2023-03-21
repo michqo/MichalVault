@@ -26,7 +26,7 @@
   let filesSize: number;
 
   let confirmData: ["delete" | "deleteAll", string, any] | undefined;
-  let previewFile: ["txt" | "img", string, string?] | undefined;
+  let previewFile: ["txt" | "img", string, ArrayBuffer?] | undefined;
   let previewFileName: string;
 
   const today = new Date();
@@ -49,7 +49,7 @@
     window.location.replace(url);
   }
 
-  function findPreviewFileInCache(key: string): ["txt" | "img", string, string?] | undefined {
+  function findPreviewFileInCache(key: string): ["txt" | "img", string, ArrayBuffer?] | undefined {
     for (const file of $filesPreviewCache) {
       if (file[1] == key) return [file[0], file[2], file[3]];
     }
@@ -78,11 +78,11 @@
       previewFile = ["img", blobUrl];
       $filesPreviewCache.push(["img", key, blobUrl]);
     } else {
-      const textUTF8Blob = new Blob([blob], {type: "text/plain;charset=utf8"});
-      const text = await textUTF8Blob.text();
-      const textBlobUrl = URL.createObjectURL(textUTF8Blob);
-      previewFile = ["txt", text, textBlobUrl];
-      $filesPreviewCache.push(["txt", key, text, textBlobUrl]);
+      const textBlob = new Blob([blob], { type: "text/plain;charset=utf8" });
+      const buffer = await textBlob.arrayBuffer();
+      const blobUrl = URL.createObjectURL(textBlob);
+      previewFile = ["txt", blobUrl, buffer];
+      $filesPreviewCache.push(["txt", key, blobUrl, buffer]);
     }
     $loading = false;
   }
