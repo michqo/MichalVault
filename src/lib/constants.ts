@@ -11,6 +11,7 @@ const maxVaultSize = MB * maxVaultSizeinMB;
 const maxVaultFilesCount = 20;
 const maxBucketSizeInGB = 10;
 const maxBucketSize = MB * 1000 * maxBucketSizeInGB;
+const maxPreviewSize = MB * 0.5;
 const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
 const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
 
@@ -44,6 +45,7 @@ export {
   maxBucketSizeInGB,
   maxVaultFilesCount,
   maxBucketSize,
+  maxPreviewSize,
   tokenRegex,
   fileRegex,
   imageExtensionsRegex,

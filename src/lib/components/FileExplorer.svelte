@@ -10,7 +10,8 @@
     imageExtensionsRegex,
     textExtensionsRegex,
     CLIPBOARD_ERROR,
-    FILE_NOT_FOUND
+    FILE_NOT_FOUND,
+    maxPreviewSize
   } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
@@ -192,7 +193,7 @@
               <button type="button" on:click={() => copyLink(file.key)}>
                 <Link class={svgClass} />
               </button>
-              {#if imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name)}
+              {#if parseInt(file.size) < maxPreviewSize && (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
                 <button type="button" on:click={() => openFile(file.name, file.key)}>
                   <Open class={svgClass} />
                 </button>
