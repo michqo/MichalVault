@@ -9,7 +9,7 @@ const MAX_REQUESTS = 100;
 const TIME_PERIOD = 30 * 60 * 1000; // 30 minutes
 
 interface IPRequest {
-  count: number; // Requests coint
+  count: number; // Requests count
   time: number; // Request time
 }
 
