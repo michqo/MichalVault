@@ -32,7 +32,7 @@
   <button class="mt-10" on:click={() => ($showInfoPanel = false)}
     ><Close class="w-12 h-12 text-red-500" /></button
   >
-  <div class="w-full h-full max-w-3xl center gap-y-3 justify-center text-center">
+  <div class="w-full h-full max-w-xs md:max-w-3xl center gap-y-3 justify-center text-center">
     <h1 class="font-bold text-5xl tracking-widest">About</h1>
     <div class="leading-relaxed tracking-wide mt-5">
       <p>Web Vault is a simple file hosting service.</p>

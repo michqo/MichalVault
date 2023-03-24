@@ -8,7 +8,6 @@
   import Upload from "$lib/components/Upload.svelte";
   import InfoPanel from "$lib/components/InfoPanel.svelte";
   import { showError } from "$lib/components/StatusModal.svelte";
-  import Info from "$lib/svgs/Info.svelte";
 
   onMount(() => {
     // Persistent files between routes
@@ -31,10 +30,6 @@
 {#if $showInfoPanel}
   <InfoPanel />
 {/if}
-
-<button class="fixed top-0 right-0 m-5" on:click={() => ($showInfoPanel = true)}
-  ><Info class="w-10 h-10" /></button
->
 
 <Header />
 <Token />
