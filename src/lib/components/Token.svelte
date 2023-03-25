@@ -9,7 +9,7 @@
   const inputDivClass = "center md:flex-row md:items-stretch gap-2";
   const labelClass = "text-slate-200 block mb-1";
   const inputClass =
-    "w-full px-2 py-2 bg-transparent border border-solid border-gray-200 rounded-md focus:outline-none focus:ring";
+    "w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500/[.8]";
   let newToken = "";
   let redirectToken = "";
 

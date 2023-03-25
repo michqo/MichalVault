@@ -33,7 +33,7 @@
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
   const tdClass = "text-sm py-2 px-2 whitespace-nowrap";
-  const btnClass = "p-1 rounded hover:bg-white/[.1] focus:ring";
+  const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
   const imgClass = "w-14 h-14";
   const svgClass = "w-7 h-7";
 
@@ -158,7 +158,7 @@
   </p>
   <code class="text-lg underline select-all">{$page.params.token}</code>
   <div
-    class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-md drop-shadow-xl"
+    class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
     in:fly={{ y: -100, duration }}
   >
     <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
@@ -168,7 +168,7 @@
     >
   </div>
 
-  <h1 class="text-center font-medium text-3xl mt-10 md:mt-20">Files</h1>
+  <h1 class="text-center font-medium text-3xl tracking-wider mt-10 md:mt-20">Files</h1>
   <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
   <div
     class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg"

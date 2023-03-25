@@ -29,7 +29,7 @@
   class="fixed center w-full inset-0 z-20 overflow-y-auto bg-transparent backdrop-blur-xl"
   transition:fade={{ duration }}
 >
-  <button class="mt-10" on:click={() => ($showInfoPanel = false)}
+  <button class="mt-10 p-1 rounded-md hover:bg-white/[.1]" on:click={() => ($showInfoPanel = false)}
     ><Close class="w-12 h-12 text-red-500" /></button
   >
   <div class="w-full h-full max-w-xs md:max-w-3xl center gap-y-3 justify-center text-center">

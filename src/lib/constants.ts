@@ -2,8 +2,10 @@
  * Style
  */
 const buttonClass =
-  "text-lg px-3 py-2 rounded-md text-slate-100 bg-white/[.06] border border-slate-300 focus:ring disabled:opacity-50";
-// Set transition duration in ms
+  "text-lg px-3 py-2 rounded-md text-slate-100 bg-gray-800 border border-slate-300 focus:ring focus:ring-blue-500/[.8] disabled:opacity-50";
+/**
+ * Transition duration in milliseconds
+ */
 const duration = 250;
 
 /**
