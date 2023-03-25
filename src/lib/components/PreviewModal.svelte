@@ -13,9 +13,13 @@
   export let name: string;
 
   onMount(() => {
-    document.addEventListener("keydown", (e) => {
+    const funcRef = (e: KeyboardEvent) => {
       if (e.key == "Escape") close();
-    });
+    };
+    document.addEventListener("keydown", funcRef);
+    return () => {
+      document.removeEventListener("keydown", funcRef);
+    };
   });
 
   function close() {

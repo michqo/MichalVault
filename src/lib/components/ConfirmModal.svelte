@@ -21,9 +21,14 @@
 
   onMount(() => {
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", (e) => {
+    const funcRef = (e: KeyboardEvent) => {
       if (e.key == "Escape") dispatch("done", false);
-    });
+    };
+    document.addEventListener("keydown", funcRef);
+    return () => {
+      document.body.style.overflow = "visible";
+      document.removeEventListener("keydown", funcRef);
+    };
   });
 </script>
 
