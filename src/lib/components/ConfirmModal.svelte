@@ -6,8 +6,8 @@
   import Done from "$lib/svgs/Done.svelte";
 
   const modalClass =
-    "center fixed mx-4 px-10 py-5 bg-gray-900 border border-slate-600 rounded drop-shadow-xl";
-  const btnClass = "p-1 rounded hover:bg-white/[.1]";
+    "center fixed mx-4 px-10 py-5 bg-gray-900 border border-slate-600 rounded-xl drop-shadow-xl";
+  const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
   const imgClass = "w-14 h-14";
 
   export let title: string;
@@ -21,9 +21,14 @@
 
   onMount(() => {
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", (e) => {
+    const funcRef = (e: KeyboardEvent) => {
       if (e.key == "Escape") dispatch("done", false);
-    });
+    };
+    document.addEventListener("keydown", funcRef);
+    return () => {
+      document.body.style.overflow = "visible";
+      document.removeEventListener("keydown", funcRef);
+    };
   });
 </script>
 
@@ -36,7 +41,7 @@
   </button>
   <div class={modalClass}>
     <h1 class="text-center text-xl font-medium tracking-wider">Confirm {title}?</h1>
-    <div class="flex space-between gap-x-3 mt-16">
+    <div class="flex space-between gap-x-3 mt-10">
       <button class={btnClass} on:click={() => setResult(true)}><Done class={imgClass} /></button>
       <button class={btnClass} on:click={() => setResult(false)}><Close class={imgClass} /></button>
     </div>

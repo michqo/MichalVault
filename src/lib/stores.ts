@@ -6,6 +6,7 @@ const filesInput: Writable<HTMLInputElement> = writable();
 const loading = writable(false);
 const token = writable("");
 const status: Writable<["success" | "error", string] | undefined> = writable();
+const showInfoPanel = writable(false);
 
 /**
  * Array of preview files cache
@@ -14,4 +15,13 @@ const status: Writable<["success" | "error", string] | undefined> = writable();
  */
 const filesPreviewCache: Writable<["img" | "txt", string, string, ArrayBuffer?][]> = writable([]);
 
-export { filesCache, inputFiles, filesInput, loading, token, status, filesPreviewCache };
+export {
+  filesCache,
+  inputFiles,
+  filesInput,
+  loading,
+  token,
+  status,
+  showInfoPanel,
+  filesPreviewCache
+};
