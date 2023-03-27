@@ -17,6 +17,7 @@
   } from "$lib/constants";
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
+  import { TRPCClientError } from "@trpc/client";
 
   let uploading = false;
   let uploadedCount: number;
@@ -116,6 +117,8 @@
         } else {
           showError(e.message);
         }
+      } else if (e instanceof TRPCClientError) {
+        showError(`Error: ${e.message}`);
       } else {
         showError(CLIENT_ERROR);
       }
@@ -144,15 +147,13 @@
   }
 
   // Successful files upload
-  $: {
-    if (filesCount && uploadedCount == filesCount) {
-      showSuccess();
-      addFilesToCache();
-      $filesInput.value = "";
-      // @ts-ignore
-      $inputFiles = undefined;
-      uploading = false;
-    }
+  $: if (filesCount && uploadedCount == filesCount) {
+    showSuccess();
+    addFilesToCache();
+    $filesInput.value = "";
+    // @ts-ignore
+    $inputFiles = undefined;
+    uploading = false;
   }
 </script>
 
