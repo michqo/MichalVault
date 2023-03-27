@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
+  import { TRPCClientError } from "@trpc/client";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { token, loading, filesCache, filesPreviewCache } from "$lib/stores";
@@ -9,9 +10,10 @@
     maxVaultSizeinMB,
     imageExtensionsRegex,
     textExtensionsRegex,
+    maxPreviewSize,
     CLIPBOARD_ERROR,
     FILE_NOT_FOUND,
-    maxPreviewSize
+    SERVER_ERROR
   } from "$lib/constants";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
@@ -43,9 +45,24 @@
     if ($filesCache && files.length == 0) files = $filesCache[2];
   });
 
+  function showRateLimitError(e: any) {
+    if (e instanceof TRPCClientError) {
+      showError(`Error: ${e.message}`);
+    } else {
+      showError(SERVER_ERROR);
+    }
+  }
+
   async function download(key: string) {
     $loading = true;
-    const url = await trpc($page).fetchOne.query({ key });
+    let url: string;
+    try {
+      url = await trpc($page).fetchOne.query({ key });
+    } catch (e) {
+      showRateLimitError(e);
+      $loading = false;
+      return;
+    }
     $loading = false;
     window.location.replace(url);
   }
@@ -66,7 +83,14 @@
       $loading = false;
       return;
     }
-    const url = await trpc($page).fetchOne.query({ key });
+    let url: string;
+    try {
+      url = await trpc($page).fetchOne.query({ key });
+    } catch (e) {
+      showRateLimitError(e);
+      $loading = false;
+      return;
+    }
     let res = await fetch(url);
     if (res.status >= 400) {
       showError(FILE_NOT_FOUND);
@@ -102,7 +126,7 @@
     confirmData = ["delete", "delete file", key];
   }
   function deleteAll() {
-    confirmData = ["delete", "delete all files", undefined];
+    confirmData = ["deleteAll", "delete all files", undefined];
   }
 
   async function handleConfirm(e: CustomEvent<boolean>) {
@@ -115,13 +139,23 @@
           const values = files.filter((value) => value.key != key);
           files = values;
           $filesCache = [$page.params.token, new Date(), files];
-          await trpc($page).delete.query({ token: $page.params.token, key });
+          try {
+            await trpc($page).delete.query({ token: $page.params.token, key });
+          } catch (e) {
+            showRateLimitError(e);
+            files = [];
+            $filesCache = undefined;
+          }
           break;
         case "deleteAll":
           confirmData = undefined;
           files = [];
           $filesCache = [$page.params.token, new Date(), files];
-          await trpc($page).deleteAll.query({ token: $page.params.token });
+          try {
+            await trpc($page).deleteAll.query({ token: $page.params.token });
+          } catch (e) {
+            showRateLimitError(e);
+          }
           break;
       }
     }
@@ -130,7 +164,11 @@
 
   async function refresh() {
     $loading = true;
-    files = await trpc($page).fetchAll.query({ token: $page.params.token });
+    try {
+      files = await trpc($page).fetchAll.query({ token: $page.params.token });
+    } catch (e) {
+      showRateLimitError(e);
+    }
     $filesCache = [$page.params.token, new Date(), files];
     $loading = false;
   }
