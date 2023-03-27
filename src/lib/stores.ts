@@ -1,4 +1,5 @@
 import { type Writable, writable } from "svelte/store";
+import type { IPRequest } from "./constants";
 
 const filesCache: Writable<[string, Date, Record<string, string>[]] | undefined> = writable();
 const inputFiles: Writable<FileList> = writable();
@@ -15,6 +16,11 @@ const showInfoPanel = writable(false);
  */
 const filesPreviewCache: Writable<["img" | "txt", string, string, ArrayBuffer?][]> = writable([]);
 
+/**
+ * Object of requests for rate limit
+ */
+let ipRequests: Record<string, IPRequest> = {};
+
 export {
   filesCache,
   inputFiles,
@@ -23,5 +29,6 @@ export {
   token,
   status,
   showInfoPanel,
-  filesPreviewCache
+  filesPreviewCache,
+  ipRequests
 };

@@ -22,6 +22,12 @@ const maxBucketSize = MB * 1000 * maxBucketSizeInGB;
 const maxPreviewSize = MB * 4;
 const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
 const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
+const MAX_REQUESTS = 100;
+const TIME_PERIOD = 30 * 60 * 1000; // 30 minutes
+interface IPRequest {
+  count: number; // Requests count
+  time: number; // Request time
+}
 
 /**
  * Regex for files which can be previewed in the PreviewModal
@@ -60,6 +66,9 @@ export {
   fileRegex,
   imageExtensionsRegex,
   textExtensionsRegex,
+  MAX_REQUESTS,
+  TIME_PERIOD,
+  type IPRequest,
   FILE_NOT_FOUND,
   TOKEN_ERROR,
   FILE_NAME_ERROR,

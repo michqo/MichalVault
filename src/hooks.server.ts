@@ -4,16 +4,8 @@ import { sequence } from "@sveltejs/kit/hooks";
 import { createTRPCHandle } from "trpc-sveltekit";
 import { createContext } from "$lib/trpc/context";
 import { router } from "$lib/trpc/router";
-
-const MAX_REQUESTS = 100;
-const TIME_PERIOD = 30 * 60 * 1000; // 30 minutes
-
-interface IPRequest {
-  count: number; // Requests count
-  time: number; // Request time
-}
-
-let ipRequests: Record<string, IPRequest> = {};
+import { MAX_REQUESTS, TIME_PERIOD } from "$lib/constants";
+import { ipRequests } from "$lib/stores";
 
 const ratelimiter: Handle = async ({ event, resolve }) => {
   const clientIp = event.getClientAddress();

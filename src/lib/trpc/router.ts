@@ -5,8 +5,9 @@ import { createPresignedPost, type PresignedPostOptions } from "@aws-sdk/s3-pres
 import randomWords from "random-words";
 import s3 from "$lib/server/connection";
 import { S3_BUCKET_NAME } from "$env/static/private";
-import type { Context } from "$lib/trpc/context";
-import { initTRPC, TRPCError } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
+import { t } from "./t";
+import { ratelimit } from "./middleware";
 import {
   FULL_DB_ERROR,
   maxBucketSize,
@@ -54,12 +55,12 @@ function checkBucketSize(size: number): Promise<void> {
   });
 }
 
-export const t = initTRPC.context<Context>().create();
-
 const token = z.string().regex(tokenRegex);
 
+const procedure = t.procedure.use(ratelimit);
+
 export const router = t.router({
-  deleteAll: t.procedure.input(z.object({ token })).query(async ({ input }) => {
+  deleteAll: procedure.input(z.object({ token })).query(async ({ input }) => {
     s3.listObjectsV2(
       {
         Bucket: S3_BUCKET_NAME,
@@ -77,20 +78,20 @@ export const router = t.router({
       }
     );
   }),
-  delete: t.procedure.input(z.object({ token, key: z.string() })).query(async ({ input }) => {
+  delete: procedure.input(z.object({ token, key: z.string() })).query(async ({ input }) => {
     await s3.deleteObject({
       Bucket: S3_BUCKET_NAME,
       Key: input.key
     });
   }),
-  fetchToken: t.procedure.query(async ({}) => {
+  fetchToken: procedure.query(async ({}) => {
     const words = randomWords({
       exactly: 3,
       maxLength: 4
     });
     return words.join("-");
   }),
-  getUploadUrl: t.procedure
+  getUploadUrl: procedure
     .input(z.object({ token, filesSize: z.number().min(0), filesCount: z.number().min(0) }))
     .query(async ({ input }) => {
       // Pre file upload checks
@@ -125,7 +126,7 @@ export const router = t.router({
       };
       return await createPresignedPost(s3, options);
     }),
-  fetchOne: t.procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
+  fetchOne: procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     const command = new GetObjectCommand({
       Bucket: S3_BUCKET_NAME,
       ResponseContentDisposition: "attachment",
@@ -134,7 +135,7 @@ export const router = t.router({
     const url = await getSignedUrl(s3, command);
     return url;
   }),
-  fetchAll: t.procedure.input(z.object({ token })).query(async ({ input }) => {
+  fetchAll: procedure.input(z.object({ token })).query(async ({ input }) => {
     if (input.token.length == 0) return [];
     const data = await s3.listObjectsV2({
       Bucket: S3_BUCKET_NAME,
