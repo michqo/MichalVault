@@ -39,9 +39,9 @@
   const imgClass = "w-14 h-14";
   const svgClass = "w-7 h-7";
 
-  onMount(() => {
+  onMount(async () => {
     if (!$filesCache) $filesCache = [$page.params.token, new Date(), files];
-    if ($filesCache[0] != $token) $filesCache = undefined;
+    if ($filesCache[0] != $page.params.token) await refresh();
     if ($filesCache && files.length == 0) files = $filesCache[2];
   });
 
