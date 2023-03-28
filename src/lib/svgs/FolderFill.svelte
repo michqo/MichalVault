@@ -1,0 +1,16 @@
+<script>
+  let className = void 0;
+  export { className as class };
+</script>
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 96 960 960"
+  height="48"
+  width="48"
+  fill="currentColor"
+  class={className}
+  ><path
+    d="M141 896q-24 0-42-18.5T81 836V316q0-23 18-41.5t42-18.5h280l60 60h340q23 0 41.5 18.5T881 376v460q0 23-18.5 41.5T821 896H141Z"
+  /></svg
+>
