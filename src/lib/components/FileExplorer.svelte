@@ -1,12 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fade, fly } from "svelte/transition";
   import { TRPCClientError } from "@trpc/client";
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
-  import { token, loading, filesCache, filesPreviewCache } from "$lib/stores";
+  import { loading, filesCache, filesPreviewCache } from "$lib/stores";
   import {
-    duration,
     maxVaultSizeinMB,
     imageExtensionsRegex,
     textExtensionsRegex,
@@ -188,7 +186,7 @@
   />
 {/if}
 
-<div class="center md:absolute w-full max-w-2xl">
+<div class="center md:absolute w-full max-w-2xl mt-8">
   <p>
     Last refreshed on <span class="font-medium"
       >{$filesCache ? formatDate($filesCache[1], today) : formatDate(today, today)}</span
@@ -197,7 +195,6 @@
   <code class="text-lg underline select-all">{$page.params.token}</code>
   <div
     class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
-    in:fly={{ y: -100, duration }}
   >
     <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
     <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
@@ -208,10 +205,7 @@
 
   <h1 class="text-center font-medium text-3xl tracking-wider mt-10 md:mt-20">Files</h1>
   <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
-  <div
-    class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg"
-    in:fade={{ duration }}
-  >
+  <div class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg">
     <table class="w-full divide-y divide-gray-500">
       <thead class="uppercase">
         <tr>
