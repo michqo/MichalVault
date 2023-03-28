@@ -186,65 +186,69 @@
   />
 {/if}
 
-<div class="center md:absolute w-full max-w-2xl mt-8">
-  <p>
-    Last refreshed on <span class="font-medium"
-      >{$filesCache ? formatDate($filesCache[1], today) : formatDate(today, today)}</span
+<div class="center md:absolute w-full h-[60%] max-w-2xl mt-8">
+  <div class="center flex-1">
+    <p>
+      Last refreshed on <span class="font-medium"
+        >{$filesCache ? formatDate($filesCache[1], today) : formatDate(today, today)}</span
+      >
+    </p>
+    <code class="text-lg underline select-all">{$page.params.token}</code>
+    <div
+      class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
     >
-  </p>
-  <code class="text-lg underline select-all">{$page.params.token}</code>
-  <div
-    class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
-  >
-    <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
-    <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
-    <button class={btnClass} title="Delete all files" on:click={deleteAll}
-      ><Delete class={imgClass} /></button
-    >
+      <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
+      <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
+      <button class={btnClass} title="Delete all files" on:click={deleteAll}
+        ><Delete class={imgClass} /></button
+      >
+    </div>
   </div>
 
-  <h1 class="text-center font-medium text-3xl tracking-wider mt-10 md:mt-20">Files</h1>
-  <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
-  <div class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg">
-    <table class="w-full divide-y divide-gray-500">
-      <thead class="uppercase">
-        <tr>
-          <th scope="col" class={thClass} />
-          <th scope="col" class={thClass}> Name </th>
-          <th scope="col" class={thClass}> Uploaded </th>
-          <th scope="col" class={thClass}> Size </th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each files as file}
-          <tr class="hover:bg-white/[.07]">
-            <td class="{tdClass} flex gap-x-3">
-              <button type="button" on:click={() => deleteFile(file.key)}>
-                <Delete class={svgClass} />
-              </button>
-              <button type="button" on:click={() => copyLink(file.key)}>
-                <Link class={svgClass} />
-              </button>
-              {#if parseInt(file.size) < maxPreviewSize && (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
-                <button type="button" on:click={() => openFile(file.name, file.key)}>
-                  <Open class={svgClass} />
-                </button>
-              {/if}
-            </td>
-            <td class={tdClass}>
-              <button
-                type="button"
-                class="hover:underline underline-offset-2"
-                on:click={() => download(file.key)}
-              >
-                {file.name}
-              </button>
-            </td>
-            <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
-            <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
+  <div class="center w-full flex-1">
+    <h1 class="text-center font-medium text-3xl tracking-wider mt-10 md:mt-5">Files</h1>
+    <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
+    <div class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg">
+      <table class="w-full divide-y divide-gray-500">
+        <thead class="uppercase">
+          <tr>
+            <th scope="col" class={thClass} />
+            <th scope="col" class={thClass}> Name </th>
+            <th scope="col" class={thClass}> Uploaded </th>
+            <th scope="col" class={thClass}> Size </th>
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {#each files as file}
+            <tr class="hover:bg-white/[.07]">
+              <td class="{tdClass} flex gap-x-3">
+                <button type="button" on:click={() => deleteFile(file.key)}>
+                  <Delete class={svgClass} />
+                </button>
+                <button type="button" on:click={() => copyLink(file.key)}>
+                  <Link class={svgClass} />
+                </button>
+                {#if parseInt(file.size) < maxPreviewSize && (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
+                  <button type="button" on:click={() => openFile(file.name, file.key)}>
+                    <Open class={svgClass} />
+                  </button>
+                {/if}
+              </td>
+              <td class={tdClass}>
+                <button
+                  type="button"
+                  class="hover:underline underline-offset-2"
+                  on:click={() => download(file.key)}
+                >
+                  {file.name}
+                </button>
+              </td>
+              <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
+              <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
