@@ -34,7 +34,8 @@ interface IPRequest {
  * Regex for files which can be previewed in the PreviewModal
  */
 const imageExtensionsRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
-const textExtensionsRegex = /\.(txt|py|rs|js|ts|cs|c|cpp|java|kt|gd|css|md)$/i;
+const textExtensionsRegex =
+  /\.(txt|md|rs|js|ts|gd|css|md|html|java|py|c|php|cs|cake|cshtml|csx|cpp|cp|cc|cobol|cob|ccp|css|flux|fx|go|jsp|kt|ktm|kts|numpy|numpyw|numsc|pls|pck|pkb|pks|plbplsql|sql|perl|r|rd|rs|rsx|sh|bash|st|cs|swift|vb|class)$/i;
 
 /**
  * Errors
