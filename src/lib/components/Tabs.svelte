@@ -6,7 +6,7 @@
   import Upload from "$lib/svgs/Upload.svelte";
 
   const linkClass =
-    "w-1/2 py-1 text-lg flex justify-center items-center gap-x-2 border-b hover:bg-gray-800";
+    "w-1/2 py-1 text-lg flex justify-center items-center gap-x-2 border-b md:hover:bg-gray-800";
   const activeClass = "border-indigo-400";
   const inactiveClass = "border-indigo-900 opacity-80";
   const svgClass = "w-7 h-7";
