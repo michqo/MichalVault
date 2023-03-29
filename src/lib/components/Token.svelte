@@ -52,7 +52,7 @@
 
 <!-- TODO: Input text with label and optional buttons component -->
 
-<div class="mt-8 md:w-full max-w-xs px-3 py-2 rounded-md bg-gray-800">
+<div class="mt-8 w-full max-w-xs px-3 py-2 rounded-md bg-gray-800">
   <button
     on:click={() => (tokenVisible = !tokenVisible)}
     class="w-full flex items-center justify-between"
