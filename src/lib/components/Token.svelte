@@ -48,7 +48,7 @@
   }
 </script>
 
-<div class="w-full center gap-y-2 mt-8">
+<div class="w-full center gap-y-2 mt-10">
   <Accordion bind:visible={showChangeToken} label="Change token">
     <div class="w-full pt-4 pb-3" transition:slide={{ duration }}>
       <Input bind:text={newToken}>
@@ -69,8 +69,8 @@
   </Accordion>
 </div>
 
-<div class="text-center">
-  <p class="text-xl font-bold mt-4">Your vault token is</p>
+<div class="text-center mt-5">
+  <p class="text-xl font-bold">Your vault token is</p>
   <code class="text-lg {$token.length != 0 ? 'underline select-all' : ''}"
     >{$token.length != 0 ? $token : "loading..."}</code
   >

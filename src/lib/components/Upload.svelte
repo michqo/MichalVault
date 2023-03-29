@@ -157,7 +157,7 @@
   }
 </script>
 
-<form class="center gap-y-3 w-full mb-10 mt-5" on:submit|preventDefault={handleSubmit}>
+<form class="center gap-y-3 w-full mt-10" on:submit|preventDefault={handleSubmit}>
   {#if (progress > 0 && progress < 100) || uploading}
     <div class="w-full center gap-y-2" transition:fade={{ duration }}>
       <div class="w-full flex justify-between">
