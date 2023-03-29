@@ -37,7 +37,7 @@
   transition:fade={{ duration }}
 >
   <button class="cursor-default" on:click={() => setResult(false)}>
-    <div class="fixed inset-0 w-full h-full bg-black/[.3]" />
+    <div class="fixed inset-0 w-full h-full bg-black/[.6]" />
   </button>
   <div class={modalClass}>
     <h1 class="text-center text-xl font-medium tracking-wider">Confirm {title}?</h1>
