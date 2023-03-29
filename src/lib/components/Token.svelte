@@ -6,15 +6,13 @@
   import { token, filesCache, filesPreviewCache } from "../stores";
   import { buttonClass, duration, tokenRegex, TOKEN_ERROR } from "../constants";
   import { showError } from "./StatusModal.svelte";
-  import Expand from "$lib/svgs/Expand.svelte";
+  import Input from "./controls/Input.svelte";
+  import Accordion from "./controls/Accordion.svelte";
 
-  const inputDivClass = "center md:flex-row md:items-stretch gap-2";
-  const labelClass = "text-slate-200 block mb-1";
-  const inputClass =
-    "w-full px-3 py-2 bg-transparent border border-slate-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500/[.8]";
   let newToken = "";
   let redirectToken = "";
-  let tokenVisible = false;
+  let showChangeToken = false;
+  let showRedirectToken = false;
 
   onMount(async () => {
     const t = localStorage.getItem("token");
@@ -50,51 +48,25 @@
   }
 </script>
 
-<!-- TODO: Input text with label and optional buttons component -->
-
-<div class="mt-8 w-full max-w-xs px-3 py-2 rounded-md bg-gray-800">
-  <button
-    on:click={() => (tokenVisible = !tokenVisible)}
-    class="w-full flex items-center justify-between"
-  >
-    <p class="text-lg font-medium">Token</p>
-    <Expand class="w-7 h-7 transition-transform {tokenVisible ? 'rotate-180' : 'rotate-0'}" />
-  </button>
-  {#if tokenVisible}
+<div class="w-full center gap-y-2 mt-8">
+  <Accordion bind:visible={showChangeToken} label="Change token">
     <div class="w-full pt-4 pb-3" transition:slide={{ duration }}>
-      <div class="w-full">
-        <label for="tokenInput" class={labelClass}>Change token</label>
-        <div class={inputDivClass}>
-          <input
-            type="text"
-            id="tokenInput"
-            placeholder="Token"
-            bind:value={newToken}
-            class={inputClass}
-          />
-          <div class="flex gap-2 flex-row">
-            <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
-            {#if $token.length < 11}
-              <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
-            {/if}
-          </div>
-        </div>
-      </div>
-      <div class="w-full mt-2">
-        <label for="tokenInput2" class={labelClass}>Go to vault</label>
-        <div class={inputDivClass}>
-          <input
-            type="text"
-            id="tokenInput2"
-            placeholder="Token"
-            bind:value={redirectToken}
-            class={inputClass}
-          />
-          <a href="/files/{redirectToken}" class="{buttonClass} py-1">Go</a>
-        </div>
-      </div>
+      <Input label="Change token" bind:text={newToken}>
+        <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
+        {#if $token.length < 11}
+          <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
+        {/if}
+      </Input>
     </div>
-  {/if}
+  </Accordion>
+
+  <Accordion bind:visible={showRedirectToken} label="Go to vault">
+    <div class="w-full pt-4 pb-3" transition:slide={{ duration }}>
+      <Input label="Go to vault" bind:text={redirectToken}>
+        <a href="/files/{redirectToken}" class="{buttonClass} py-1">Go</a>
+      </Input>
+    </div>
+  </Accordion>
 </div>
 
 <div class="text-center">
