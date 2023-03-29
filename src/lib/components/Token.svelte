@@ -51,7 +51,7 @@
 <div class="w-full center gap-y-2 mt-8">
   <Accordion bind:visible={showChangeToken} label="Change token">
     <div class="w-full pt-4 pb-3" transition:slide={{ duration }}>
-      <Input label="Change token" bind:text={newToken}>
+      <Input bind:text={newToken}>
         <button on:click={changeToken} class="{buttonClass} py-1">Change</button>
         {#if $token.length < 11}
           <button on:click={resetToken} class="{buttonClass} py-1">Reset</button>
@@ -62,7 +62,7 @@
 
   <Accordion bind:visible={showRedirectToken} label="Go to vault">
     <div class="w-full pt-4 pb-3" transition:slide={{ duration }}>
-      <Input label="Go to vault" bind:text={redirectToken}>
+      <Input bind:text={redirectToken}>
         <a href="/files/{redirectToken}" class="{buttonClass} py-1">Go</a>
       </Input>
     </div>
