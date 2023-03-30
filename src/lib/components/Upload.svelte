@@ -5,16 +5,14 @@
   import { trpc } from "$lib/trpc/client";
   import { formatBytes } from "../utils";
   import { loading, filesCache, inputFiles, filesInput, token } from "$lib/stores";
+  import { buttonClass, duration, maxSize } from "$lib/constants";
   import {
-    buttonClass,
-    duration,
-    maxSize,
     FILE_SELECTED_ERROR,
     FILE_SIZE_ERROR,
     NETWORK_ERROR,
     CLIENT_ERROR,
     SERVER_ERROR
-  } from "$lib/constants";
+  } from "$lib/errors";
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
   import { TRPCClientError } from "@trpc/client";

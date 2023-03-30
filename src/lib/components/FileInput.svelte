@@ -1,7 +1,8 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { inputFiles, filesInput } from "$lib/stores";
-  import { duration, fileRegex, FILE_NAME_ERROR } from "$lib/constants";
+  import { duration, fileRegex } from "$lib/constants";
+  import { FILE_NAME_ERROR } from "$lib/errors";
   import { formatBytes } from "../utils";
   import { showError } from "./StatusModal.svelte";
   import Delete from "$lib/svgs/Delete.svelte";

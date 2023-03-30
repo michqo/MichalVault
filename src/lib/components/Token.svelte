@@ -4,7 +4,8 @@
   import { page } from "$app/stores";
   import { trpc } from "$lib/trpc/client";
   import { token, filesCache, filesPreviewCache } from "../stores";
-  import { buttonClass, duration, tokenRegex, TOKEN_ERROR } from "../constants";
+  import { buttonClass, duration, tokenRegex } from "$lib/constants";
+  import { TOKEN_ERROR } from "$lib/errors";
   import { showError } from "./StatusModal.svelte";
   import Input from "./controls/Input.svelte";
   import Accordion from "./controls/Accordion.svelte";

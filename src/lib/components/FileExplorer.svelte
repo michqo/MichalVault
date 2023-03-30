@@ -8,11 +8,9 @@
     maxVaultSizeinMB,
     imageExtensionsRegex,
     textExtensionsRegex,
-    maxPreviewSize,
-    CLIPBOARD_ERROR,
-    FILE_NOT_FOUND,
-    SERVER_ERROR
+    maxPreviewSize
   } from "$lib/constants";
+  import { CLIPBOARD_ERROR, FILE_NOT_FOUND, SERVER_ERROR } from "$lib/errors";
   import { formatBytes, formatDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
   import ConfirmModal from "./ConfirmModal.svelte";

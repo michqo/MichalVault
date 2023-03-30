@@ -9,15 +9,13 @@ import { TRPCError } from "@trpc/server";
 import { t } from "./t";
 import { ratelimit } from "./middleware";
 import {
-  FULL_DB_ERROR,
   maxBucketSize,
   maxSize,
   maxVaultFilesCount,
   maxVaultSize,
-  MAX_VAULT_FILES_ERROR,
-  MAX_VAULT_SIZE_ERROR,
   tokenRegex
 } from "$lib/constants";
+import { FULL_DB_ERROR, MAX_VAULT_FILES_ERROR, MAX_VAULT_SIZE_ERROR } from "$lib/errors";
 
 // Returns vault files size and vault files count
 function countVaultFiles(token: string): Promise<[number, number]> {
