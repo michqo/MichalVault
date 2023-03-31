@@ -20,6 +20,7 @@
   import Back from "$lib/svgs/Back.svelte";
   import Link from "$lib/svgs/Link.svelte";
   import Open from "$lib/svgs/Open.svelte";
+  import ProgressBarTop from "./controls/ProgressBarTop.svelte";
 
   export let files: Record<string, string>[];
   let filesSize: number;
@@ -27,6 +28,7 @@
   let confirmData: ["delete" | "deleteAll", string, any] | undefined;
   let previewFile: ["txt" | "img", string, ArrayBuffer?] | undefined;
   let previewFileName: string;
+  let previewFileProgress: number | undefined;
 
   const today = new Date();
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -71,41 +73,72 @@
   }
 
   async function openFile(name: string, key: string) {
-    $loading = true;
     previewFileName = name;
     const cacheFile = findPreviewFileInCache(key);
     if (cacheFile) {
       previewFile = cacheFile;
-      $loading = false;
       return;
     }
+    previewFileProgress = 0;
     let url: string;
     try {
       url = await trpc($page).fetchOne.query({ key });
     } catch (e) {
       showRateLimitError(e);
-      $loading = false;
+      previewFileProgress = undefined;
       return;
     }
-    let res = await fetch(url);
-    if (res.status >= 400) {
-      showError(FILE_NOT_FOUND);
-      $loading = false;
-      return;
-    }
-    const blob = await res.blob();
-    if (imageExtensionsRegex.test(name)) {
-      const blobUrl = URL.createObjectURL(blob);
-      previewFile = ["img", blobUrl];
-      $filesPreviewCache.push(["img", key, blobUrl]);
-    } else {
-      const textBlob = new Blob([blob], { type: "text/plain;charset=utf8" });
-      const buffer = await textBlob.arrayBuffer();
-      const blobUrl = URL.createObjectURL(textBlob);
-      previewFile = ["txt", blobUrl, buffer];
-      $filesPreviewCache.push(["txt", key, blobUrl, buffer]);
-    }
-    $loading = false;
+    fetch(url)
+      .then((res) => {
+        const contentLength = res.headers.get("content-length");
+        if (!contentLength) return;
+        let loaded = 0;
+        return new Response(
+          new ReadableStream({
+            start(controller) {
+              const reader = res.body?.getReader();
+              read();
+              function read() {
+                reader?.read().then(({ done, value }) => {
+                  if (done) {
+                    previewFileProgress = undefined;
+                    controller.close();
+                    return;
+                  }
+                  loaded += value.byteLength;
+                  previewFileProgress = Math.round((loaded / parseInt(contentLength!)) * 100);
+                  controller.enqueue(value);
+                  read();
+                });
+              }
+            }
+          })
+        );
+      })
+      .then((res) => {
+        if (!res || res.status >= 400) {
+          showError(FILE_NOT_FOUND);
+          $loading = false;
+          return;
+        }
+        return res.blob();
+      })
+      .then((blob) => {
+        if (!blob) return;
+        if (imageExtensionsRegex.test(name)) {
+          const blobUrl = URL.createObjectURL(blob);
+          previewFile = ["img", blobUrl];
+          $filesPreviewCache.push(["img", key, blobUrl]);
+        } else {
+          const textBlob = new Blob([blob], { type: "text/plain;charset=utf8" });
+          textBlob.arrayBuffer().then((buffer) => {
+            const blobUrl = URL.createObjectURL(textBlob);
+            previewFile = ["txt", blobUrl, buffer];
+            $filesPreviewCache.push(["txt", key, blobUrl, buffer]);
+          });
+        }
+      });
+    previewFileProgress = undefined;
   }
 
   async function copyLink(key: string) {
@@ -174,6 +207,10 @@
 
 {#if confirmData}
   <ConfirmModal title={confirmData[1]} on:done={handleConfirm} />
+{/if}
+
+{#if previewFileProgress}
+  <ProgressBarTop progress={previewFileProgress} />
 {/if}
 
 {#if previewFile}

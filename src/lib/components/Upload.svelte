@@ -2,6 +2,7 @@
   import { fade } from "svelte/transition";
   import { page } from "$app/stores";
   import { TRPCError } from "@trpc/server";
+  import { TRPCClientError } from "@trpc/client";
   import { trpc } from "$lib/trpc/client";
   import { formatBytes } from "../utils";
   import { loading, filesCache, inputFiles, filesInput, token } from "$lib/stores";
@@ -15,7 +16,6 @@
   } from "$lib/errors";
   import FileInput from "./FileInput.svelte";
   import { showSuccess, showError } from "./StatusModal.svelte";
-  import { TRPCClientError } from "@trpc/client";
 
   let uploading = false;
   let uploadedCount: number;

@@ -1,8 +1,5 @@
 import { maxSizeInMB, maxVaultFilesCount, maxVaultSizeinMB } from "./constants";
 
-/**
- * Errors
- */
 const FILE_NOT_FOUND = "File not found";
 const TOKEN_ERROR = "Invalid token";
 const FILE_NAME_ERROR = "Invalid file, selected file(s) includes special characters or is too long";
