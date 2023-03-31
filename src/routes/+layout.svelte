@@ -4,7 +4,7 @@
   import { fade } from "svelte/transition";
   import { page } from "$app/stores";
   import { duration } from "$lib/constants";
-  import ProgressIndicator from "$lib/components/ProgressIndicator.svelte";
+  import ProgressIndicator from "$lib/components/controls/ProgressIndicator.svelte";
   import StatusModal from "$lib/components/StatusModal.svelte";
   import Tabs from "$lib/components/Tabs.svelte";
 </script>

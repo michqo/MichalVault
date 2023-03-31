@@ -28,7 +28,7 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
   import { duration } from "$lib/constants";
-  import ProgressBar from "./ProgressBar.svelte";
+  import ProgressBar from "./controls/ProgressBar.svelte";
 
   const modalClass =
     "center top z-20 bg-gray-900 border border-slate-700 rounded-md drop-shadow-xl";
