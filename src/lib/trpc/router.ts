@@ -54,29 +54,19 @@ function checkBucketSize(size: number): Promise<void> {
 }
 
 const token = z.string().regex(tokenRegex);
+const keys = z.object({ Key: z.string() }).array().min(1);
 
 const procedure = t.procedure.use(ratelimit);
 
 export const router = t.router({
-  deleteAll: procedure.input(z.object({ token })).query(async ({ input }) => {
-    s3.listObjectsV2(
-      {
-        Bucket: S3_BUCKET_NAME,
-        Prefix: input.token + "/"
-      },
-      (err, data) => {
-        if (err) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        if (!data?.Contents) return;
-        const objects = data.Contents.map((obj) => ({ Key: obj.Key }));
-        const deleteParams = {
-          Bucket: S3_BUCKET_NAME,
-          Delete: { Objects: objects }
-        };
-        s3.deleteObjects(deleteParams);
-      }
-    );
+  deleteSelected: procedure.input(z.object({ keys })).query(async ({ input }) => {
+    const deleteParams = {
+      Bucket: S3_BUCKET_NAME,
+      Delete: { Objects: input.keys }
+    };
+    await s3.deleteObjects(deleteParams);
   }),
-  delete: procedure.input(z.object({ token, key: z.string() })).query(async ({ input }) => {
+  delete: procedure.input(z.object({ key: z.string() })).query(async ({ input }) => {
     await s3.deleteObject({
       Bucket: S3_BUCKET_NAME,
       Key: input.key

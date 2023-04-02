@@ -21,11 +21,14 @@
   import Link from "$lib/svgs/Link.svelte";
   import Open from "$lib/svgs/Open.svelte";
   import ProgressBarTop from "./controls/ProgressBarTop.svelte";
+  import Checkbox from "./controls/Checkbox.svelte";
 
   export let files: Record<string, string>[];
   let filesSize: number;
+  let selected: boolean[] = files.map(() => false);
+  let selectedAll = false;
 
-  let confirmData: ["delete" | "deleteAll", string, any] | undefined;
+  let confirmData: ["delete" | "deleteSelected", string, any] | undefined;
   let previewFile: ["txt" | "img", string, ArrayBuffer?] | undefined;
   let previewFileName: string;
   let previewFileProgress: number | undefined;
@@ -101,7 +104,6 @@
               function read() {
                 reader?.read().then(({ done, value }) => {
                   if (done) {
-                    previewFileProgress = undefined;
                     controller.close();
                     return;
                   }
@@ -118,7 +120,6 @@
       .then((res) => {
         if (!res || res.status >= 400) {
           showError(FILE_NOT_FOUND);
-          $loading = false;
           return;
         }
         return res.blob();
@@ -154,8 +155,9 @@
   function deleteFile(key: string) {
     confirmData = ["delete", "delete file", key];
   }
-  function deleteAll() {
-    confirmData = ["deleteAll", "delete all files", undefined];
+  function deleteSelected() {
+    if (selected.length == 0) return;
+    confirmData = ["deleteSelected", "delete selected files", undefined];
   }
 
   async function handleConfirm(e: CustomEvent<boolean>) {
@@ -164,24 +166,34 @@
       switch (confirmData[0]) {
         case "delete":
           const key = confirmData[2];
-          confirmData = undefined;
-          const values = files.filter((value) => value.key != key);
-          files = values;
+          files = files.filter((value) => value.key != key);
           $filesCache = [$page.params.token, new Date(), files];
+          confirmData = undefined;
           try {
-            await trpc($page).delete.query({ token: $page.params.token, key });
+            await trpc($page).delete.query({ key });
           } catch (e) {
             showRateLimitError(e);
             files = [];
             $filesCache = undefined;
           }
           break;
-        case "deleteAll":
-          confirmData = undefined;
-          files = [];
+        case "deleteSelected":
+          let keys: { Key: string }[] = [];
+          let newFiles: Record<string, string>[] = [];
+          for (let i = 0; i < selected.length; i++) {
+            if (selected[i] == true) {
+              keys.push({ Key: files[i].key });
+            } else {
+              newFiles.push(files[i]);
+            }
+          }
+          if (keys.length == 0) break;
+          files = newFiles;
+          selected = files.map(() => false);
           $filesCache = [$page.params.token, new Date(), files];
+          confirmData = undefined;
           try {
-            await trpc($page).deleteAll.query({ token: $page.params.token });
+            await trpc($page).deleteSelected.query({ keys });
           } catch (e) {
             showRateLimitError(e);
           }
@@ -200,6 +212,13 @@
     }
     $filesCache = [$page.params.token, new Date(), files];
     $loading = false;
+  }
+
+  function handleSelect() {
+    selectedAll = false;
+  }
+  function handleSelectAll() {
+    selected = files.map(() => !selectedAll);
   }
 
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
@@ -234,7 +253,7 @@
     >
       <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
       <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
-      <button class={btnClass} title="Delete all files" on:click={deleteAll}
+      <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
         ><Delete class={imgClass} /></button
       >
     </div>
@@ -247,6 +266,9 @@
       <table class="w-full divide-y divide-gray-500">
         <thead class="uppercase">
           <tr>
+            <th scope="col" class={thClass}>
+              <Checkbox onChange={handleSelectAll} bind:checked={selectedAll} value="all" />
+            </th>
             <th scope="col" class={thClass} />
             <th scope="col" class={thClass}> Name </th>
             <th scope="col" class={thClass}> Uploaded </th>
@@ -254,8 +276,11 @@
           </tr>
         </thead>
         <tbody>
-          {#each files as file}
-            <tr class="hover:bg-white/[.07]">
+          {#each files as file, index}
+            <tr>
+              <td class={tdClass}>
+                <Checkbox onChange={handleSelect} bind:checked={selected[index]} value={file.key} />
+              </td>
               <td class="{tdClass} flex gap-x-3">
                 <button type="button" on:click={() => deleteFile(file.key)}>
                   <Delete class={svgClass} />
