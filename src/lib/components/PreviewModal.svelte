@@ -33,17 +33,16 @@
 >
   <button class="cursor-default fixed z-20 inset-0 w-full h-full bg-black/[.2]" on:click={close} />
   <div class={modalClass}>
-    <div class="center md:flex-row gap-x-4">
+    <div class="center md:flex-row gap-2">
       <h1 class="text-center text-xl font-medium tracking-wider">{name}</h1>
       <a target="_blank" rel="noreferrer" href={file[1]}>
-        <Open class="w-7 h-7" />
+        <Open class="pt-1 w-7 h-7" />
       </a>
     </div>
     {#if file[0] == "img"}
-      <img src={file[1]} class="overflow-auto" alt="Modal img" />
+      <img src={file[1]} class="overflow-auto" alt="Preview" />
     {:else}
-      <code
-        class="p-5 whitespace-pre-line bg-gray-800 rounded-md overflow-auto max-w-full max-h-full"
+      <code class="p-5 whitespace-pre bg-gray-800 rounded-md overflow-auto max-w-full max-h-full"
         >{decoder.decode(file[2])}</code
       >
     {/if}
