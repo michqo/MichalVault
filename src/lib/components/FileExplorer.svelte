@@ -54,6 +54,12 @@
     }
   }
 
+  function updateFiles(newFiles: Record<string, string>[]) {
+    files = newFiles;
+    $filesCache = [$page.params.token, new Date(), files];
+    selected = files.map(() => false);
+  }
+
   async function download(key: string) {
     $loading = true;
     let url: string;
@@ -167,8 +173,7 @@
       switch (confirmData[0]) {
         case "delete":
           const key = confirmData[2];
-          files = files.filter((value) => value.key != key);
-          $filesCache = [$page.params.token, new Date(), files];
+          updateFiles(files.filter((value) => value.key != key));
           confirmData = undefined;
           try {
             await trpc($page).delete.query({ key });
@@ -189,9 +194,7 @@
             }
           }
           if (keys.length == 0) break;
-          files = newFiles;
-          selected = files.map(() => false);
-          $filesCache = [$page.params.token, new Date(), files];
+          updateFiles(newFiles);
           confirmData = undefined;
           try {
             await trpc($page).deleteSelected.query({ keys });
@@ -207,11 +210,10 @@
   async function refresh() {
     $loading = true;
     try {
-      files = await trpc($page).fetchAll.query({ token: $page.params.token });
+      updateFiles(await trpc($page).fetchAll.query({ token: $page.params.token }));
     } catch (e) {
       showRateLimitError(e);
     }
-    $filesCache = [$page.params.token, new Date(), files];
     $loading = false;
   }
 
@@ -223,6 +225,7 @@
   }
 
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
+  $: if (selected.length > 0 && selected.every((e) => e === true)) selectedAll = true;
 </script>
 
 {#if confirmData}
