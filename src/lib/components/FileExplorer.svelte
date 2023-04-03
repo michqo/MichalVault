@@ -283,7 +283,7 @@
         </thead>
         <tbody>
           {#each files as file, index}
-            <tr class="group">
+            <tr class="group {selected[index] ? 'bg-gray-700' : 'bg-transparent'}">
               <td class={tdClass}>
                 <Checkbox
                   class="md:invisible md:group-hover:visible md:peer-checked:visible"
