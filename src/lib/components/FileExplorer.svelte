@@ -46,7 +46,7 @@
     if ($filesCache && files.length == 0) files = $filesCache[2];
   });
 
-  function showRateLimitError(e: any) {
+  function showAppError(e: any) {
     if (e instanceof TRPCClientError) {
       showError(`Error: ${e.message}`);
     } else {
@@ -66,7 +66,7 @@
     try {
       url = await trpc($page).fetchOne.query({ key });
     } catch (e) {
-      showRateLimitError(e);
+      showAppError(e);
       $loading = false;
       return;
     }
@@ -93,7 +93,7 @@
     try {
       url = await trpc($page).fetchOne.query({ key });
     } catch (e) {
-      showRateLimitError(e);
+      showAppError(e);
       previewFileProgress = undefined;
       return;
     }
@@ -153,7 +153,7 @@
     const url = `${window.location.origin}/download/${key}`;
     try {
       await navigator.clipboard.writeText(url);
-      showSuccess("Copied link to clipboard", 1000);
+      showSuccess("Copied link to clipboard", 2000);
     } catch {
       showError(CLIPBOARD_ERROR, 3000);
     }
@@ -169,40 +169,42 @@
 
   async function handleConfirm(e: CustomEvent<boolean>) {
     if (!confirmData) return;
-    if (e.detail) {
-      switch (confirmData[0]) {
-        case "delete":
-          const key = confirmData[2];
-          updateFiles(files.filter((value) => value.key != key));
-          confirmData = undefined;
-          try {
-            await trpc($page).delete.query({ key });
-          } catch (e) {
-            showRateLimitError(e);
-            files = [];
-            $filesCache = undefined;
+    if (e.detail == false) {
+      confirmData = undefined;
+      return;
+    }
+    switch (confirmData[0]) {
+      case "delete":
+        const key = confirmData[2];
+        updateFiles(files.filter((value) => value.key != key));
+        confirmData = undefined;
+        try {
+          await trpc($page).delete.query({ key });
+        } catch (e) {
+          showAppError(e);
+          files = [];
+          $filesCache = undefined;
+        }
+        break;
+      case "deleteSelected":
+        let keys: { Key: string }[] = [];
+        let newFiles: Record<string, string>[] = [];
+        for (let i = 0; i < selected.length; i++) {
+          if (selected[i] == true) {
+            keys.push({ Key: files[i].key });
+          } else {
+            newFiles.push(files[i]);
           }
-          break;
-        case "deleteSelected":
-          let keys: { Key: string }[] = [];
-          let newFiles: Record<string, string>[] = [];
-          for (let i = 0; i < selected.length; i++) {
-            if (selected[i] == true) {
-              keys.push({ Key: files[i].key });
-            } else {
-              newFiles.push(files[i]);
-            }
-          }
-          if (keys.length == 0) break;
-          updateFiles(newFiles);
-          confirmData = undefined;
-          try {
-            await trpc($page).deleteSelected.query({ keys });
-          } catch (e) {
-            showRateLimitError(e);
-          }
-          break;
-      }
+        }
+        if (keys.length == 0) break;
+        updateFiles(newFiles);
+        confirmData = undefined;
+        try {
+          await trpc($page).deleteSelected.query({ keys });
+        } catch (e) {
+          showAppError(e);
+        }
+        break;
     }
     confirmData = undefined;
   }
@@ -212,7 +214,7 @@
     try {
       updateFiles(await trpc($page).fetchAll.query({ token: $page.params.token }));
     } catch (e) {
-      showRateLimitError(e);
+      showAppError(e);
     }
     $loading = false;
   }
