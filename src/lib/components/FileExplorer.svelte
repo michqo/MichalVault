@@ -283,9 +283,14 @@
         </thead>
         <tbody>
           {#each files as file, index}
-            <tr>
+            <tr class="group">
               <td class={tdClass}>
-                <Checkbox onChange={handleSelect} bind:checked={selected[index]} value={file.key} />
+                <Checkbox
+                  class="md:invisible md:group-hover:visible md:peer-checked:visible"
+                  onChange={handleSelect}
+                  bind:checked={selected[index]}
+                  value={file.key}
+                />
               </td>
               <td class="{tdClass} flex gap-x-3">
                 <button type="button" on:click={() => deleteFile(file.key)}>
