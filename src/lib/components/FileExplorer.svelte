@@ -120,6 +120,7 @@
       .then((res) => {
         if (!res || res.status >= 400) {
           showError(FILE_NOT_FOUND);
+          previewFileProgress = undefined;
           return;
         }
         return res.blob();
@@ -138,8 +139,8 @@
             $filesPreviewCache.push(["txt", key, blobUrl, buffer]);
           });
         }
+        previewFileProgress = undefined;
       });
-    previewFileProgress = undefined;
   }
 
   async function copyLink(key: string) {
