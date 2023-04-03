@@ -22,6 +22,7 @@
   import Open from "$lib/svgs/Open.svelte";
   import ProgressBarTop from "./controls/ProgressBarTop.svelte";
   import Checkbox from "./controls/Checkbox.svelte";
+  import Download from "$lib/svgs/Download.svelte";
 
   export let files: Record<string, string>[];
   let filesSize: number;
@@ -288,6 +289,9 @@
                 <Checkbox onChange={handleSelect} bind:checked={selected[index]} value={file.key} />
               </td>
               <td class="{tdClass} flex gap-x-3">
+                <button type="button" on:click={() => download(file.key)}>
+                  <Download class={svgClass} />
+                </button>
                 <button type="button" on:click={() => deleteFile(file.key)}>
                   <Delete class={svgClass} />
                 </button>
@@ -300,15 +304,7 @@
                   </button>
                 {/if}
               </td>
-              <td class={tdClass}>
-                <button
-                  type="button"
-                  class="hover:underline underline-offset-2"
-                  on:click={() => download(file.key)}
-                >
-                  {file.name}
-                </button>
-              </td>
+              <td class={tdClass}>{file.name}</td>
               <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
               <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
             </tr>
