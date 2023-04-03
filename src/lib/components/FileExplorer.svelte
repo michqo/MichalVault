@@ -270,7 +270,7 @@
     <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
     <div class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg">
       <table class="w-full divide-y divide-gray-500">
-        <thead class="uppercase">
+        <thead class="uppercase group">
           <tr>
             <th scope="col" class={thClass}>
               <Checkbox onChange={handleSelectAll} bind:checked={selectedAll} value="all" />
@@ -285,12 +285,7 @@
           {#each files as file, index}
             <tr class="group {selected[index] ? 'bg-gray-700' : 'bg-transparent'}">
               <td class={tdClass}>
-                <Checkbox
-                  class="md:invisible md:group-hover:visible md:peer-checked:visible"
-                  onChange={handleSelect}
-                  bind:checked={selected[index]}
-                  value={file.key}
-                />
+                <Checkbox onChange={handleSelect} bind:checked={selected[index]} value={file.key} />
               </td>
               <td class="{tdClass} flex gap-x-3">
                 <button type="button" on:click={() => deleteFile(file.key)}>

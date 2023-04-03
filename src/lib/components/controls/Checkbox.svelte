@@ -17,6 +17,6 @@
     {value}
   />
   <Done
-    class="{className} w-6 h-6 rounded-full border border-slate-500 text-transparent peer-checked:text-slate-100 peer-checked:border-0 peer-checked:bg-blue-500"
+    class="{className} w-6 h-6 rounded-full border border-slate-300 text-transparent peer-checked:text-slate-100 peer-checked:border-0 peer-checked:bg-blue-500 md:invisible md:group-hover:visible md:peer-checked:visible"
   />
 </label>
