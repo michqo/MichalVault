@@ -31,7 +31,7 @@
   import ProgressBar from "./controls/ProgressBar.svelte";
 
   const modalClass =
-    "center top z-20 bg-gray-900 border border-slate-700 rounded-md drop-shadow-xl";
+    "center fixed top-0 mt-14 z-20 bg-gray-900 border border-slate-700 rounded-md drop-shadow-xl";
   const textClass = "tracking-wider mx-2 mt-2 mb-3";
 </script>
 

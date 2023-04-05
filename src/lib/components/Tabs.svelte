@@ -11,7 +11,7 @@
   const svgClass = "w-7 h-7";
 </script>
 
-<div class="mt-5 flex gap-x-1 w-full max-w-xl">
+<div class="mt-3 flex gap-x-1 w-full max-w-xl">
   <a class="{linkClass} {$page.url.pathname == '/' ? activeClass : inactiveClass}" href="/"
     ><Upload class={svgClass} /> Upload</a
   >
