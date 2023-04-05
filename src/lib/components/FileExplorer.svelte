@@ -221,6 +221,7 @@
   }
 
   function handleSelect() {
+    if (selected.length != files.length) selected = files.map(() => false);
     selectedAll = false;
   }
   function handleSelectAll() {
