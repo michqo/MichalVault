@@ -53,12 +53,12 @@
         <input
           type="text"
           class="p-3 bg-gray-800 rounded-md"
-          placeholder="File name"
+          placeholder="name.txt"
           bind:value={name}
         />
         <textarea
           class="p-3 bg-gray-800 rounded-md overflow-auto w-full h-full resize-none"
-          placeholder="File content"
+          placeholder="content"
           name="textfile"
           id="textarea"
           bind:value={content}
