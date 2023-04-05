@@ -5,6 +5,7 @@
   import Token from "$lib/components/Token.svelte";
   import Upload from "$lib/components/Upload.svelte";
   import InfoPanel from "$lib/components/InfoPanel.svelte";
+  import FileCreate from "$lib/components/FileCreate.svelte";
 
   onMount(() => {
     // Persistent files between routes
@@ -23,3 +24,4 @@
 <Header />
 <Token />
 <Upload />
+<FileCreate />
