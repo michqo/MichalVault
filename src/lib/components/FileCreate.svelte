@@ -8,8 +8,8 @@
   const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
   const svgClass = "w-12 h-12";
   let visible = false;
-  let name: string;
-  let content: string;
+  let name = "";
+  let content = "";
 
   function close() {
     visible = false;
@@ -65,8 +65,10 @@
         />
       </div>
       <div class="flex gap-x-2">
-        <button class={btnClass} on:click={addFile}><Done class={svgClass} /></button>
-        <button class={btnClass} on:click={close}><Close class={svgClass} /></button>
+        <button class={btnClass} on:click={addFile}
+          ><Done class="{svgClass} text-green-500" /></button
+        >
+        <button class={btnClass} on:click={close}><Close class="{svgClass} text-red-500" /></button>
       </div>
     </div>
   </div>
