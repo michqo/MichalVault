@@ -8,9 +8,9 @@
   const dispatch = createEventDispatcher();
 
   const modalClass =
-    "absolute flex flex-col z-10 -mt-7 ml-9 bg-gray-900 backdrop-blur-xl border border-slate-400 rounded-md drop-shadow-xl";
+    "absolute flex flex-col z-10 -mt-7 ml-9 bg-gray-900 border border-slate-400/[.5] rounded-md drop-shadow-xl";
   const btnClass =
-    "text-base px-3 py-2 text-slate-100 hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg";
+    "text-base px-3 py-2 text-slate-100 hover:bg-gray-800 first:rounded-t-md last:rounded-b-md";
 
   onMount(() => {
     const funcRef = (e: KeyboardEvent) => {
