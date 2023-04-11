@@ -18,13 +18,12 @@
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
   import Back from "$lib/svgs/Back.svelte";
-  import Link from "$lib/svgs/Link.svelte";
-  import Open from "$lib/svgs/Open.svelte";
   import ProgressBarTop from "./controls/ProgressBarTop.svelte";
   import Checkbox from "./controls/Checkbox.svelte";
-  import Download from "$lib/svgs/Download.svelte";
+  import Menu from "./controls/Menu.svelte";
+  import More from "$lib/svgs/More.svelte";
 
-  export let files: Record<string, string>[];
+  export let files: Record<string, any>[];
   let filesSize: number;
   let selected: boolean[] = files.map(() => false);
   let selectedAll = false;
@@ -228,6 +227,33 @@
     selected = files.map(() => !selectedAll);
   }
 
+  async function handleMenuClick(e: CustomEvent<string>, file: any, index: number) {
+    switch (e.detail) {
+      case "Download":
+        await download(file.key);
+        break;
+      case "Delete":
+        deleteFile(file.key);
+        break;
+      case "Copy link":
+        await copyLink(file.key);
+        break;
+      case "Open preview":
+        await openFile(file.name, file.key);
+        break;
+      default:
+        break;
+    }
+    files[index].showMenu = false;
+    selected[index] = false;
+  }
+
+  function handleMenuChange(state: boolean, index: number) {
+    files[index].showMenu = state;
+    handleSelect();
+    selected[index] = state;
+  }
+
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
   $: if (selected.length > 0 && selected.every((e) => e === true)) selectedAll = true;
 </script>
@@ -277,35 +303,36 @@
             <th scope="col" class={thClass}>
               <Checkbox onChange={handleSelectAll} bind:checked={selectedAll} value="all" />
             </th>
-            <th scope="col" class={thClass} />
             <th scope="col" class={thClass}> Name </th>
+            <th scope="col" class={thClass} />
             <th scope="col" class={thClass}> Uploaded </th>
             <th scope="col" class={thClass}> Size </th>
           </tr>
         </thead>
         <tbody>
           {#each files as file, index}
+            {@const canPreview =
+              parseInt(file.size) < maxPreviewSize &&
+              (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
             <tr class="group {selected[index] ? 'bg-gray-700' : 'bg-transparent'}">
               <td class={tdClass}>
                 <Checkbox onChange={handleSelect} bind:checked={selected[index]} value={file.key} />
               </td>
-              <td class="{tdClass} flex gap-x-3">
-                <button type="button" on:click={() => download(file.key)}>
-                  <Download class={svgClass} />
+              <td class={tdClass}>{file.name}</td>
+              <td class={tdClass}>
+                <button type="button" on:click={() => handleMenuChange(true, index)}>
+                  <More class={svgClass} />
                 </button>
-                <button type="button" on:click={() => deleteFile(file.key)}>
-                  <Delete class={svgClass} />
-                </button>
-                <button type="button" on:click={() => copyLink(file.key)}>
-                  <Link class={svgClass} />
-                </button>
-                {#if parseInt(file.size) < maxPreviewSize && (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
-                  <button type="button" on:click={() => openFile(file.name, file.key)}>
-                    <Open class={svgClass} />
-                  </button>
+                {#if file.showMenu == true}
+                  <Menu
+                    actions={["Download", "Delete", "Copy link"].concat(
+                      canPreview ? "Open preview" : []
+                    )}
+                    on:close={() => handleMenuChange(false, index)}
+                    on:click={(e) => handleMenuClick(e, file, index)}
+                  />
                 {/if}
               </td>
-              <td class={tdClass}>{file.name}</td>
               <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
               <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
             </tr>

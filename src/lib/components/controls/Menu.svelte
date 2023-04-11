@@ -1,0 +1,31 @@
+<script lang="ts">
+  import { onMount, createEventDispatcher } from "svelte";
+  import { fly, fade } from "svelte/transition";
+  import { duration } from "$lib/constants";
+
+  export let actions: string[];
+
+  const dispatch = createEventDispatcher();
+
+  const modalClass =
+    "absolute flex flex-col z-10 -mt-7 ml-9 bg-gray-900 backdrop-blur-xl border border-slate-400 rounded-md drop-shadow-xl";
+  const btnClass =
+    "text-base px-3 py-2 text-slate-100 hover:bg-gray-800 first:rounded-t-lg last:rounded-b-lg";
+
+  onMount(() => {
+    const funcRef = (e: KeyboardEvent) => {
+      if (e.key == "Escape") dispatch("close");
+    };
+    document.addEventListener("keydown", funcRef);
+    return () => {
+      document.removeEventListener("keydown", funcRef);
+    };
+  });
+</script>
+
+<div in:fly={{ duration, x: -8, opacity: 0.5 }} out:fade={{ duration }} class={modalClass}>
+  {#each actions as action}
+    <button class={btnClass} on:click={() => dispatch("click", action)}>{action}</button>
+  {/each}
+</div>
+<button class="cursor-default fixed inset-0 w-full h-full" on:click={() => dispatch("close")} />
