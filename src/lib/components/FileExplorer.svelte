@@ -24,6 +24,7 @@
   import More from "$lib/svgs/More.svelte";
 
   export let files: Record<string, any>[];
+
   let filesSize: number;
   let selected: boolean[] = files.map(() => false);
   let selectedAll = false;
@@ -41,7 +42,7 @@
   const svgClass = "w-7 h-7";
 
   onMount(async () => {
-    if (!$filesCache) $filesCache = [$page.params.token, new Date(), files];
+    if (!$filesCache) $filesCache = [$page.params.token, today, files];
     if ($filesCache[0] != $page.params.token) await refresh();
     if ($filesCache && files.length == 0) files = $filesCache[2];
   });
@@ -278,7 +279,7 @@
   <div class="center flex-1">
     <p>
       Last refreshed on <span class="font-medium"
-        >{$filesCache ? formatDate($filesCache[1], today) : formatDate(today, today)}</span
+        >{$filesCache ? formatDate($filesCache[1], new Date()) : formatDate(today, today)}</span
       >
     </p>
     <code class="text-lg underline select-all">{$page.params.token}</code>
@@ -320,7 +321,11 @@
               </td>
               <td class={tdClass}>{file.name}</td>
               <td class={tdClass}>
-                <button type="button" on:click={() => handleMenuChange(true, index)}>
+                <button
+                  type="button"
+                  class="rounded-md md:hover:bg-white/[.1]"
+                  on:click={() => handleMenuChange(true, index)}
+                >
                   <More class={svgClass} />
                 </button>
                 {#if file.showMenu == true}
@@ -333,7 +338,7 @@
                   />
                 {/if}
               </td>
-              <td class={tdClass}>{formatDate(new Date(file.date), today)}</td>
+              <td class={tdClass}>{formatDate(new Date(file.date), new Date())}</td>
               <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
             </tr>
           {/each}
