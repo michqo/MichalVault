@@ -101,52 +101,63 @@
     fetch(url)
       .then((res) => {
         const contentLength = res.headers.get("content-length");
+        const contentType = res.headers.get("content-type");
+        console.log(contentType);
         if (!contentLength) return;
         let loaded = 0;
-        return new Response(
-          new ReadableStream({
-            start(controller) {
-              const reader = res.body?.getReader();
-              read();
-              function read() {
-                reader?.read().then(({ done, value }) => {
-                  if (done) {
-                    controller.close();
-                    return;
-                  }
-                  loaded += value.byteLength;
-                  previewFileProgress = Math.round((loaded / parseInt(contentLength!)) * 100);
-                  controller.enqueue(value);
-                  read();
-                });
+        return {
+          res: new Response(
+            new ReadableStream({
+              start(controller) {
+                const reader = res.body?.getReader();
+                read();
+                function read() {
+                  reader?.read().then(({ done, value }) => {
+                    if (done) {
+                      controller.close();
+                      return;
+                    }
+                    loaded += value.byteLength;
+                    previewFileProgress = Math.round((loaded / parseInt(contentLength!)) * 100);
+                    controller.enqueue(value);
+                    read();
+                  });
+                }
               }
-            }
-          })
-        );
+            })
+          ),
+          contentType
+        };
       })
       .then((res) => {
-        if (!res || res.status >= 400) {
+        if (!res || !res.res || !res.contentType || res.res.status >= 400) {
           showError(FILE_NOT_FOUND);
           previewFileProgress = undefined;
           return;
         }
-        return res.blob();
+        return {
+          blob: res.res.blob(),
+          contentType: res.contentType
+        };
       })
-      .then((blob) => {
-        if (!blob) return;
-        if (imageExtensionsRegex.test(name)) {
-          const blobUrl = URL.createObjectURL(blob);
-          previewFile = ["img", blobUrl];
-          $filesPreviewCache.push(["img", key, blobUrl]);
-        } else {
-          const textBlob = new Blob([blob], { type: "text/plain;charset=utf8" });
-          textBlob.arrayBuffer().then((buffer) => {
-            const blobUrl = URL.createObjectURL(textBlob);
-            previewFile = ["txt", blobUrl, buffer];
-            $filesPreviewCache.push(["txt", key, blobUrl, buffer]);
-          });
-        }
-        previewFileProgress = undefined;
+      .then((res) => {
+        if (!res) return;
+        res.blob.then((blob) => {
+          if (imageExtensionsRegex.test(name)) {
+            const imageBlob = new Blob([blob], { type: res.contentType });
+            const blobUrl = URL.createObjectURL(imageBlob);
+            previewFile = ["img", blobUrl];
+            $filesPreviewCache.push(["img", key, blobUrl]);
+          } else {
+            const textBlob = new Blob([blob], { type: "text/plain;charset=utf8" });
+            textBlob.arrayBuffer().then((buffer) => {
+              const blobUrl = URL.createObjectURL(textBlob);
+              previewFile = ["txt", blobUrl, buffer];
+              $filesPreviewCache.push(["txt", key, blobUrl, buffer]);
+            });
+          }
+          previewFileProgress = undefined;
+        });
       });
   }
 
