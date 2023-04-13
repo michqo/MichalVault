@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { duration, buttonClass } from "$lib/constants";
   import { inputFiles, filesInput } from "$lib/stores";
@@ -31,22 +32,27 @@
     content = "";
     visible = false;
   }
+
+  onMount(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key == "Escape") close();
+    });
+  });
 </script>
 
-<p class="my-2">or</p>
-<button class={buttonClass} on:click={() => (visible = true)}>Create file</button>
+<button class="{buttonClass} mt-5" on:click={() => (visible = true)}>Create file</button>
 
 {#if visible}
   <div
-    class="fixed z-20 inset-0 w-full min-h-full grid place-items-center"
+    class="fixed inset-0 w-full min-h-full grid place-items-center"
     transition:fade={{ duration }}
   >
     <button
-      class="cursor-default fixed z-20 inset-0 md:w-full md:h-full bg-black/[.2]"
+      class="cursor-default fixed inset-0 md:w-full md:h-full bg-black/[.2]"
       on:click={close}
     />
     <div
-      class="fixed center justify-between z-20 w-full h-full md:max-w-4xl max-h-screen md:max-h-[95%] gap-y-3 md:gap-y-10 px-10 py-5 bg-gray-900/[.4] backdrop-blur-xl md:border md:border-slate-600 rounded-xl drop-shadow-xl"
+      class="fixed center justify-between z-10 w-full h-full md:max-w-4xl max-h-screen md:max-h-[95%] gap-y-3 md:gap-y-10 px-10 py-5 bg-gray-900/[.4] backdrop-blur-xl md:border md:border-slate-600 rounded-md drop-shadow-xl"
     >
       <h1 class="text-center text-2xl font-medium tracking-wider">Create file</h1>
       <div class="flex flex-col w-full h-full gap-y-2">
