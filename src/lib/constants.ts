@@ -39,6 +39,9 @@ const textExtensionsRegex =
 const tokenRegex = /^[\p{L}\p{N}!\-_.*'"()]{3,20}$/gu;
 const fileRegex = /^[\p{L}\p{N}!\-_.*'"()]{1,100}$/gu;
 
+const imageTypes = ["image/png", "image/jpeg", "image/gif", "image/webp"];
+const imageExtensions = ["png", "jpg", "gif", "webp"];
+
 export {
   buttonClass,
   duration,
@@ -50,11 +53,13 @@ export {
   maxVaultFilesCount,
   maxBucketSize,
   maxPreviewSize,
+  MAX_REQUESTS,
+  TIME_PERIOD,
   tokenRegex,
   fileRegex,
   imageExtensionsRegex,
   textExtensionsRegex,
-  MAX_REQUESTS,
-  TIME_PERIOD,
+  imageTypes,
+  imageExtensions,
   type IPRequest
 };

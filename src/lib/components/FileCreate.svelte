@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { duration, buttonClass } from "$lib/constants";
+  import { duration, buttonClass, imageTypes, imageExtensions } from "$lib/constants";
   import { inputFiles, filesInput } from "$lib/stores";
   import Close from "$lib/svgs/Close.svelte";
   import Done from "$lib/svgs/Done.svelte";
@@ -11,6 +11,7 @@
   let visible = false;
   let name = "";
   let content = "";
+  let pastCount = 0;
 
   function close() {
     visible = false;
@@ -34,9 +35,39 @@
   }
 
   onMount(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.key == "Escape") close();
-    });
+    const keydownRef = (e: KeyboardEvent) => {
+      if (e.key == "Escape") {
+        close();
+      }
+    };
+    document.addEventListener("keydown", keydownRef);
+
+    document.onpaste = (e) => {
+      const cd = e.clipboardData;
+      if (!cd) return;
+      let dt = new DataTransfer();
+      if ($inputFiles) {
+        for (const f of $inputFiles) {
+          dt.items.add(f);
+        }
+      }
+      for (const item of cd.items) {
+        const idx = imageTypes.indexOf(item.type);
+        if (idx > -1) {
+          const itemFile = item.getAsFile();
+          if (!itemFile) return;
+          pastCount += 1;
+          const renamedFile = new File([itemFile], `image${pastCount}.${imageExtensions[idx]}`);
+          dt.items.add(renamedFile);
+        }
+      }
+      $filesInput.files = dt.files;
+      $inputFiles = dt.files;
+    };
+
+    return () => {
+      document.removeEventListener("keydown", keydownRef);
+    };
   });
 </script>
 
