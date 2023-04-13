@@ -175,7 +175,6 @@
     confirmData = ["delete", "delete file", key];
   }
   function deleteSelected() {
-    if (selected.length == 0) return;
     confirmData = ["deleteSelected", "delete selected files", undefined];
   }
 
@@ -267,7 +266,7 @@
   }
 
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
-  $: if (selected.length > 0 && selected.every((e) => e === true)) selectedAll = true;
+  $: if (selected.length > 0 && selected.every((i) => i === true)) selectedAll = true;
 </script>
 
 {#if confirmData}
@@ -299,9 +298,11 @@
     >
       <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
       <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
-      <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
-        ><Delete class={imgClass} /></button
-      >
+      {#if !(selected.length == 0 || selected.every((i) => i === false))}
+        <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
+          ><Delete class={imgClass} /></button
+        >
+      {/if}
     </div>
   </div>
 
