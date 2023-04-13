@@ -8,7 +8,7 @@
   const decoder = new TextDecoder();
 
   const modalClass =
-    "fixed center justify-between z-30 my-5 w-full h-full md:h-fit md:max-w-4xl max-h-screen md:max-h-[95%] gap-y-3 md:gap-y-20 px-10 py-5 bg-gray-900/[.4] backdrop-blur-xl md:border md:border-slate-600 rounded-xl drop-shadow-xl";
+    "fixed center justify-between z-30 my-5 w-full h-full md:h-fit md:max-w-4xl max-h-screen md:max-h-[95%] gap-y-3 md:gap-y-20 px-10 py-5 bg-gray-900/[.4] backdrop-blur-xl md:border md:border-slate-600 rounded-md drop-shadow-xl";
   export let file: ["txt" | "img", string, ArrayBuffer?];
   export let name: string;
 

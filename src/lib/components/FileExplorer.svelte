@@ -102,8 +102,8 @@
       .then((res) => {
         const contentLength = res.headers.get("content-length");
         const contentType = res.headers.get("content-type");
-        console.log(contentType);
         if (!contentLength) return;
+        const contentLengthNumber = parseInt(contentLength);
         let loaded = 0;
         return {
           res: new Response(
@@ -118,7 +118,7 @@
                       return;
                     }
                     loaded += value.byteLength;
-                    previewFileProgress = Math.round((loaded / parseInt(contentLength!)) * 100);
+                    previewFileProgress = Math.round((loaded / contentLengthNumber) * 100);
                     controller.enqueue(value);
                     read();
                   });
@@ -306,55 +306,63 @@
   </div>
 
   <div class="center w-full flex-1">
-    <h1 class="text-center font-medium text-3xl tracking-wider mt-10 md:mt-5">Files</h1>
-    <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
-    <div class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg">
-      <table class="w-full divide-y divide-gray-500">
-        <thead class="uppercase group">
-          <tr>
-            <th scope="col" class={thClass}>
-              <Checkbox onChange={handleSelectAll} bind:checked={selectedAll} value="all" />
-            </th>
-            <th scope="col" class={thClass}> Name </th>
-            <th scope="col" class={thClass} />
-            <th scope="col" class={thClass}> Uploaded </th>
-            <th scope="col" class={thClass}> Size </th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each files as file, index}
-            {@const canPreview =
-              parseInt(file.size) < maxPreviewSize &&
-              (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
-            <tr class="group {selected[index] ? 'bg-gray-700' : 'bg-transparent'}">
-              <td class={tdClass}>
-                <Checkbox onChange={handleSelect} bind:checked={selected[index]} value={file.key} />
-              </td>
-              <td class={tdClass}>{file.name}</td>
-              <td class={tdClass}>
-                <button
-                  type="button"
-                  class="rounded-md md:hover:bg-white/[.1]"
-                  on:click={() => handleMenuChange(true, index)}
-                >
-                  <More class={svgClass} />
-                </button>
-                {#if file.showMenu == true}
-                  <Menu
-                    actions={["Download", "Delete", "Copy link"].concat(
-                      canPreview ? "Open preview" : []
-                    )}
-                    on:close={() => handleMenuChange(false, index)}
-                    on:click={(e) => handleMenuClick(e, file, index)}
-                  />
-                {/if}
-              </td>
-              <td class={tdClass}>{formatDate(new Date(file.date), new Date())}</td>
-              <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
+    {#if files.length > 0}
+      <h1 class="text-center font-medium text-3xl tracking-wider mt-10 md:mt-5">Files</h1>
+      <p class="mb-2">{formatBytes(filesSize)} / {maxVaultSizeinMB} MB</p>
+      <div class="w-full overflow-x-auto p-3 bg-white/[.07] border border-slate-700 rounded-lg">
+        <table class="w-full divide-y divide-gray-500">
+          <thead class="uppercase group">
+            <tr>
+              <th scope="col" class={thClass}>
+                <Checkbox onChange={handleSelectAll} bind:checked={selectedAll} value="all" />
+              </th>
+              <th scope="col" class={thClass}> Name </th>
+              <th scope="col" class={thClass} />
+              <th scope="col" class={thClass}> Uploaded </th>
+              <th scope="col" class={thClass}> Size </th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {#each files as file, index}
+              {@const canPreview =
+                parseInt(file.size) < maxPreviewSize &&
+                (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
+              <tr class="group {selected[index] ? 'bg-gray-700' : 'bg-transparent'}">
+                <td class={tdClass}>
+                  <Checkbox
+                    onChange={handleSelect}
+                    bind:checked={selected[index]}
+                    value={file.key}
+                  />
+                </td>
+                <td class={tdClass}>{file.name}</td>
+                <td class={tdClass}>
+                  <button
+                    type="button"
+                    class="rounded-md md:hover:bg-white/[.1]"
+                    on:click={() => handleMenuChange(true, index)}
+                  >
+                    <More class={svgClass} />
+                  </button>
+                  {#if file.showMenu == true}
+                    <Menu
+                      actions={["Download", "Delete", "Copy link"].concat(
+                        canPreview ? "Open preview" : []
+                      )}
+                      on:close={() => handleMenuChange(false, index)}
+                      on:click={(e) => handleMenuClick(e, file, index)}
+                    />
+                  {/if}
+                </td>
+                <td class={tdClass}>{formatDate(new Date(file.date), new Date())}</td>
+                <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {:else}
+      <p class="tracking-wide text-lg">No files to show</p>
+    {/if}
   </div>
 </div>

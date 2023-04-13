@@ -6,9 +6,9 @@
   import Done from "$lib/svgs/Done.svelte";
 
   const modalClass =
-    "center fixed mx-4 px-10 py-5 bg-gray-900 border border-slate-600 rounded-xl drop-shadow-xl";
+    "center fixed mx-4 px-10 py-5 bg-gray-900 border border-slate-400/[.5] rounded-md drop-shadow-xl";
   const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
-  const imgClass = "w-14 h-14";
+  const imgClass = "w-12 h-12";
 
   export let title: string;
 
@@ -37,7 +37,7 @@
   transition:fade={{ duration }}
 >
   <button class="cursor-default" on:click={() => setResult(false)}>
-    <div class="fixed inset-0 w-full h-full bg-black/[.6]" />
+    <div class="fixed inset-0 w-full h-full bg-black/[.2]" />
   </button>
   <div class={modalClass}>
     <h1 class="text-center text-xl font-medium tracking-wider">Confirm {title}?</h1>
