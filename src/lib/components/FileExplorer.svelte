@@ -11,7 +11,7 @@
     maxPreviewSize
   } from "$lib/constants";
   import { CLIPBOARD_ERROR, FILE_NOT_FOUND, SERVER_ERROR } from "$lib/errors";
-  import { formatBytes, formatDate } from "$lib/utils";
+  import { formatBytes, formatDate, formatRelativeDate } from "$lib/utils";
   import { showError, showSuccess } from "./StatusModal.svelte";
   import ConfirmModal from "./ConfirmModal.svelte";
   import PreviewModal from "./PreviewModal.svelte";
@@ -35,6 +35,8 @@
   let previewFileProgress: number | undefined;
 
   const today = new Date();
+  const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
+
   const thClass = "text-sm py-3 px-2 font-medium text-left";
   const tdClass = "text-sm py-2 px-2 whitespace-nowrap";
   const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
@@ -355,7 +357,7 @@
                     />
                   {/if}
                 </td>
-                <td class={tdClass}>{formatDate(new Date(file.date), new Date())}</td>
+                <td class={tdClass}>{formatRelativeDate(rtf, new Date(file.date), new Date())}</td>
                 <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
               </tr>
             {/each}
