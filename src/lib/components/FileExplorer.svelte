@@ -21,7 +21,11 @@
   import ProgressBarTop from "./controls/ProgressBarTop.svelte";
   import Checkbox from "./controls/Checkbox.svelte";
   import Menu from "./controls/Menu.svelte";
+  import Sidebar from "./controls/Sidebar.svelte";
   import More from "$lib/svgs/More.svelte";
+  import Download from "$lib/svgs/Download.svelte";
+  import Link from "$lib/svgs/Link.svelte";
+  import Open from "$lib/svgs/Open.svelte";
 
   export let files: Record<string, any>[];
 
@@ -33,6 +37,7 @@
   let previewFile: ["txt" | "img", string, ArrayBuffer?] | undefined;
   let previewFileName: string;
   let previewFileProgress: number | undefined;
+  let selectedFileIndex = -2;
 
   const today = new Date();
   const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
@@ -40,7 +45,7 @@
   const thClass = "text-sm py-3 px-2 font-medium text-left";
   const tdClass = "text-sm py-2 px-2 whitespace-nowrap";
   const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
-  const imgClass = "w-14 h-14";
+  const imgClass = "w-12 h-12";
   const svgClass = "w-7 h-7";
 
   onMount(async () => {
@@ -232,12 +237,39 @@
     $loading = false;
   }
 
+  function findSelectedIndex(): number {
+    let count = 0;
+    let idx = -1;
+    for (let i = 0; i < selected.length; i++) {
+      if (selected[i] === true) {
+        count++;
+        idx = i;
+        if (count > 1) {
+          return -1;
+        }
+      }
+    }
+    if (count === 1) {
+      return idx;
+    } else if (count > 1) {
+      return -1;
+    } else {
+      return -2;
+    }
+  }
+
   function handleSelect() {
     if (selected.length != files.length) selected = files.map(() => false);
     selectedAll = false;
   }
   function handleSelectAll() {
     selected = files.map(() => !selectedAll);
+  }
+
+  function handleMenuChange(state: boolean, index: number) {
+    files[index].showMenu = state;
+    handleSelect();
+    selected[index] = state;
   }
 
   async function handleMenuClick(e: CustomEvent<string>, file: any, index: number) {
@@ -261,12 +293,7 @@
     selected[index] = false;
   }
 
-  function handleMenuChange(state: boolean, index: number) {
-    files[index].showMenu = state;
-    handleSelect();
-    selected[index] = state;
-  }
-
+  $: selected, (selectedFileIndex = findSelectedIndex());
   $: filesSize = files.reduce((a, b) => a + parseInt(b.size), 0);
   $: if (selected.length > 0 && selected.every((i) => i === true)) selectedAll = true;
 </script>
@@ -295,17 +322,37 @@
       >
     </p>
     <code class="text-lg underline select-all">{$page.params.token}</code>
-    <div
-      class="flex gap-x-3 mt-1 px-3 py-2 bg-white/[.04] border border-slate-700 rounded-xl drop-shadow-xl"
-    >
-      <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
-      <button class={btnClass} title="Refresh" on:click={refresh}><Sync class={imgClass} /></button>
-      {#if !(selected.length == 0 || selected.every((i) => i === false))}
+    {#if selectedFileIndex <= -1}
+      <Sidebar>
+        <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
+        <button class={btnClass} title="Refresh" on:click={refresh}
+          ><Sync class={imgClass} /></button
+        >
+        {#if selectedFileIndex > -2}
+          <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
+            ><Delete class={imgClass} /></button
+          >
+        {/if}
+      </Sidebar>
+    {:else}
+      <Sidebar>
+        <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
+        <button class={btnClass} title="Refresh" on:click={refresh}
+          ><Sync class={imgClass} /></button
+        >
+        {@const { key, name } = files[selectedFileIndex]}
+        <button class={btnClass} on:click={() => download(key)}
+          ><Download class={imgClass} /></button
+        >
         <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
           ><Delete class={imgClass} /></button
         >
-      {/if}
-    </div>
+        <button class={btnClass} on:click={() => copyLink(key)}><Link class={imgClass} /></button>
+        <button class={btnClass} on:click={() => openFile(name, key)}
+          ><Open class={imgClass} /></button
+        >
+      </Sidebar>
+    {/if}
   </div>
 
   <div class="center w-full flex-1">
