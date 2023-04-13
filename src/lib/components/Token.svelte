@@ -23,6 +23,7 @@
     } else {
       $token = t;
     }
+    newToken = $token;
   });
 
   function resetCache() {
@@ -31,8 +32,8 @@
   }
 
   async function resetToken() {
-    newToken = "";
     $token = await trpc($page).fetchToken.query();
+    newToken = $token;
     localStorage.setItem("token", $token);
     resetCache();
   }
@@ -44,7 +45,6 @@
     }
     localStorage.setItem("token", newToken);
     $token = newToken;
-    newToken = "";
     resetCache();
   }
 </script>
@@ -68,12 +68,4 @@
       </Input>
     </div>
   </Accordion>
-</div>
-
-<div class="text-center mt-5">
-  <p class="text-xl font-bold">Your vault token is</p>
-  <code class="text-lg {$token.length != 0 ? 'underline select-all' : ''}"
-    >{$token.length != 0 ? $token : "loading..."}</code
-  >
-  <p class="text-sm text-slate-300 text-center">With this token you can access your files</p>
 </div>
