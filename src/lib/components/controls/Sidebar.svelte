@@ -3,9 +3,12 @@
   import { duration } from "$lib/constants";
 </script>
 
-<div transition:fade={{ duration }} class="fixed inset-0 w-fit flex items-center">
+<div
+  transition:fade={{ duration }}
+  class="fixed bottom-0 md:inset-0 h-fit md:w-fit md:h-full flex justify-center md:items-center"
+>
   <div
-    class="flex flex-col gap-y-2 px-3 py-2 bg-white/[.04] border-l-0 border border-slate-700 rounded-r-xl drop-shadow-xl"
+    class="flex flex-row md:flex-col gap-y-2 px-3 py-2 bg-gray-900 border border-b-0 md:border-l-0 md:border-b border-slate-700 rounded-t-md md:rounded-t-none md:rounded-r-md drop-shadow-xl"
   >
     <slot />
   </div>
