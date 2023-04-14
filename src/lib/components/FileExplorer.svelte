@@ -15,17 +15,11 @@
   import { showError, showSuccess } from "./StatusModal.svelte";
   import ConfirmModal from "./ConfirmModal.svelte";
   import PreviewModal from "./PreviewModal.svelte";
-  import Delete from "$lib/svgs/Delete.svelte";
-  import Sync from "$lib/svgs/Sync.svelte";
-  import Back from "$lib/svgs/Back.svelte";
   import ProgressBarTop from "./controls/ProgressBarTop.svelte";
   import Checkbox from "./controls/Checkbox.svelte";
   import Menu from "./controls/Menu.svelte";
-  import Sidebar from "./controls/Sidebar.svelte";
+  import FileActions from "./FileActions.svelte";
   import More from "$lib/svgs/More.svelte";
-  import Download from "$lib/svgs/Download.svelte";
-  import Link from "$lib/svgs/Link.svelte";
-  import Open from "$lib/svgs/Open.svelte";
 
   export let files: Record<string, any>[];
 
@@ -44,8 +38,6 @@
 
   const thClass = "text-sm py-3 px-2 font-medium text-left";
   const tdClass = "text-sm py-2 px-2 whitespace-nowrap";
-  const btnClass = "p-1 rounded-md hover:bg-white/[.1]";
-  const imgClass = "w-12 h-12";
   const svgClass = "w-7 h-7";
 
   onMount(async () => {
@@ -322,31 +314,15 @@
       >
     </p>
     <code class="text-lg underline select-all">{$page.params.token}</code>
-    {#key selectedFileIndex}
-      <Sidebar>
-        <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
-        <button class={btnClass} title="Refresh" on:click={refresh}
-          ><Sync class={imgClass} /></button
-        >
-        {#if selectedFileIndex == -1}
-          <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
-            ><Delete class={imgClass} /></button
-          >
-        {:else if selectedFileIndex > -1}
-          {@const { key, name } = files[selectedFileIndex]}
-          <button class={btnClass} on:click={() => download(key)}
-            ><Download class={imgClass} /></button
-          >
-          <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
-            ><Delete class={imgClass} /></button
-          >
-          <button class={btnClass} on:click={() => copyLink(key)}><Link class={imgClass} /></button>
-          <button class={btnClass} on:click={() => openFile(name, key)}
-            ><Open class={imgClass} /></button
-          >
-        {/if}
-      </Sidebar>
-    {/key}
+    <FileActions
+      {selectedFileIndex}
+      {files}
+      on:refresh={refresh}
+      on:deleteSelected={deleteSelected}
+      on:download={(e) => download(e.detail)}
+      on:copyLink={(e) => copyLink(e.detail)}
+      on:preview={(e) => openFile(e.detail.name, e.detail.key)}
+    />
   </div>
 
   <div class="center w-full flex-1">
