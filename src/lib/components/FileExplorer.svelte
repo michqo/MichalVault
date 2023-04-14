@@ -259,8 +259,12 @@
   }
 
   function handleMenuChange(state: boolean, index: number) {
-    files[index].showMenu = state;
     handleSelect();
+    for (let i = 0; i < files.length; i++) {
+      files[i].showMenu = false;
+      selected[i] = false;
+    }
+    files[index].showMenu = state;
     selected[index] = state;
   }
 
@@ -348,7 +352,12 @@
               {@const canPreview =
                 parseInt(file.size) < maxPreviewSize &&
                 (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
-              <tr class="group {selected[index] ? 'bg-gray-700' : 'bg-transparent'}">
+              <tr
+                on:contextmenu|preventDefault={() => handleMenuChange(true, index)}
+                class="group md:hover:bg-gray-700  {selected[index]
+                  ? 'bg-gray-700'
+                  : 'bg-transparent'}"
+              >
                 <td class={tdClass}>
                   <Checkbox
                     onChange={handleSelect}
