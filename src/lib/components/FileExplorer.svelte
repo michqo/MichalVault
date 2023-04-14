@@ -322,37 +322,31 @@
       >
     </p>
     <code class="text-lg underline select-all">{$page.params.token}</code>
-    {#if selectedFileIndex <= -1}
+    {#key selectedFileIndex}
       <Sidebar>
         <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
         <button class={btnClass} title="Refresh" on:click={refresh}
           ><Sync class={imgClass} /></button
         >
-        {#if selectedFileIndex > -2}
+        {#if selectedFileIndex == -1}
           <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
             ><Delete class={imgClass} /></button
           >
+        {:else if selectedFileIndex > -1}
+          {@const { key, name } = files[selectedFileIndex]}
+          <button class={btnClass} on:click={() => download(key)}
+            ><Download class={imgClass} /></button
+          >
+          <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
+            ><Delete class={imgClass} /></button
+          >
+          <button class={btnClass} on:click={() => copyLink(key)}><Link class={imgClass} /></button>
+          <button class={btnClass} on:click={() => openFile(name, key)}
+            ><Open class={imgClass} /></button
+          >
         {/if}
       </Sidebar>
-    {:else}
-      <Sidebar>
-        <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
-        <button class={btnClass} title="Refresh" on:click={refresh}
-          ><Sync class={imgClass} /></button
-        >
-        {@const { key, name } = files[selectedFileIndex]}
-        <button class={btnClass} on:click={() => download(key)}
-          ><Download class={imgClass} /></button
-        >
-        <button class={btnClass} title="Delete selected files" on:click={deleteSelected}
-          ><Delete class={imgClass} /></button
-        >
-        <button class={btnClass} on:click={() => copyLink(key)}><Link class={imgClass} /></button>
-        <button class={btnClass} on:click={() => openFile(name, key)}
-          ><Open class={imgClass} /></button
-        >
-      </Sidebar>
-    {/if}
+    {/key}
   </div>
 
   <div class="center w-full flex-1">

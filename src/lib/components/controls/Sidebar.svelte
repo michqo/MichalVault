@@ -4,7 +4,7 @@
 </script>
 
 <div
-  transition:fade={{ duration }}
+  in:fade={{ duration }}
   class="fixed z-10 bottom-0 md:inset-0 h-fit md:w-fit md:h-full flex justify-center md:items-center"
 >
   <div
