@@ -2,6 +2,8 @@
 
 Quick way to upload/download files from multiple devices
 
+Think of it as a cloud storage but open source.
+
 ## Libraries used
 
 - SvelteKit
