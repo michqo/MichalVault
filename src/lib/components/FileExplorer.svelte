@@ -34,6 +34,7 @@
   let selectedFileIndex = -2;
 
   const today = new Date();
+  let now = new Date();
   const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
 
   const thClass = "text-sm py-3 px-2 font-medium text-left";
@@ -44,6 +45,12 @@
     if (!$filesCache) $filesCache = [$page.params.token, today, files];
     if ($filesCache[0] != $page.params.token) await refresh();
     if ($filesCache && files.length == 0) files = $filesCache[2];
+    const id = setInterval(() => {
+      now = new Date();
+    }, 1000 * 60);
+    return () => {
+      clearInterval(id);
+    };
   });
 
   function showAppError(e: any) {
@@ -384,7 +391,7 @@
                     />
                   {/if}
                 </td>
-                <td class={tdClass}>{formatRelativeDate(rtf, new Date(file.date), new Date())}</td>
+                <td class={tdClass}>{formatRelativeDate(rtf, new Date(file.date), now)}</td>
                 <td class={tdClass}>{formatBytes(parseInt(file.size))}</td>
               </tr>
             {/each}
