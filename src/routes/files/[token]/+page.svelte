@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-  <title>Web Vault - Files Explorer</title>
+  <title>MichalVault - Files Explorer</title>
 </svelte:head>
 
 <FileExplorer files={data.files} />

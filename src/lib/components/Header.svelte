@@ -8,7 +8,7 @@
   <div class="flex justify-center gap-x-2">
     <a
       class="p-2 rounded-md hover:bg-white/[.1]"
-      href="https://github.com/MichalUSER/web_vault"
+      href="https://github.com/MichalUSER/MichalVault"
       target="_blank"
       rel="noreferrer"><Code class="w-10 h-10" /></a
     >
@@ -19,7 +19,7 @@
   <h1
     class="mt-1 text-indigo-100 text-4xl md:text-5xl text-center font-semibold tracking-wider underline decoration-3"
   >
-    Web Vault
+    MichalVault
   </h1>
   <p class="mt-1 text-center text-slate-300 font-light">File hosting service</p>
 </header>

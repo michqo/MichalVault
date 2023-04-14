@@ -35,7 +35,7 @@
   <div class="w-full h-full max-w-xs md:max-w-3xl center gap-y-3 justify-center text-center">
     <h1 class="font-bold text-5xl tracking-widest">About</h1>
     <div class="leading-relaxed tracking-wide mt-3">
-      <p>MichalStore is a simple file hosting service.</p>
+      <p>MichalVault is a simple file hosting service.</p>
       <p>
         Think of it as <span class="font-medium">one drive, google cloud</span> etc, but free and open
         source.

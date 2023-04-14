@@ -1,4 +1,4 @@
-# Web Vault 🔒
+# MichalVault 🔒
 
 Quick way to upload/download files from multiple devices
 

@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>Web Vault - Upload files</title>
+  <title>MichalVault - Upload files</title>
 </svelte:head>
 
 {#if $showInfoPanel}
