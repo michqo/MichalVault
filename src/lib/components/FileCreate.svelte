@@ -26,10 +26,14 @@
     pasteVisible = false;
   }
 
+  function removeSpaces(name: string): string {
+    return name.replaceAll(" ", "_");
+  }
+
   function addFile() {
     if (name.length == 0 || content.length == 0) return;
     const blob = new Blob([content], { type: "text/plain" });
-    const newFile = new File([blob], name);
+    const newFile = new File([blob], removeSpaces(name));
     const dt = new DataTransfer();
     if ($inputFiles) {
       for (const f of $inputFiles) {
@@ -51,7 +55,7 @@
         dt.items.add(f);
       }
     }
-    const renamedFile = new File([imageFile], `${imageName}.${imageExt}`);
+    const renamedFile = new File([imageFile], `${removeSpaces(imageName)}.${imageExt}`);
     dt.items.add(renamedFile);
 
     $filesInput.files = dt.files;
