@@ -306,7 +306,17 @@
   />
 {/if}
 
-<div class="center md:absolute w-full h-[60%] max-w-2xl mt-8">
+<FileActions
+  {selectedFileIndex}
+  {files}
+  on:refresh={refresh}
+  on:deleteSelected={deleteSelected}
+  on:download={(e) => download(e.detail)}
+  on:copyLink={(e) => copyLink(e.detail)}
+  on:preview={(e) => openFile(e.detail.name, e.detail.key)}
+/>
+
+<div class="center md:absolute w-full h-[60%] max-w-2xl mt-4">
   <div class="center flex-1">
     <p>
       Last refreshed on <span class="font-medium"
@@ -314,15 +324,6 @@
       >
     </p>
     <code class="text-lg underline select-all">{$page.params.token}</code>
-    <FileActions
-      {selectedFileIndex}
-      {files}
-      on:refresh={refresh}
-      on:deleteSelected={deleteSelected}
-      on:download={(e) => download(e.detail)}
-      on:copyLink={(e) => copyLink(e.detail)}
-      on:preview={(e) => openFile(e.detail.name, e.detail.key)}
-    />
   </div>
 
   <div class="center w-full flex-1">

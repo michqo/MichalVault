@@ -31,7 +31,7 @@
       >
     {:else if selectedFileIndex > -1}
       {@const { key, name } = files[selectedFileIndex]}
-      <button class={btnClass} on:click={() => dispatch("download", key)}
+      <button class={btnClass} title="Download" on:click={() => dispatch("download", key)}
         ><Download class={imgClass} /></button
       >
       <button
@@ -39,11 +39,13 @@
         title="Delete selected files"
         on:click={() => dispatch("deleteSelected")}><Delete class={imgClass} /></button
       >
-      <button class={btnClass} on:click={() => dispatch("copyLink", key)}
+      <button class={btnClass} title="Copy file link" on:click={() => dispatch("copyLink", key)}
         ><Link class={imgClass} /></button
       >
-      <button class={btnClass} on:click={() => dispatch("preview", { name, key })}
-        ><Open class={imgClass} /></button
+      <button
+        class={btnClass}
+        title="Open file preview"
+        on:click={() => dispatch("preview", { name, key })}><Open class={imgClass} /></button
       >
     {/if}
   </Sidebar>
