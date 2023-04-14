@@ -33,7 +33,7 @@
 </script>
 
 <div
-  class="fixed z-20 inset-0 w-full min-h-full grid place-items-center"
+  class="fixed z-20 inset-0 w-full min-h-full flex items-center justify-center"
   transition:fade={{ duration }}
 >
   <button class="cursor-default" on:click={() => setResult(false)}>
