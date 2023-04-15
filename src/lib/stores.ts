@@ -12,9 +12,10 @@ const showInfoPanel = writable(false);
 /**
  * Array of preview files cache
  *
- * @type {[type: "img" | "txt", key: string, url: string, arrayBuffer: ArrayBuffer?]}
+ * @type {[type: "img" | "txt" | "svg", key: string, url: string, arrayBuffer: ArrayBuffer?]}
  */
-const filesPreviewCache: Writable<["img" | "txt", string, string, ArrayBuffer?][]> = writable([]);
+const filesPreviewCache: Writable<["img" | "txt" | "svg", string, string, ArrayBuffer?][]> =
+  writable([]);
 
 /**
  * Object of requests for rate limit

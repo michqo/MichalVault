@@ -8,7 +8,8 @@
     maxVaultSizeinMB,
     imageExtensionsRegex,
     textExtensionsRegex,
-    maxPreviewSize
+    maxPreviewSize,
+    type PreviewFile
   } from "$lib/constants";
   import { CLIPBOARD_ERROR, FILE_NOT_FOUND, SERVER_ERROR } from "$lib/errors";
   import { formatBytes, formatDate, formatRelativeDate } from "$lib/utils";
@@ -28,7 +29,7 @@
   let selectedAll = false;
 
   let confirmData: ["delete" | "deleteSelected", string, any] | undefined;
-  let previewFile: ["txt" | "img", string, ArrayBuffer?] | undefined;
+  let previewFile: PreviewFile | undefined;
   let previewFileName: string;
   let previewFileProgress: number | undefined;
   let selectedFileIndex = -2;
@@ -81,7 +82,7 @@
     window.location.replace(url);
   }
 
-  function findPreviewFileInCache(key: string): ["txt" | "img", string, ArrayBuffer?] | undefined {
+  function findPreviewFileInCache(key: string): PreviewFile | undefined {
     for (const file of $filesPreviewCache) {
       if (file[1] == key) return [file[0], file[2], file[3]];
     }
@@ -152,8 +153,10 @@
           if (imageExtensionsRegex.test(name)) {
             const imageBlob = new Blob([blob], { type: res.contentType });
             const blobUrl = URL.createObjectURL(imageBlob);
-            previewFile = ["img", blobUrl];
-            $filesPreviewCache.push(["img", key, blobUrl]);
+            let type: "img" | "svg" = "img";
+            if (res.contentType == "image/svg+xml") type = "svg";
+            previewFile = [type, blobUrl];
+            $filesPreviewCache.push([type, key, blobUrl]);
           } else {
             const textBlob = new Blob([blob], { type: "text/plain;charset=utf8" });
             textBlob.arrayBuffer().then((buffer) => {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { createEventDispatcher, onMount } from "svelte";
-  import { duration, buttonClass } from "$lib/constants";
+  import { duration, buttonClass, type PreviewFile } from "$lib/constants";
   import Open from "$lib/svgs/Open.svelte";
 
   const dispatch = createEventDispatcher();
@@ -9,7 +9,7 @@
 
   const modalClass =
     "fixed center justify-between z-30 my-5 w-full h-full md:h-fit md:max-w-4xl max-h-screen md:max-h-[95%] gap-y-3 md:gap-y-20 px-10 py-5 bg-gray-900/[.6] backdrop-blur-xl md:border md:border-slate-600 rounded-md drop-shadow-xl";
-  export let file: ["txt" | "img", string, ArrayBuffer?];
+  export let file: PreviewFile;
   export let name: string;
 
   onMount(() => {
@@ -35,16 +35,18 @@
   <div class={modalClass}>
     <div class="center md:flex-row gap-2">
       <h1 class="text-center text-xl font-medium tracking-wider">{name}</h1>
-      <a target="_blank" rel="noreferrer" href={file[1]}>
-        <Open class="pt-1 w-7 h-7" />
-      </a>
+      {#if file[0] != "svg"}
+        <a target="_blank" rel="noreferrer" href={file[1]}>
+          <Open class="pt-1 w-7 h-7" />
+        </a>
+      {/if}
     </div>
-    {#if file[0] == "img"}
-      <img src={file[1]} class="overflow-auto" alt="Preview" />
-    {:else}
+    {#if file[0] == "txt"}
       <code class="p-5 whitespace-pre bg-gray-800 rounded-md overflow-auto max-w-full max-h-full"
         >{decoder.decode(file[2])}</code
       >
+    {:else}
+      <img src={file[1]} class="overflow-auto" alt="Preview" />
     {/if}
     <button class={buttonClass} on:click={close}>Close</button>
   </div>
