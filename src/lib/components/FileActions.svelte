@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { imageExtensionsRegex, maxPreviewSize, textExtensionsRegex } from "$lib/constants";
   import Sidebar from "./controls/Sidebar.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
   import Sync from "$lib/svgs/Sync.svelte";
@@ -30,7 +31,7 @@
         on:click={() => dispatch("deleteSelected")}><Delete class={imgClass} /></button
       >
     {:else if selectedFileIndex > -1}
-      {@const { key, name } = files[selectedFileIndex]}
+      {@const { key, name, size } = files[selectedFileIndex]}
       <button class={btnClass} title="Download" on:click={() => dispatch("download", key)}
         ><Download class={imgClass} /></button
       >
@@ -42,11 +43,16 @@
       <button class={btnClass} title="Copy file link" on:click={() => dispatch("copyLink", key)}
         ><Link class={imgClass} /></button
       >
-      <button
-        class={btnClass}
-        title="Open file preview"
-        on:click={() => dispatch("preview", { name, key })}><Open class={imgClass} /></button
-      >
+      {@const canPreview =
+        parseInt(size) < maxPreviewSize &&
+        (imageExtensionsRegex.test(name) || textExtensionsRegex.test(name))}
+      {#if canPreview}
+        <button
+          class={btnClass}
+          title="Open file preview"
+          on:click={() => dispatch("preview", { name, key })}><Open class={imgClass} /></button
+        >
+      {/if}
     {/if}
   </Sidebar>
 {/key}

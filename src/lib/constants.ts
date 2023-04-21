@@ -34,7 +34,7 @@ interface IPRequest {
  */
 const imageExtensionsRegex = /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
 const textExtensionsRegex =
-  /\.(txt|rs|js|ts|gd|md|html|java|py|c|php|cs|cake|cshtml|csx|cpp|cp|cc|cobol|cob|ccp|css|flux|fx|go|jsp|kt|ktm|kts|numpy|numpyw|numsc|pls|pck|pkb|pks|plbplsql|sql|perl|r|rd|rs|rsx|sh|bash|st|cs|swift|vb|class)$/i;
+  /\.(txt|json|rs|js|ts|gd|md|html|java|py|c|php|cs|cake|cshtml|csx|cpp|cp|cc|cobol|cob|ccp|css|flux|fx|go|jsp|kt|ktm|kts|numpy|numpyw|numsc|pls|pck|pkb|pks|plbplsql|sql|perl|r|rd|rs|rsx|sh|bash|st|cs|swift|vb|class)$/i;
 
 type PreviewFile = ["txt" | "img" | "svg", string, ArrayBuffer?];
 
