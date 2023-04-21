@@ -4,6 +4,8 @@
   import Folder from "$lib/svgs/Folder.svelte";
   import FolderFill from "$lib/svgs/FolderFill.svelte";
   import Upload from "$lib/svgs/Upload.svelte";
+  import Settings from "$lib/svgs/Settings.svelte";
+  import SettingsFill from "$lib/svgs/SettingsFill.svelte";
 
   const linkClass = "w-1/2 py-1 text-lg flex justify-center items-center gap-x-2 border-b";
   const activeClass = "border-indigo-100";
@@ -25,5 +27,16 @@
       <Folder class={svgClass} />
     {/if}
     Files
+  </a>
+  <a
+    class="{linkClass} {$page.url.pathname == '/settings' ? activeClass : inactiveClass}"
+    href="/settings"
+  >
+    {#if $page.url.pathname == "/settings"}
+      <SettingsFill class={svgClass} />
+    {:else}
+      <Settings class={svgClass} />
+    {/if}
+    Settings
   </a>
 </div>
