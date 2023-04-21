@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { loading } from "$lib/stores";
   import { imageExtensionsRegex, maxPreviewSize, textExtensionsRegex } from "$lib/constants";
   import Sidebar from "./controls/Sidebar.svelte";
   import Delete from "$lib/svgs/Delete.svelte";
@@ -22,7 +23,7 @@
   <Sidebar>
     <a class={btnClass} href="/" title="Go back"><Back class={imgClass} /></a>
     <button class={btnClass} title="Refresh" on:click={() => dispatch("refresh")}
-      ><Sync class={imgClass} /></button
+      ><Sync class="{imgClass} {$loading ? 'animate-spin' : ''}" /></button
     >
     {#if selectedFileIndex == -1}
       <button
