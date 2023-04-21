@@ -19,6 +19,7 @@
   import ProgressBarTop from "./controls/ProgressBarTop.svelte";
   import Checkbox from "./controls/Checkbox.svelte";
   import Menu from "./controls/Menu.svelte";
+  import MobileMenu from "./controls/MobileMenu.svelte";
   import FileActions from "./FileActions.svelte";
   import More from "$lib/svgs/More.svelte";
 
@@ -384,14 +385,23 @@
                   >
                     <More class={svgClass} />
                   </button>
-                  {#if file.showMenu == true}
-                    <Menu
-                      actions={["Download", "Delete", "Copy link"].concat(
-                        canPreview ? "Open preview" : []
-                      )}
-                      on:close={() => handleMenuChange(false, index)}
-                      on:click={(e) => handleMenuClick(e, file, index)}
-                    />
+                  {#if file.showMenu}
+                    {@const actions = ["Download", "Delete", "Copy link"].concat(
+                      canPreview ? "Open preview" : []
+                    )}
+                    {#if navigator.userAgent.indexOf("Mobi") > -1}
+                      <MobileMenu
+                        {actions}
+                        on:close={() => handleMenuChange(false, index)}
+                        on:click={(e) => handleMenuClick(e, file, index)}
+                      />
+                    {:else}
+                      <Menu
+                        {actions}
+                        on:close={() => handleMenuChange(false, index)}
+                        on:click={(e) => handleMenuClick(e, file, index)}
+                      />
+                    {/if}
                   {/if}
                 </td>
                 <td class={tdClass}>{formatRelativeDate(rtf, new Date(file.date), now)}</td>
