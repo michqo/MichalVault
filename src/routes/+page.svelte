@@ -1,14 +1,25 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { inputFiles, filesInput, showInfoPanel } from "$lib/stores";
+  import { inputFiles, filesInput, showInfoPanel, token, newToken } from "$lib/stores";
+  import { page } from "$app/stores";
   import Links from "$lib/components/Links.svelte";
   import Upload from "$lib/components/Upload.svelte";
   import InfoPanel from "$lib/components/InfoPanel.svelte";
   import FileCreate from "$lib/components/FileCreate.svelte";
+  import { trpc } from "$lib/trpc/client";
 
-  onMount(() => {
+  onMount(async () => {
     // Persistent files between routes
     if ($inputFiles) $filesInput.files = $inputFiles;
+    // Load token
+    const t = localStorage.getItem("token");
+    if (t == undefined) {
+      $token = await trpc($page).fetchToken.query();
+      localStorage.setItem("token", $token);
+    } else {
+      $token = t;
+    }
+    $newToken = $token;
   });
 </script>
 
