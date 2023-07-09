@@ -34,6 +34,8 @@
   let previewFileName: string;
   let previewFileProgress: number | undefined;
   let selectedFileIndex = -2;
+  let rightClickMenuX = 0;
+  let rightClickMenuY = 0;
 
   const today = new Date();
   let now = new Date();
@@ -268,15 +270,24 @@
   function handleSelectAll() {
     selected = files.map(() => !selectedAll);
   }
-
-  function handleMenuChange(state: boolean, index: number) {
-    handleSelect();
+  function hideMenus() {
     for (let i = 0; i < files.length; i++) {
       files[i].showMenu = false;
       selected[i] = false;
     }
+  }
+
+  function handleMenuChange(state: boolean, index: number) {
+    handleSelect();
+    hideMenus();
     files[index].showMenu = state;
     selected[index] = state;
+  }
+
+  function handleDesktopMenuChange(e: MouseEvent, state: boolean, index: number) {
+    rightClickMenuX = e.pageX;
+    rightClickMenuY = e.pageY;
+    handleMenuChange(state, index);
   }
 
   async function handleMenuClick(e: CustomEvent<string>, file: any, index: number) {
@@ -364,7 +375,7 @@
                 parseInt(file.size) < maxPreviewSize &&
                 (imageExtensionsRegex.test(file.name) || textExtensionsRegex.test(file.name))}
               <tr
-                on:contextmenu|preventDefault={() => handleMenuChange(true, index)}
+                on:contextmenu|preventDefault={(e) => handleDesktopMenuChange(e, true, index)}
                 class="group md:hover:bg-gray-700  {selected[index]
                   ? 'bg-gray-700'
                   : 'bg-transparent'}"
@@ -381,7 +392,7 @@
                   <button
                     type="button"
                     class="rounded-md md:hover:bg-white/[.1]"
-                    on:click={() => handleMenuChange(true, index)}
+                    on:click={(e) => handleDesktopMenuChange(e, true, index)}
                   >
                     <More class={svgClass} />
                   </button>
@@ -398,6 +409,8 @@
                     {:else}
                       <Menu
                         {actions}
+                        x={rightClickMenuX}
+                        y={rightClickMenuY}
                         on:close={() => handleMenuChange(false, index)}
                         on:click={(e) => handleMenuClick(e, file, index)}
                       />

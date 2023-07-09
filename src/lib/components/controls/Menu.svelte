@@ -4,11 +4,13 @@
   import { duration } from "$lib/constants";
 
   export let actions: string[];
+  export let x: number;
+  export let y: number;
 
   const dispatch = createEventDispatcher();
 
   const modalClass =
-    "absolute flex flex-col z-10 -mt-7 ml-9 bg-gray-900 border border-slate-400/[.5] rounded-md drop-shadow-xl";
+    "fixed flex flex-col z-10 bg-gray-900 border border-slate-400/[.5] rounded-md drop-shadow-xl";
   const btnClass =
     "text-base px-3 py-2 text-slate-100 hover:bg-gray-800 first:rounded-t-md last:rounded-b-md";
 
@@ -23,7 +25,7 @@
   });
 </script>
 
-<div in:fly={{ duration, x: -8, opacity: 0.5 }} out:fade={{ duration }} class={modalClass}>
+<div style="left: {x}px; top: {y}px;" transition:fade={{ duration }} class={modalClass}>
   {#each actions as action}
     <button class={btnClass} on:click={() => dispatch("click", action)}>{action}</button>
   {/each}
