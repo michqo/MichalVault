@@ -14,7 +14,7 @@
   <StatusModal />
   <Tabs />
   {#key $page}
-    <div class="center w-full h-full max-w-xl" in:fade={{ duration }}>
+    <div class="center w-full h-full overflow-auto max-w-xl" in:fade={{ duration }}>
       <slot />
     </div>
   {/key}
@@ -22,6 +22,6 @@
 
 <style>
   :global(body) {
-    @apply bg-gray-900 text-slate-100 mx-4 mb-4 h-screen;
+    @apply bg-gray-900 text-slate-100 mx-4 mb-4 h-screen overflow-hidden;
   }
 </style>
